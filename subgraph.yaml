@@ -1,0 +1,95 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: LPTokenStaker
+    network: mainnet
+    source:
+      address: "0x2E32bAd45a1C29c1EA27cf4dD588DF9e68ED376C"
+      abi: LPTokenStaker
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LogAddPool
+        - LogClaim
+        - LogDeposit
+        - LogEmergencyWithdraw
+        - LogGroPerBlock
+        - LogLpTokenAdded
+        - LogMaxGroPerBlock
+        - LogMigrate
+        - LogMigrateFrom
+        - LogMigrateFromV1
+        - LogMigrateUser
+        - LogMultiClaim
+        - LogMultiWithdraw
+        - LogNewManagment
+        - LogNewPwrdPid
+        - LogNewStaker
+        - LogNewVester
+        - LogOldStaker
+        - LogSetPool
+        - LogSetStatus
+        - LogSetTimelock
+        - LogUpdatePool
+        - LogUserMigrateFromV1
+        - LogWithdraw
+        - OwnershipTransferred
+      abis:
+        - name: LPTokenStaker
+          file: ./abis/LPTokenStaker.json
+      eventHandlers:
+        - event: LogAddPool(indexed uint256,uint256,indexed address)
+          handler: handleLogAddPool
+        - event: LogClaim(indexed address,bool,indexed uint256,uint256)
+          handler: handleLogClaim
+        - event: LogDeposit(indexed address,indexed uint256,uint256)
+          handler: handleLogDeposit
+        - event: LogEmergencyWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleLogEmergencyWithdraw
+        - event: LogGroPerBlock(uint256)
+          handler: handleLogGroPerBlock
+        - event: LogLpTokenAdded(address)
+          handler: handleLogLpTokenAdded
+        - event: LogMaxGroPerBlock(uint256)
+          handler: handleLogMaxGroPerBlock
+        - event: LogMigrate(uint256[])
+          handler: handleLogMigrate
+        - event: LogMigrateFrom(uint256[])
+          handler: handleLogMigrateFrom
+        - event: LogMigrateFromV1(address)
+          handler: handleLogMigrateFromV1
+        - event: LogMigrateUser(indexed address,uint256[])
+          handler: handleLogMigrateUser
+        - event: LogMultiClaim(indexed address,bool,uint256[],uint256)
+          handler: handleLogMultiClaim
+        - event: LogMultiWithdraw(indexed address,uint256[],uint256[])
+          handler: handleLogMultiWithdraw
+        - event: LogNewManagment(address)
+          handler: handleLogNewManagment
+        - event: LogNewPwrdPid(uint256)
+          handler: handleLogNewPwrdPid
+        - event: LogNewStaker(address)
+          handler: handleLogNewStaker
+        - event: LogNewVester(address)
+          handler: handleLogNewVester
+        - event: LogOldStaker(address)
+          handler: handleLogOldStaker
+        - event: LogSetPool(indexed uint256,uint256)
+          handler: handleLogSetPool
+        - event: LogSetStatus(bool)
+          handler: handleLogSetStatus
+        - event: LogSetTimelock(address)
+          handler: handleLogSetTimelock
+        - event: LogUpdatePool(indexed uint256,uint256,uint256,uint256)
+          handler: handleLogUpdatePool
+        - event: LogUserMigrateFromV1(indexed address,address)
+          handler: handleLogUserMigrateFromV1
+        - event: LogWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleLogWithdraw
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/lp-token-staker.ts
