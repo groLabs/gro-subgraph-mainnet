@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: LPTokenStaker
@@ -8,7 +8,6 @@ dataSources:
     source:
       address: "0x2E32bAd45a1C29c1EA27cf4dD588DF9e68ED376C"
       abi: LPTokenStaker
-      startBlock: 14268645
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -41,7 +40,7 @@ dataSources:
         - OwnershipTransferred
       abis:
         - name: LPTokenStaker
-          file: ./abis/LPTokenStaker.json
+          file: LPTokenStaker/abis/LPTokenStaker.json
       eventHandlers:
         - event: LogAddPool(indexed uint256,uint256,indexed address)
           handler: handleLogAddPool
@@ -93,14 +92,13 @@ dataSources:
           handler: handleLogWithdraw
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-      file: ./src/lp-token-staker.ts
+      file: LPTokenStaker/LPTokenStaker.wasm
   - kind: ethereum
     name: Gro
     network: mainnet
     source:
       address: "0x3Ec8798B81485A254928B70CDA1cf0A2BB0B74D7"
       abi: Gro
-      startBlock: 13265186
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -113,7 +111,7 @@ dataSources:
         - Transfer
       abis:
         - name: Gro
-          file: ./abis/Gro.json
+          file: Gro/abis/Gro.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
@@ -125,14 +123,13 @@ dataSources:
           handler: handleGroOwnershipTransferred
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
-      file: ./src/gro.ts
+      file: Gro/Gro.wasm
   - kind: ethereum
     name: Gvt
     network: mainnet
     source:
       address: "0x3ADb04E127b9C0a5D36094125669d4603AC52a0c"
       abi: Gvt
-      startBlock: 12522446
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -146,7 +143,7 @@ dataSources:
         - GvtTransfer
       abis:
         - name: Gvt
-          file: ./abis/Gvt.json
+          file: Gvt/abis/Gvt.json
       eventHandlers:
         - event: GvtApproval(indexed address,indexed address,uint256)
           handler: handleGvtApproval
@@ -160,14 +157,13 @@ dataSources:
           handler: handleGvtOwnershipTransferred
         - event: GvtTransfer(indexed address,indexed address,uint256)
           handler: handleGvtTransfer
-      file: ./src/gvt.ts
+      file: Gvt/Gvt.wasm
   - kind: ethereum
     name: Pwrd
     network: mainnet
     source:
       address: "0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b"
       abi: Pwrd
-      startBlock: 12522247
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -181,7 +177,7 @@ dataSources:
         - PwrdTransfer
       abis:
         - name: Pwrd
-          file: ./abis/Pwrd.json
+          file: Pwrd/abis/Pwrd.json
       eventHandlers:
         - event: PwrdApproval(indexed address,indexed address,uint256)
           handler: handlePwrdApproval
@@ -195,4 +191,4 @@ dataSources:
           handler: handlePwrdOwnershipTransferred
         - event: PwrdTransfer(indexed address,indexed address,uint256)
           handler: handlePwrdTransfer
-      file: ./src/pwrd.ts
+      file: Pwrd/Pwrd.wasm
