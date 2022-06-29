@@ -1,3 +1,4 @@
+/*
 import {
   GvtApproval as GvtApprovalEvent,
   LogAddToWhitelist as LogAddToWhitelistEvent,
@@ -74,3 +75,4 @@ export function handleGvtTransfer(event: GvtTransferEvent): void {
   entity.value = event.params.value
   entity.save()
 }
+*/

@@ -1,3 +1,4 @@
+/*
 import {
   Approval as ApprovalEvent,
   LogDistributer as LogDistributerEvent,
@@ -62,3 +63,4 @@ export function handleTransfer(event: TransferEvent): void {
   entity.value = event.params.value
   entity.save()
 }
+*/

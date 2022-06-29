@@ -1,111 +1,165 @@
-type ExampleEntity @entity {
+
+# type ExampleEntity @entity {
+#   id: ID!
+#   count: BigInt!
+#   pid: BigInt! # uint256
+#   allocPoint: BigInt! # uint256
+# }
+
+# type Approval @entity {
+#   id: ID!
+#   owner: Bytes! # address
+#   spender: Bytes! # address
+#   value: BigInt! # uint256
+# }
+
+# type LogDistributer @entity {
+#   id: ID!
+#   newDistributer: Bytes! # address
+# }
+
+# type LogInflationRate @entity {
+#   id: ID!
+#   newInflationRate: BigInt! # uint256
+#   newInflationPerSecond: BigInt! # uint256
+#   lastMaxTotalSupply: BigInt! # uint256
+#   lastMaxTotalSupplyTime: BigInt! # uint256
+# }
+
+# type GroOwnershipTransferred @entity {
+#   id: ID!
+#   previousOwner: Bytes! # address
+#   newOwner: Bytes! # address
+# }
+
+# type Transfer @entity {
+#   id: ID!
+#   from: Bytes! # address
+#   to: Bytes! # address
+#   value: BigInt! # uint256
+# }
+
+# type GvtApproval @entity {
+#   id: ID!
+#   owner: Bytes! # address
+#   spender: Bytes! # address
+#   value: BigInt! # uint256
+# }
+
+# type LogAddToWhitelist @entity {
+#   id: ID!
+#   user: Bytes! # address
+# }
+
+# type LogRemoveFromWhitelist @entity {
+#   id: ID!
+#   user: Bytes! # address
+# }
+
+# type LogTransfer @entity {
+#   id: ID!
+#   sender: Bytes! # address
+#   recipient: Bytes! # address
+#   amount: BigInt! # uint256
+#   factor: BigInt! # uint256
+# }
+
+# type GvtOwnershipTransferred @entity {
+#   id: ID!
+#   previousOwner: Bytes! # address
+#   newOwner: Bytes! # address
+# }
+
+# type GvtTransfer @entity {
+#   id: ID!
+#   from: Bytes! # address
+#   to: Bytes! # address
+#   value: BigInt! # uint256
+# }
+
+# type PwrdApproval @entity {
+#   id: ID!
+#   owner: Bytes! # address
+#   spender: Bytes! # address
+#   value: BigInt! # uint256
+# }
+
+# type PwrdLogAddToWhitelist @entity {
+#   id: ID!
+#   user: Bytes! # address
+# }
+
+# type PwrdLogRemoveFromWhitelist @entity {
+#   id: ID!
+#   user: Bytes! # address
+# }
+
+# type PwrdLogTransfer @entity {
+#   id: ID!
+#   sender: Bytes! # address
+#   recipient: Bytes! # address
+#   amount: BigInt! # uint256
+# }
+
+# type PwrdOwnershipTransferred @entity {
+#   id: ID!
+#   previousOwner: Bytes! # address
+#   newOwner: Bytes! # address
+# }
+
+# type PwrdTransfer @entity {
+#   id: ID!
+#   from: Bytes! # address
+#   to: Bytes! # address
+#   value: BigInt! # uint256
+# }
+
+# New enums
+
+enum Token {
+  pwrd
+  gvt
+  gro
+  usdc
+  usdt
+  dai
+  balancer_gro_weth
+  uniswap_gvt_gro
+  uniswap_gro_usdc
+  curve_pwrd3crv
+}
+
+enum TxType {
+  deposit
+  withdrawal
+  claim
+  vest
+  approval
+}
+
+# New entities
+
+type LogDeposit @entity {
   id: ID!
-  count: BigInt!
+  user: Bytes! # address
   pid: BigInt! # uint256
-  allocPoint: BigInt! # uint256
-}
-type Approval @entity {
-  id: ID!
-  owner: Bytes! # address
-  spender: Bytes! # address
-  value: BigInt! # uint256
-}
-
-type LogDistributer @entity {
-  id: ID!
-  newDistributer: Bytes! # address
-}
-
-type LogInflationRate @entity {
-  id: ID!
-  newInflationRate: BigInt! # uint256
-  newInflationPerSecond: BigInt! # uint256
-  lastMaxTotalSupply: BigInt! # uint256
-  lastMaxTotalSupplyTime: BigInt! # uint256
-}
-
-type GroOwnershipTransferred @entity {
-  id: ID!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-}
-
-type Transfer @entity {
-  id: ID!
-  from: Bytes! # address
-  to: Bytes! # address
-  value: BigInt! # uint256
-}
-type GvtApproval @entity {
-  id: ID!
-  owner: Bytes! # address
-  spender: Bytes! # address
-  value: BigInt! # uint256
-}
-
-type LogAddToWhitelist @entity {
-  id: ID!
-  user: Bytes! # address
-}
-
-type LogRemoveFromWhitelist @entity {
-  id: ID!
-  user: Bytes! # address
-}
-
-type LogTransfer @entity {
-  id: ID!
-  sender: Bytes! # address
-  recipient: Bytes! # address
-  amount: BigInt! # uint256
-  factor: BigInt! # uint256
-}
-
-type GvtOwnershipTransferred @entity {
-  id: ID!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-}
-
-type GvtTransfer @entity {
-  id: ID!
-  from: Bytes! # address
-  to: Bytes! # address
-  value: BigInt! # uint256
-}
-type PwrdApproval @entity {
-  id: ID!
-  owner: Bytes! # address
-  spender: Bytes! # address
-  value: BigInt! # uint256
-}
-
-type PwrdLogAddToWhitelist @entity {
-  id: ID!
-  user: Bytes! # address
-}
-
-type PwrdLogRemoveFromWhitelist @entity {
-  id: ID!
-  user: Bytes! # address
-}
-
-type PwrdLogTransfer @entity {
-  id: ID!
-  sender: Bytes! # address
-  recipient: Bytes! # address
   amount: BigInt! # uint256
 }
 
-type PwrdOwnershipTransferred @entity {
+# TODO: multiclaims, multiwithdrawals
+type Transaction @entity {
   id: ID!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
+  userAddress: Bytes!
+  poolId: Int
+  token: Token!
+  block: Int! 
+  timestamp: Int!
+  type: TxType!
+  coinAmount: BigInt!
+  usdAmount: BigInt!
 }
 
-type PwrdTransfer @entity {
+type User @entity {
   id: ID!
-  from: Bytes! # address
-  to: Bytes! # address
-  value: BigInt! # uint256
+  txs: [Transaction!]
 }

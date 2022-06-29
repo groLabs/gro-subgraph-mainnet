@@ -1,13 +1,13 @@
 {
-  "name": "subgraph",
+  "name": "staker",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/subgraph",
-    "create-local": "graph create --node http://localhost:8020/ sjuanati/subgraph",
-    "remove-local": "graph remove --node http://localhost:8020/ sjuanati/subgraph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sjuanati/subgraph"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/Staker",
+    "create-local": "graph create --node http://localhost:8020/ sjuanati/Staker",
+    "remove-local": "graph remove --node http://localhost:8020/ sjuanati/Staker",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sjuanati/Staker"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.31.0",

@@ -1,100 +1,117 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  LPTokenStaker,
-  LogAddPool,
-  LogClaim,
-  LogDeposit,
-  LogEmergencyWithdraw,
-  LogGroPerBlock,
-  LogLpTokenAdded,
-  LogMaxGroPerBlock,
-  LogMigrate,
-  LogMigrateFrom,
-  LogMigrateFromV1,
-  LogMigrateUser,
-  LogMultiClaim,
-  LogMultiWithdraw,
-  LogNewManagment,
-  LogNewPwrdPid,
-  LogNewStaker,
-  LogNewVester,
-  LogOldStaker,
-  LogSetPool,
-  LogSetStatus,
-  LogSetTimelock,
-  LogUpdatePool,
-  LogUserMigrateFromV1,
-  LogWithdraw,
-  OwnershipTransferred
+  // LPTokenStaker,
+  // LogAddPool,
+  // LogClaim,
+  LogDeposit as LogDepositEvent,
+  // LogEmergencyWithdraw,
+  // LogGroPerBlock,
+  // LogLpTokenAdded,
+  // LogMaxGroPerBlock,
+  // LogMigrate,
+  // LogMigrateFrom,
+  // LogMigrateFromV1,
+  // LogMigrateUser,
+  // LogMultiClaim,
+  // LogMultiWithdraw,
+  // LogNewManagment,
+  // LogNewPwrdPid,
+  // LogNewStaker,
+  // LogNewVester,
+  // LogOldStaker,
+  // LogSetPool,
+  // LogSetStatus,
+  // LogSetTimelock,
+  // LogUpdatePool,
+  // LogUserMigrateFromV1,
+  // LogWithdraw,
+  // OwnershipTransferred
 } from "../generated/LPTokenStaker/LPTokenStaker"
-import { ExampleEntity } from "../generated/schema"
+import {
+  User,
+  LogDeposit,
+  Transaction
+} from "../generated/schema"
 
-export function handleLogAddPool(event: LogAddPool): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+// export function handleLogAddPool(event: LogAddPool): void {
 
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
+//   // It is also possible to access smart contracts from mappings. For
+//   // example, the contract that has emitted the event can be connected to
+//   // with:
+//   //
+//   // let contract = Contract.bind(event.address)
+//   //
+//   // The following functions can then be called on this contract to access
+//   // state variables and other data:
+//   //
+//   // - contract.PWRD(...)
+//   // - contract.TIME_LOCK(...)
+//   // - contract.activeLpTokens(...)
+//   // - contract.claimable(...)
+//   // - contract.getUserPwrd(...)
+//   // - contract.groPerBlock(...)
+//   // - contract.initialized(...)
+//   // - contract.manager(...)
+//   // - contract.maxGroPerBlock(...)
+//   // - contract.migratedFromV1(...)
+//   // - contract.newStaker(...)
+//   // - contract.oldStaker(...)
+//   // - contract.owner(...)
+//   // - contract.pPid(...)
+//   // - contract.paused(...)
+//   // - contract.poolInfo(...)
+//   // - contract.poolLength(...)
+//   // - contract.totalAllocPoint(...)
+//   // - contract.updatePool(...)
+//   // - contract.userInfo(...)
+//   // - contract.userMigrated(...)
+//   // - contract.vesting(...)
+// }
 
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
+export function handleLogDeposit(event: LogDepositEvent): void {
+
+  // Step 1: store `LogDeposit` event
+  let deposit = new LogDeposit(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  deposit.user = event.params.user
+  deposit.pid = event.params.pid
+  deposit.amount = event.params.amount
+  deposit.save()
+
+  // Step 2: create User if first deposit; load User otherwise
+  let id = event.params.user.toHexString()
+  let user = User.load(id)
+  if (!user) {
+    user = new User(
+      event.params.user.toHexString()
+    )
+    user.txs = []
   }
 
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.pid = event.params.pid
-  entity.allocPoint = event.params.allocPoint
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.PWRD(...)
-  // - contract.TIME_LOCK(...)
-  // - contract.activeLpTokens(...)
-  // - contract.claimable(...)
-  // - contract.getUserPwrd(...)
-  // - contract.groPerBlock(...)
-  // - contract.initialized(...)
-  // - contract.manager(...)
-  // - contract.maxGroPerBlock(...)
-  // - contract.migratedFromV1(...)
-  // - contract.newStaker(...)
-  // - contract.oldStaker(...)
-  // - contract.owner(...)
-  // - contract.pPid(...)
-  // - contract.paused(...)
-  // - contract.poolInfo(...)
-  // - contract.poolLength(...)
-  // - contract.totalAllocPoint(...)
-  // - contract.updatePool(...)
-  // - contract.userInfo(...)
-  // - contract.userMigrated(...)
-  // - contract.vesting(...)
+  // Step 3: create transaction & add it to user
+  // TODO: move to a function and reuse for every event type (deposit, withdrawal..)
+  // TODO: function to determine token
+  let tx = new Transaction(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  tx.userAddress = event.params.user
+  tx.poolId = event.params.pid.toI32()
+  tx.token = 'gro'
+  tx.block = event.block.number.toI32()
+  tx.timestamp = event.block.timestamp.toI32()
+  tx.type = 'deposit'
+  tx.coinAmount = event.params.amount
+  tx.usdAmount = BigInt.fromI32(0)  // TODO
+  tx.save()
+  let txs = user.txs
+  txs!.push(tx.id)
+  user.txs = txs
+  user.save()
 }
 
+/*
 export function handleLogClaim(event: LogClaim): void {}
-
-export function handleLogDeposit(event: LogDeposit): void {}
 
 export function handleLogEmergencyWithdraw(event: LogEmergencyWithdraw): void {}
 
@@ -139,3 +156,4 @@ export function handleLogUserMigrateFromV1(event: LogUserMigrateFromV1): void {}
 export function handleLogWithdraw(event: LogWithdraw): void {}
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
+*/

@@ -1,3 +1,4 @@
+/*
 import {
   PwrdApproval as PwrdApprovalEvent,
   PwrdLogAddToWhitelist as PwrdLogAddToWhitelistEvent,
@@ -75,3 +76,4 @@ export function handlePwrdTransfer(event: PwrdTransferEvent): void {
   entity.value = event.params.value
   entity.save()
 }
+*/
