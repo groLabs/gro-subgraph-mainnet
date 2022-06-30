@@ -1,9 +1,12 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
+    LogDeposit as LogDepositEventV1
+} from "../../generated/LpTokenStakerV1/LpTokenStaker"
+import {
   // LPTokenStaker,
   // LogAddPool,
   // LogClaim,
-  LogDeposit as LogDepositEvent,
+  LogDeposit as LogDepositEventV2,
   // LogEmergencyWithdraw,
   // LogGroPerBlock,
   // LogLpTokenAdded,
@@ -26,12 +29,13 @@ import {
   // LogUserMigrateFromV1,
   // LogWithdraw,
   // OwnershipTransferred
-} from "../generated/LPTokenStaker/LPTokenStaker"
+} from "../../generated/LPTokenStakerV2/LPTokenStaker"
+
 import {
   User,
   LogDeposit,
   Transaction
-} from "../generated/schema"
+} from "../../generated/schema"
 
 // export function handleLogAddPool(event: LogAddPool): void {
 
@@ -68,7 +72,8 @@ import {
 //   // - contract.vesting(...)
 // }
 
-export function handleLogDeposit(event: LogDepositEvent): void {
+
+function logDeposit<T> (event: T): void {
 
   // Step 1: store `LogDeposit` event
   let deposit = new LogDeposit(
@@ -108,6 +113,53 @@ export function handleLogDeposit(event: LogDepositEvent): void {
   txs!.push(tx.id)
   user.txs = txs
   user.save()
+}
+
+export function handleLogDepositV1(event: LogDepositEventV1): void {
+
+    logDeposit(event)
+//   // Step 1: store `LogDeposit` event
+//   let deposit = new LogDeposit(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   deposit.user = event.params.user
+//   deposit.pid = event.params.pid
+//   deposit.amount = event.params.amount
+//   deposit.save()
+
+//   // Step 2: create User if first deposit; load User otherwise
+//   let id = event.params.user.toHexString()
+//   let user = User.load(id)
+//   if (!user) {
+//     user = new User(
+//       event.params.user.toHexString()
+//     )
+//     user.txs = []
+//   }
+
+//   // Step 3: create transaction & add it to user
+//   // TODO: move to a function and reuse for every event type (deposit, withdrawal..)
+//   // TODO: function to determine token
+//   let tx = new Transaction(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   tx.userAddress = event.params.user
+//   tx.poolId = event.params.pid.toI32()
+//   tx.token = 'gro'
+//   tx.block = event.block.number.toI32()
+//   tx.timestamp = event.block.timestamp.toI32()
+//   tx.type = 'deposit'
+//   tx.coinAmount = event.params.amount
+//   tx.usdAmount = BigInt.fromI32(0)  // TODO
+//   tx.save()
+//   let txs = user.txs
+//   txs!.push(tx.id)
+//   user.txs = txs
+//   user.save()
+}
+
+export function handleLogDepositV2(event: LogDepositEventV2): void {
+    logDeposit(event)
 }
 
 /*
