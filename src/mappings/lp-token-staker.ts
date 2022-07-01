@@ -1,99 +1,168 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  LogClaim as LogClaimEventV1,
-  LogDeposit as LogDepositEventV1,
-  LogWithdraw as LogWithdrawEventV1,
+    LogDeposit as LogDepositEventV1
 } from "../../generated/LpTokenStakerV1/LpTokenStaker"
 import {
-  LogClaim as LogClaimEventV2,
+  // LPTokenStaker,
+  // LogAddPool,
+  // LogClaim,
   LogDeposit as LogDepositEventV2,
-  LogWithdraw as LogWithdrawEventV2,
+  // LogEmergencyWithdraw,
+  // LogGroPerBlock,
+  // LogLpTokenAdded,
+  // LogMaxGroPerBlock,
+  // LogMigrate,
+  // LogMigrateFrom,
+  // LogMigrateFromV1,
+  // LogMigrateUser,
+  // LogMultiClaim,
+  // LogMultiWithdraw,
+  // LogNewManagment,
+  // LogNewPwrdPid,
+  // LogNewStaker,
+  // LogNewVester,
+  // LogOldStaker,
+  // LogSetPool,
+  // LogSetStatus,
+  // LogSetTimelock,
+  // LogUpdatePool,
+  // LogUserMigrateFromV1,
+  // LogWithdraw,
+  // OwnershipTransferred
 } from "../../generated/LPTokenStakerV2/LPTokenStaker"
+
 import {
   User,
+  LogDeposit,
   Transaction
 } from "../../generated/schema"
-import { getTokenFromPoolId } from "../utils/tokens"
-import { LpTokenStaker } from '../../generated/LpTokenStakerV2/LpTokenStaker'
 
-/* *** REMARKS MVP ***
-Staker.LogMultiWithdraw: no events found, so currently not used
-Staker.LogEmergencyWithdraw: event generates no data, so currently excluded
-Staker.LogMultiClaim: excluded for MVP (requires amount calculation per pool in block-1 via sc calls)
-Staker.LogClaim: field 'vest' excluded from MVP
-*/
+// export function handleLogAddPool(event: LogAddPool): void {
 
-function parseEvent<T>(event: T, type: string): void {
-//function parseEvent(event: LogDepositEventV1, type: string): void {
+//   // It is also possible to access smart contracts from mappings. For
+//   // example, the contract that has emitted the event can be connected to
+//   // with:
+//   //
+//   // let contract = Contract.bind(event.address)
+//   //
+//   // The following functions can then be called on this contract to access
+//   // state variables and other data:
+//   //
+//   // - contract.PWRD(...)
+//   // - contract.TIME_LOCK(...)
+//   // - contract.activeLpTokens(...)
+//   // - contract.claimable(...)
+//   // - contract.getUserPwrd(...)
+//   // - contract.groPerBlock(...)
+//   // - contract.initialized(...)
+//   // - contract.manager(...)
+//   // - contract.maxGroPerBlock(...)
+//   // - contract.migratedFromV1(...)
+//   // - contract.newStaker(...)
+//   // - contract.oldStaker(...)
+//   // - contract.owner(...)
+//   // - contract.pPid(...)
+//   // - contract.paused(...)
+//   // - contract.poolInfo(...)
+//   // - contract.poolLength(...)
+//   // - contract.totalAllocPoint(...)
+//   // - contract.updatePool(...)
+//   // - contract.userInfo(...)
+//   // - contract.userMigrated(...)
+//   // - contract.vesting(...)
+// }
 
-  // let contract = LpTokenStaker.bind(event.address)
 
-  // Step 1: create User if first deposit; load User otherwise
+function logDeposit<T> (event: T): void {
+
+  // Step 1: store `LogDeposit` event
+  let deposit = new LogDeposit(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  deposit.user = event.params.user
+  deposit.pid = event.params.pid
+  deposit.amount = event.params.amount
+  deposit.save()
+
+  // Step 2: create User if first deposit; load User otherwise
   let id = event.params.user.toHexString()
   let user = User.load(id)
   if (!user) {
     user = new User(
       event.params.user.toHexString()
     )
-    // user.txs = []
-    user.save()
+    user.txs = []
   }
 
-  // Step 2: create transaction & add it to user
+  // Step 3: create transaction & add it to user
+  // TODO: move to a function and reuse for every event type (deposit, withdrawal..)
+  // TODO: function to determine token
   let tx = new Transaction(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
-  tx.userAddress = event.params.user.toHexString();
-  tx.contractAddress = event.address
+  tx.userAddress = event.params.user
   tx.poolId = event.params.pid.toI32()
-  tx.token = getTokenFromPoolId(tx.poolId, type)
+  tx.token = 'gro'
   tx.block = event.block.number.toI32()
   tx.timestamp = event.block.timestamp.toI32()
-  tx.type = type
+  tx.type = 'deposit'
   tx.coinAmount = event.params.amount
-  tx.usdAmount = BigInt.fromI32(0)  // TODO: possible?
+  tx.usdAmount = BigInt.fromI32(0)  // TODO
   tx.save()
-
-  //let txs = user.txs
-  //txs!.push(tx.id)
-  // user.txs = txs
-
-  // Update User's data
-  
-  // let cl = contract.try_claimable(BigInt.fromI32(3), event.params.user)
-  // user.claimable = cl.value
-  //todo cl.reverted
-
+  let txs = user.txs
+  txs!.push(tx.id)
+  user.txs = txs
+  user.save()
 }
 
 export function handleLogDepositV1(event: LogDepositEventV1): void {
-  parseEvent(event, 'deposit')
+
+    logDeposit(event)
+//   // Step 1: store `LogDeposit` event
+//   let deposit = new LogDeposit(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   deposit.user = event.params.user
+//   deposit.pid = event.params.pid
+//   deposit.amount = event.params.amount
+//   deposit.save()
+
+//   // Step 2: create User if first deposit; load User otherwise
+//   let id = event.params.user.toHexString()
+//   let user = User.load(id)
+//   if (!user) {
+//     user = new User(
+//       event.params.user.toHexString()
+//     )
+//     user.txs = []
+//   }
+
+//   // Step 3: create transaction & add it to user
+//   // TODO: move to a function and reuse for every event type (deposit, withdrawal..)
+//   // TODO: function to determine token
+//   let tx = new Transaction(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   tx.userAddress = event.params.user
+//   tx.poolId = event.params.pid.toI32()
+//   tx.token = 'gro'
+//   tx.block = event.block.number.toI32()
+//   tx.timestamp = event.block.timestamp.toI32()
+//   tx.type = 'deposit'
+//   tx.coinAmount = event.params.amount
+//   tx.usdAmount = BigInt.fromI32(0)  // TODO
+//   tx.save()
+//   let txs = user.txs
+//   txs!.push(tx.id)
+//   user.txs = txs
+//   user.save()
 }
 
 export function handleLogDepositV2(event: LogDepositEventV2): void {
-  parseEvent(event, 'deposit')
+    logDeposit(event)
 }
-
-export function handleLogWithdrawV1(event: LogWithdrawEventV1): void {
-  parseEvent(event, 'withdrawal')
-}
-
-export function handleLogWithdrawV2(event: LogWithdrawEventV2): void {
-  parseEvent(event, 'withdrawal')
-}
-
-export function handleLogClaimV1(event: LogClaimEventV1): void {
-  parseEvent(event, 'claim')
-}
-
-export function handleLogClaimV2(event: LogClaimEventV2): void {
-  parseEvent(event, 'claim')
-}
-
 
 /*
-export function handleLogAddPool(event: LogAddPool): void {
-
 export function handleLogClaim(event: LogClaim): void {}
 
 export function handleLogEmergencyWithdraw(event: LogEmergencyWithdraw): void {}
@@ -140,39 +209,3 @@ export function handleLogWithdraw(event: LogWithdraw): void {}
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
 */
-
-
-
-
-//   // It is also possible to access smart contracts from mappings. For
-//   // example, the contract that has emitted the event can be connected to
-//   // with:
-//   //
-//   // let contract = Contract.bind(event.address)
-//   //
-//   // The following functions can then be called on this contract to access
-//   // state variables and other data:
-//   //
-//   // - contract.PWRD(...)
-//   // - contract.TIME_LOCK(...)
-//   // - contract.activeLpTokens(...)
-//   // - contract.claimable(...)
-//   // - contract.getUserPwrd(...)
-//   // - contract.groPerBlock(...)
-//   // - contract.initialized(...)
-//   // - contract.manager(...)
-//   // - contract.maxGroPerBlock(...)
-//   // - contract.migratedFromV1(...)
-//   // - contract.newStaker(...)
-//   // - contract.oldStaker(...)
-//   // - contract.owner(...)
-//   // - contract.pPid(...)
-//   // - contract.paused(...)
-//   // - contract.poolInfo(...)
-//   // - contract.poolLength(...)
-//   // - contract.totalAllocPoint(...)
-//   // - contract.updatePool(...)
-//   // - contract.userInfo(...)
-//   // - contract.userMigrated(...)
-//   // - contract.vesting(...)
-// }
