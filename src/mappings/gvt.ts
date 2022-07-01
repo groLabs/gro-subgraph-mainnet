@@ -1,78 +1,96 @@
-/*
+import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 import {
-  GvtApproval as GvtApprovalEvent,
-  LogAddToWhitelist as LogAddToWhitelistEvent,
-  LogRemoveFromWhitelist as LogRemoveFromWhitelistEvent,
-  LogTransfer as LogTransferEvent,
-  GvtOwnershipTransferred as GvtOwnershipTransferredEvent,
-  GvtTransfer as GvtTransferEvent
-} from "../generated/Gvt/Gvt"
+  Approval as ApprovalEvent,
+  Transfer as TransferEvent
+} from '../../generated/Gvt/ERC20'
 import {
-  GvtApproval,
-  LogAddToWhitelist,
-  LogRemoveFromWhitelist,
-  LogTransfer,
-  GvtOwnershipTransferred,
-  GvtTransfer
-} from "../generated/schema"
+  User,
+  CoreTx
+} from "../../generated/schema"
+import {
+  NO_ADDR,
+  ZERO_ADDR
+} from '../utils/constants'
 
-export function handleGvtApproval(event: GvtApprovalEvent): void {
-  let entity = new GvtApproval(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.owner = event.params.owner
-  entity.spender = event.params.spender
-  entity.value = event.params.value
-  entity.save()
-}
+// export function handleGvtApproval(event: GvtApprovalEvent): void {
+//   let entity = new GvtApproval(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   entity.owner = event.params.owner
+//   entity.spender = event.params.spender
+//   entity.value = event.params.value
+//   entity.save()
+// }
 
-export function handleLogAddToWhitelist(event: LogAddToWhitelistEvent): void {
-  let entity = new LogAddToWhitelist(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.user = event.params.user
-  entity.save()
-}
-
-export function handleLogRemoveFromWhitelist(
-  event: LogRemoveFromWhitelistEvent
+function parseTx<T>(
+  event: T,
+  userAddress: string,
+  spenderAddress: Bytes,
+  type: string
 ): void {
-  let entity = new LogRemoveFromWhitelist(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+
+  // Step 1: create User if first transaction
+  let user = User.load(userAddress)
+  if (!user) {
+    user = new User(userAddress)
+    user.save()
+  }
+
+  //Step 2: create Transaction
+  const id = (type == 'transfer_in')
+    ? '_in'
+    : (type == 'transfer_out')
+      ? '_out'
+      : ''
+  let tx = new CoreTx(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString() + id
   )
-  entity.user = event.params.user
-  entity.save()
+  tx.userAddress = userAddress
+  tx.contractAddress = event.address
+  tx.block = event.block.number.toI32()
+  tx.timestamp = event.block.timestamp.toI32()
+  tx.token = 'gvt'
+  tx.type = type
+  tx.coinAmount = event.params.value
+  tx.usdAmount = BigInt.fromI32(0)
+  tx.spenderAddress = spenderAddress
+  tx.save()
 }
 
-export function handleLogTransfer(event: LogTransferEvent): void {
-  let entity = new LogTransfer(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.sender = event.params.sender
-  entity.recipient = event.params.recipient
-  entity.amount = event.params.amount
-  entity.factor = event.params.factor
-  entity.save()
+// case A -> if from == 0x, deposit
+// case B -> if to == 0x, withdrawal
+// case C -> else, transfer between users (transfer_in & transfer_out)
+export function handleTransfer(event: TransferEvent): void {
+  let type: string = ''
+  let userAddressIn: string = ''
+  let userAddressOut: string = ''
+
+  // Determine event type (mint, burn or transfer)
+  if (event.params.from.toHexString() == ZERO_ADDR) {
+    userAddressIn = event.params.to.toHexString()
+    type = 'deposit'
+  } else if (event.params.to.toHexString() == ZERO_ADDR) {
+    userAddressOut = event.params.from.toHexString()
+    type = 'withdrawal'
+  } else {
+    userAddressIn = event.params.to.toHexString()
+    userAddressOut = event.params.from.toHexString()
+  }
+
+  // Create one tx (mint OR burn) or two txs (transfer_in AND transfer_out)
+  if (type !== '') {
+    const userAddress = (type == 'deposit')
+      ? userAddressIn
+      : userAddressOut
+    parseTx(event, userAddress, NO_ADDR, type)
+  } else {
+    parseTx(event, userAddressIn, NO_ADDR, 'transfer_in')
+    parseTx(event, userAddressOut, NO_ADDR, 'transfer_out')
+  }
 }
 
-export function handleGvtOwnershipTransferred(
-  event: GvtOwnershipTransferredEvent
-): void {
-  let entity = new GvtOwnershipTransferred(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-  entity.save()
+export function handleApproval(event: ApprovalEvent): void {
+  const userAddress = event.params.owner.toHexString()
+  const spenderAddress = event.params.spender
+  parseTx(event, userAddress, spenderAddress, 'approval')
 }
-
-export function handleGvtTransfer(event: GvtTransferEvent): void {
-  let entity = new GvtTransfer(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.value = event.params.value
-  entity.save()
-}
-*/

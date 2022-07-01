@@ -133,6 +133,8 @@ enum Token {
 enum TxType {
   deposit
   withdrawal
+  transfer_in
+  transfer_out
   claim
   vest
   approval
@@ -140,14 +142,27 @@ enum TxType {
 
 # New entities
 
-
-
 type User @entity {
   id: ID!
-  txs: [Transaction!] @derivedFrom(field: "userAddress")
+  # migrated: boolean
+  coreTxs: [CoreTx!] @derivedFrom(field: "userAddress")
+  poolTxs: [PoolTx!] @derivedFrom(field: "userAddress")
 }
 
-type Transaction @entity {
+type CoreTx @entity {
+  id: ID!
+  userAddress: User!
+  spenderAddress: Bytes
+  contractAddress: Bytes!
+  block: Int! 
+  timestamp: Int!
+  type: TxType!
+  token: Token!
+  coinAmount: BigInt!
+  usdAmount: BigInt!
+}
+
+type PoolTx @entity {
   id: ID!
   userAddress: User!
   contractAddress: Bytes!
@@ -157,9 +172,4 @@ type Transaction @entity {
   timestamp: Int!
   type: TxType!
   coinAmount: BigInt!
-  usdAmount: BigInt!
 }
-
-# PoolTransaction
-# CoreTransaction
-
