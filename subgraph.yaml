@@ -14,22 +14,22 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        # - LogClaim
-        # - LogMultiClaim
+        - LogClaim
         - LogDeposit
-        # - LogWithdraw
+        - LogWithdraw
+        # - LogMultiClaim
         # - LogMultiWithdraw
         # - LogEmergencyWithdraw
       abis:
         - name: LpTokenStaker
           file: ./abis/LpTokenStakerV1.json
       eventHandlers:
-        # - event: LogClaim(indexed address,bool,indexed uint256,uint256)
-        #   handler: handleLogClaim
-        # - event: LogMultiClaim(indexed address,bool,uint256[],uint256)
-        #   handler: handleLogMultiClaim
+        - event: LogClaim(indexed address,indexed uint256,uint256)
+          handler: handleLogClaimV1
         - event: LogDeposit(indexed address,indexed uint256,uint256)
           handler: handleLogDepositV1
+        - event: LogWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleLogWithdrawV1
       file: ./src/mappings/lp-token-staker.ts
   - kind: ethereum
     name: LpTokenStakerV2
@@ -43,10 +43,10 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        # - LogClaim
-        # - LogMultiClaim
+        - LogClaim
         - LogDeposit
-        # - LogWithdraw
+        - LogWithdraw
+        # - LogMultiClaim
         # - LogMultiWithdraw
         # - LogEmergencyWithdraw
         # - LogAddPool
@@ -72,14 +72,14 @@ dataSources:
         - name: LpTokenStaker
           file: ./abis/LpTokenStakerV2.json
       eventHandlers:
-        # - event: LogClaim(indexed address,bool,indexed uint256,uint256)
-        #   handler: handleLogClaim
-        # - event: LogMultiClaim(indexed address,bool,uint256[],uint256)
-        #   handler: handleLogMultiClaim
+        - event: LogClaim(indexed address,bool,indexed uint256,uint256)
+          handler: handleLogClaimV2
         - event: LogDeposit(indexed address,indexed uint256,uint256)
           handler: handleLogDepositV2
-        # - event: LogWithdraw(indexed address,indexed uint256,uint256)
-        #   handler: handleLogWithdraw
+        - event: LogWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleLogWithdrawV2
+        # - event: LogMultiClaim(indexed address,bool,uint256[],uint256)
+        #   handler: handleLogMultiClaim
         # - event: LogMultiWithdraw(indexed address,uint256[],uint256[])
         #   handler: handleLogMultiWithdraw
         # - event: LogEmergencyWithdraw(indexed address,indexed uint256,uint256)

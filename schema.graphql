@@ -117,6 +117,7 @@
 # New enums
 
 enum Token {
+  unknown
   pwrd
   gvt
   gro
@@ -139,17 +140,17 @@ enum TxType {
 
 # New entities
 
-type LogDeposit @entity {
+
+
+type User @entity {
   id: ID!
-  user: Bytes! # address
-  pid: BigInt! # uint256
-  amount: BigInt! # uint256
+  txs: [Transaction!] @derivedFrom(field: "userAddress")
 }
 
-# TODO: multiclaims, multiwithdrawals
 type Transaction @entity {
   id: ID!
-  userAddress: Bytes!
+  userAddress: User!
+  contractAddress: Bytes!
   poolId: Int
   token: Token!
   block: Int! 
@@ -159,7 +160,6 @@ type Transaction @entity {
   usdAmount: BigInt!
 }
 
-type User @entity {
-  id: ID!
-  txs: [Transaction!]
-}
+# PoolTransaction
+# CoreTransaction
+
