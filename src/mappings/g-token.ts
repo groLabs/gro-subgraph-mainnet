@@ -1,8 +1,12 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 import {
-  Approval as ApprovalEvent,
-  Transfer as TransferEvent
+  Approval as GvtApprovalEvent,
+  Transfer as GvtTransferEvent
 } from '../../generated/Gvt/ERC20'
+import {
+  Approval as PwrdApprovalEvent,
+  Transfer as PwrdTransferEvent
+} from '../../generated/Pwrd/ERC20'
 import {
   User,
   CoreTx
@@ -26,7 +30,8 @@ function parseTx<T>(
   event: T,
   userAddress: string,
   spenderAddress: Bytes,
-  type: string
+  type: string,
+  coin: string,
 ): void {
 
   // Step 1: create User if first transaction
@@ -49,7 +54,7 @@ function parseTx<T>(
   tx.contractAddress = event.address
   tx.block = event.block.number.toI32()
   tx.timestamp = event.block.timestamp.toI32()
-  tx.token = 'gvt'
+  tx.token = coin
   tx.type = type
   tx.coinAmount = event.params.value
   tx.usdAmount = BigInt.fromI32(0)
@@ -60,7 +65,10 @@ function parseTx<T>(
 // case A -> if from == 0x, deposit
 // case B -> if to == 0x, withdrawal
 // case C -> else, transfer between users (transfer_in & transfer_out)
-export function handleTransfer(event: TransferEvent): void {
+export function handleTransfer<T>(
+  event: T,
+  coin: string): void {
+
   let type: string = ''
   let userAddressIn: string = ''
   let userAddressOut: string = ''
@@ -82,15 +90,29 @@ export function handleTransfer(event: TransferEvent): void {
     const userAddress = (type == 'deposit')
       ? userAddressIn
       : userAddressOut
-    parseTx(event, userAddress, NO_ADDR, type)
+    parseTx(event, userAddress, NO_ADDR, type, coin)
   } else {
-    parseTx(event, userAddressIn, NO_ADDR, 'transfer_in')
-    parseTx(event, userAddressOut, NO_ADDR, 'transfer_out')
+    parseTx(event, userAddressIn, NO_ADDR, 'transfer_in', coin)
+    parseTx(event, userAddressOut, NO_ADDR, 'transfer_out', coin)
   }
 }
 
-export function handleApproval(event: ApprovalEvent): void {
+export function handleGvtTransfer(event: GvtTransferEvent): void {
+  handleTransfer(event, 'gvt')
+}
+
+export function handlePwrdTransfer(event: PwrdTransferEvent): void {
+  handleTransfer(event, 'pwrd')
+}
+
+export function handleGvtApproval(event: GvtApprovalEvent): void {
   const userAddress = event.params.owner.toHexString()
   const spenderAddress = event.params.spender
-  parseTx(event, userAddress, spenderAddress, 'approval')
+  parseTx(event, userAddress, spenderAddress, 'approval', 'gvt')
+}
+
+export function handlePwrdApproval(event: PwrdApprovalEvent): void {
+  const userAddress = event.params.owner.toHexString()
+  const spenderAddress = event.params.spender
+  parseTx(event, userAddress, spenderAddress, 'approval', 'pwrd')
 }

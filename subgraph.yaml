@@ -41,31 +41,8 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - LogClaim
-        - LogDeposit
-        - LogWithdraw
-        # - LogMultiClaim
-        # - LogMultiWithdraw
-        # - LogEmergencyWithdraw
-        # - LogAddPool
-        # - LogGroPerBlock
-        # - LogLpTokenAdded
-        # - LogMaxGroPerBlock
-        # - LogMigrate
-        # - LogMigrateFrom
-        # - LogMigrateFromV1
-        # - LogMigrateUser
-        # - LogNewManagment
-        # - LogNewPwrdPid
-        # - LogNewStaker
-        # - LogNewVester
-        # - LogOldStaker
-        # - LogSetPool
-        # - LogSetStatus
-        # - LogSetTimelock
-        # - LogUpdatePool
-        # - LogUserMigrateFromV1
-        # - OwnershipTransferred
+        - User
+        - PoolTx
       abis:
         - name: LpTokenStaker
           file: ./abis/LpTokenStakerV2.json
@@ -141,45 +118,34 @@ dataSources:
           file: ./abis/ERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
+          handler: handleGvtTransfer
         - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
-      file: ./src/mappings/gvt.ts
-  # - kind: ethereum
-  #   name: Pwrd
-  #   network: mainnet
-  #   source:
-  #     address: "0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b"
-  #     abi: Pwrd
-  #     startBlock: 12522247
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.5
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - PwrdApproval
-  #       - PwrdLogAddToWhitelist
-  #       - PwrdLogRemoveFromWhitelist
-  #       - PwrdLogTransfer
-  #       - PwrdOwnershipTransferred
-  #       - PwrdTransfer
-  #     abis:
-  #       - name: Pwrd
-  #         file: ./abis/Pwrd.json
-  #     eventHandlers:
-  #       - event: PwrdApproval(indexed address,indexed address,uint256)
-  #         handler: handlePwrdApproval
-  #       - event: PwrdLogAddToWhitelist(indexed address)
-  #         handler: handlePwrdLogAddToWhitelist
-  #       - event: PwrdLogRemoveFromWhitelist(indexed address)
-  #         handler: handlePwrdLogRemoveFromWhitelist
-  #       - event: PwrdLogTransfer(indexed address,indexed address,indexed uint256)
-  #         handler: handlePwrdLogTransfer
-  #       - event: PwrdOwnershipTransferred(indexed address,indexed address)
-  #         handler: handlePwrdOwnershipTransferred
-  #       - event: PwrdTransfer(indexed address,indexed address,uint256)
-  #         handler: handlePwrdTransfer
-  #     file: ./src/pwrd.ts
+          handler: handleGvtApproval
+      file: ./src/mappings/g-token.ts
+  - kind: ethereum
+    name: Pwrd
+    network: mainnet
+    source:
+      address: "0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b"
+      abi: ERC20
+      # startBlock: 12522247
+      startBlock: 14900000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - CoreTx
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handlePwrdTransfer
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handlePwrdApproval
+      file: ./src/mappings/g-token.ts
   # - kind: ethereum
   #   name: Gro
   #   network: mainnet
