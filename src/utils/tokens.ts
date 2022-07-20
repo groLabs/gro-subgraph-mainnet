@@ -1,3 +1,5 @@
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+
 const getTokenFromPoolId = (poolId: i32, type: string): string => {
     if (type == 'claim') return 'gro'
     switch (poolId) {
@@ -20,6 +22,14 @@ const getTokenFromPoolId = (poolId: i32, type: string): string => {
     }
 }
 
+const tokenToDecimal = (amount: BigInt, decimals: i32): BigDecimal => {
+    let scale = BigInt.fromI32(10)
+        .pow(decimals as u8)
+        .toBigDecimal();
+    return amount.toBigDecimal().div(scale);
+}
+
 export {
-    getTokenFromPoolId
+    getTokenFromPoolId,
+    tokenToDecimal,
 }
