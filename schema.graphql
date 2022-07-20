@@ -111,12 +111,12 @@ type User @entity {
 type Totals @entity {
   id: ID! # userAddress
   userAddress: User!
-  eth_amount_added_pwrd: BigDecimal
-  eth_amount_added_gvt: BigDecimal
-  eth_amount_added_total: BigDecimal
-  eth_amount_removed_pwrd: BigDecimal
-  eth_amount_removed_gvt: BigDecimal
-  eth_amount_removed_total: BigDecimal
+  eth_amount_added_pwrd: BigDecimal!
+  eth_amount_added_gvt: BigDecimal!
+  eth_amount_added_total: BigDecimal!
+  eth_amount_removed_pwrd: BigDecimal!
+  eth_amount_removed_gvt: BigDecimal!
+  eth_amount_removed_total: BigDecimal!
 }
 
 type CoreTx @entity {

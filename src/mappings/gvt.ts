@@ -1,14 +1,9 @@
-import { BigInt, Bytes, BigDecimal } from "@graphprotocol/graph-ts"
+import { Bytes, BigDecimal } from "@graphprotocol/graph-ts"
 import {
   Approval as GvtApprovalEvent,
   Transfer as GvtTransferEvent
 } from '../../generated/Gvt/ERC20'
-import {
-  Approval as PwrdApprovalEvent,
-  Transfer as PwrdTransferEvent
-} from '../../generated/Pwrd/ERC20'
 import { Gvt } from '../../generated/Gvt/Gvt';
-// import {} from '../../generated/Pwrd/';
 import {
   User,
   CoreTx,
@@ -20,34 +15,9 @@ import {
 } from '../utils/constants'
 import { tokenToDecimal } from '../utils/tokens'
 
-// export function handleGvtApproval(event: GvtApprovalEvent): void {
-//   let entity = new GvtApproval(
-//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-//   )
-//   entity.owner = event.params.owner
-//   entity.spender = event.params.spender
-//   entity.value = event.params.value
-//   entity.save()
-// }
 
-function calcUsdValue<T>(
-  event: T,
-  coin: string,
-): BigDecimal {
-  let price: BigDecimal
-  if (coin === 'gvt') {
-    let contract = Gvt.bind(event.address)
-    price = tokenToDecimal(contract.try_getPricePerShare().value, 18)
-  } else if (coin === 'pwrd') {
-    price = BigDecimal.fromString('1')
-  } else {
-    price = BigDecimal.fromString('0')
-  }
-  return price
-}
-
-function parseTx<T>(
-  event: T,
+function parseTx(
+  event: GvtTransferEvent,
   userAddress: string,
   spenderAddress: Bytes,
   type: string,
@@ -72,8 +42,9 @@ function parseTx<T>(
   )
 
   let coinAmount = tokenToDecimal(event.params.value, 18)
-  let price = calcUsdValue(event, coin)
-  
+  let contract = Gvt.bind(event.address)
+  let price: BigDecimal = tokenToDecimal(contract.try_getPricePerShare().value, 18)
+
   tx.userAddress = userAddress
   tx.contractAddress = event.address
   tx.block = event.block.number.toI32()
@@ -85,32 +56,38 @@ function parseTx<T>(
   tx.spenderAddress = spenderAddress
   tx.save()
 
-  //Step 3: update Total
+  //Step 3: update Totals
   let total = Totals.load(userAddress)
   if (!total) {
     total = new Totals(userAddress)
     total.userAddress = userAddress
     total.eth_amount_added_gvt = BigDecimal.fromString('0')
+    total.eth_amount_added_pwrd = BigDecimal.fromString('0')
+    total.eth_amount_added_total = BigDecimal.fromString('0')
+    total.eth_amount_removed_gvt = BigDecimal.fromString('0')
+    total.eth_amount_removed_pwrd = BigDecimal.fromString('0')
+    total.eth_amount_removed_total = BigDecimal.fromString('0')
   }
-  if (type === 'transfer_in') {
-    total.eth_amount_added_gvt += coinAmount
+  if (type === 'deposit' || type === 'transfer_in') {
+    total.eth_amount_added_gvt = total.eth_amount_added_gvt.plus(tx.usdAmount)
+    total.eth_amount_added_total = total.eth_amount_added_total.plus(tx.usdAmount)
+  } else if (type === 'withdrawal' || type === 'transfer_out') {
+    total.eth_amount_removed_gvt = total.eth_amount_removed_gvt.plus(tx.usdAmount)
+    total.eth_amount_removed_total = total.eth_amount_removed_total.plus(tx.usdAmount)
   }
   total.save()
-
 }
 
-// case A -> if from == 0x, deposit
-// case B -> if to == 0x, withdrawal
-// case C -> else, transfer between users (transfer_in & transfer_out)
-export function handleTransfer<T>(
-  event: T,
-  coin: string): void {
-
+export function handleGvtTransfer(event: GvtTransferEvent): void {
   let type: string = ''
   let userAddressIn: string = ''
   let userAddressOut: string = ''
+  const coin = 'gvt'
 
-  // Determine event type (mint, burn or transfer)
+  // Determine event type (deposit, withdrawal or transfer):
+  // case A -> if from == 0x, deposit (mint)
+  // case B -> if to == 0x, withdrawal (burn)
+  // case C -> else, transfer between users (transfer_in & transfer_out)
   if (event.params.from.toHexString() == ZERO_ADDR) {
     userAddressIn = event.params.to.toHexString()
     type = 'deposit'
@@ -134,22 +111,8 @@ export function handleTransfer<T>(
   }
 }
 
-export function handleGvtTransfer(event: GvtTransferEvent): void {
-  handleTransfer(event, 'gvt')
-}
-
-export function handlePwrdTransfer(event: PwrdTransferEvent): void {
-  handleTransfer(event, 'pwrd')
-}
-
-export function handleGvtApproval(event: GvtApprovalEvent): void {
-  const userAddress = event.params.owner.toHexString()
-  const spenderAddress = event.params.spender
-  parseTx(event, userAddress, spenderAddress, 'approval', 'gvt')
-}
-
-export function handlePwrdApproval(event: PwrdApprovalEvent): void {
-  const userAddress = event.params.owner.toHexString()
-  const spenderAddress = event.params.spender
-  parseTx(event, userAddress, spenderAddress, 'approval', 'pwrd')
-}
+// export function handleGvtApproval(event: GvtApprovalEvent): void {
+//   const userAddress = event.params.owner.toHexString()
+//   const spenderAddress = event.params.spender
+//   parseTx(event, userAddress, spenderAddress, 'approval', 'gvt')
+// }

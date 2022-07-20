@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, ethereum } from "@graphprotocol/graph-ts"
 import {
   LogClaim as LogClaimEventV1,
   LogDeposit as LogDepositEventV1,
@@ -11,7 +11,7 @@ import {
 } from "../../generated/LPTokenStakerV2/LPTokenStaker"
 import {
   User,
-  PoolTx
+  PoolTx,
 } from "../../generated/schema"
 import { getTokenFromPoolId } from "../utils/tokens"
 
