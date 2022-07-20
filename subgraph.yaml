@@ -78,8 +78,8 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleGvtTransfer
-        # - event: Approval(indexed address,indexed address,uint256)
-        #   handler: handleGvtApproval
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleGvtApproval
       file: ./src/mappings/gvt.ts
   - kind: ethereum
     name: Pwrd
@@ -88,7 +88,7 @@ dataSources:
       address: "0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b"
       abi: ERC20
       # startBlock: 12522247
-      startBlock: 14700000
+      startBlock: 15000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -105,8 +105,8 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handlePwrdTransfer
-        # - event: Approval(indexed address,indexed address,uint256)
-        #   handler: handlePwrdApproval
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handlePwrdApproval
       file: ./src/mappings/pwrd.ts
   # - kind: ethereum
   #   name: GROVestingV1
