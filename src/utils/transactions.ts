@@ -1,6 +1,18 @@
-import { CoreTx, Totals } from '../../generated/schema'
-import { tokenToDecimal } from '../utils/tokens'
-import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import {
+    Address,
+    BigDecimal,
+    BigInt,
+    Bytes
+} from '@graphprotocol/graph-ts';
+import {
+    CoreTx,
+    Totals
+} from '../../generated/schema';
+import {
+    tokenToDecimal,
+    getPricePerShare,
+} from '../utils/tokens';
+
 
 const setCoreTx = (
     id: string,
@@ -13,16 +25,19 @@ const setCoreTx = (
     timestamp: BigInt,
     value: BigInt
 ): CoreTx => {
+    const coinAmount = tokenToDecimal(value, 18);
+    const pricePerShare = getPricePerShare(
+        contractAddress,
+        token,
+    );
     const transfer_tag = (type == 'transfer_in')
-        ? '_in'
+        ? '-in'
         : (type == 'transfer_out')
-            ? '_out'
+            ? '-out'
             : '';
     let tx = new CoreTx(
         id + transfer_tag
     );
-
-    const coinAmount = tokenToDecimal(value, 18);
 
     tx.userAddress = userAddress;
     tx.contractAddress = contractAddress;
@@ -32,7 +47,7 @@ const setCoreTx = (
     tx.type = type;
     tx.hash = Bytes.fromHexString(id.split('-')[0]);
     tx.coinAmount = coinAmount;
-    tx.usdAmount = coinAmount;
+    tx.usdAmount = coinAmount.times(pricePerShare);
     tx.spenderAddress = spenderAddress;
     tx.save();
     return tx;
@@ -72,7 +87,7 @@ const setTotals = (
         }
         total.eth_amount_removed_total = total.eth_amount_removed_total.plus(usdAmount);
     }
-    
+
     total.save();
 }
 

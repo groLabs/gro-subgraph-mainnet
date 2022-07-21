@@ -50,6 +50,7 @@ function parseApproval(
   userAddress: string,
   spenderAddress: Bytes,
 ): void {
+  
   // Step 1: Manage User
   setUser(userAddress);
 
@@ -67,7 +68,7 @@ function parseApproval(
   );
 }
 
-export function handlePwrdTransfer(event: PwrdTransferEvent): void {
+export function handleTransfer(event: PwrdTransferEvent): void {
   let type: string = '';
   let userAddressIn: string = '';
   let userAddressOut: string = '';
@@ -99,7 +100,7 @@ export function handlePwrdTransfer(event: PwrdTransferEvent): void {
   }
 }
 
-export function handlePwrdApproval(event: PwrdApprovalEvent): void {
+export function handleApproval(event: PwrdApprovalEvent): void {
   const userAddress = event.params.owner.toHexString();
   const spenderAddress = event.params.spender;
   parseApproval(event, userAddress, spenderAddress);

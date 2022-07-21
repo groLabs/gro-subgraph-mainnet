@@ -2,6 +2,86 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
+  - kind: ethereum
+    name: Gvt
+    network: mainnet
+    source:
+      address: "0x3ADb04E127b9C0a5D36094125669d4603AC52a0c"
+      abi: ERC20
+      # startBlock: 12522446
+      startBlock: 15000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - CoreTx
+        - Totals
+      abis:
+        - name: Gvt
+          file: ./abis/Gvt.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mappings/gvt.ts
+  - kind: ethereum
+    name: Pwrd
+    network: mainnet
+    source:
+      address: "0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b"
+      abi: ERC20
+      # startBlock: 12522247
+      startBlock: 15000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - CoreTx
+        - Totals
+      abis:
+        - name: Pwrd
+          file: ./abis/Pwrd.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mappings/pwrd.ts
+  # - kind: ethereum
+  #   name: Gro
+  #   network: mainnet
+  #   source:
+  #     address: "0x3Ec8798B81485A254928B70CDA1cf0A2BB0B74D7"
+  #     abi: Gro
+  #     startBlock: 13265186
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.5
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - User
+  #       - CoreTx
+  #       - Totals
+  #     abis:
+  #       - name: Gro
+  #         file: ./abis/Gro.json
+  #       - name: ERC20
+  #         file: ./abis/ERC20.json
+  #     eventHandlers:
+  #       - event: Transfer(indexed address,indexed address,uint256)
+  #         handler: handleTransfer
+  #       - event: Approval(indexed address,indexed address,uint256)
+  #         handler: handleApproval
+  #     file: ./src/mappings/gro.ts
   # - kind: ethereum
   #   name: LpTokenStakerV1
   #   network: mainnet
@@ -54,60 +134,6 @@ dataSources:
   #       - event: LogWithdraw(indexed address,indexed uint256,uint256)
   #         handler: handleLogWithdrawV2
   #     file: ./src/mappings/lp-token-staker.ts
-  - kind: ethereum
-    name: Gvt
-    network: mainnet
-    source:
-      address: "0x3ADb04E127b9C0a5D36094125669d4603AC52a0c"
-      abi: ERC20
-      # startBlock: 12522446
-      startBlock: 15000000
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - User
-        - CoreTx
-        - Totals
-      abis:
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: Gvt
-          file: ./abis/Gvt.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleGvtTransfer
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleGvtApproval
-      file: ./src/mappings/gvt.ts
-  - kind: ethereum
-    name: Pwrd
-    network: mainnet
-    source:
-      address: "0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b"
-      abi: ERC20
-      # startBlock: 12522247
-      startBlock: 15000000
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - User
-        - CoreTx
-        - Totals
-      abis:
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: Pwrd
-          file: ./abis/Pwrd.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handlePwrdTransfer
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handlePwrdApproval
-      file: ./src/mappings/pwrd.ts
   # - kind: ethereum
   #   name: GROVestingV1
   #   network: mainnet
@@ -175,35 +201,3 @@ dataSources:
   #     blockHandlers:
   #       - handler: handleBlock
   #     file: ./src/mappings/block.ts
-  # - kind: ethereum
-  #   name: Gro
-  #   network: mainnet
-  #   source:
-  #     address: "0x3Ec8798B81485A254928B70CDA1cf0A2BB0B74D7"
-  #     abi: Gro
-  #     startBlock: 13265186
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.5
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - Approval
-  #       - LogDistributer
-  #       - LogInflationRate
-  #       - GroOwnershipTransferred
-  #       - Transfer
-  #     abis:
-  #       - name: Gro
-  #         file: ./abis/Gro.json
-  #     eventHandlers:
-  #       - event: Approval(indexed address,indexed address,uint256)
-  #         handler: handleApproval
-  #       - event: LogDistributer(address)
-  #         handler: handleLogDistributer
-  #       - event: LogInflationRate(uint256,uint256,uint256,uint256)
-  #         handler: handleLogInflationRate
-  #       - event: GroOwnershipTransferred(indexed address,indexed address)
-  #         handler: handleGroOwnershipTransferred
-  #       - event: Transfer(indexed address,indexed address,uint256)
-  #         handler: handleTransfer
-  #     file: ./src/gro.ts

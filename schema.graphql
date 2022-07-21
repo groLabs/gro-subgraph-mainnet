@@ -1,5 +1,5 @@
 
-# New enums
+# Enums
 
 enum Token {
   unknown
@@ -28,7 +28,7 @@ enum TxType {
 # Entities
 
 type User @entity {
-  id: ID! 
+  id: ID! # userAddress
   timestamp: Int
   coreTxs: [CoreTx!] @derivedFrom(field: "userAddress")
   poolTxs: [PoolTx!] @derivedFrom(field: "userAddress")
@@ -47,7 +47,7 @@ type Totals @entity {
 }
 
 type CoreTx @entity {
-  id: ID!
+  id: ID! # hash-logIndex(-in|-out)
   userAddress: User!
   spenderAddress: Bytes
   contractAddress: Bytes!
@@ -61,7 +61,7 @@ type CoreTx @entity {
 }
 
 type PoolTx @entity {
-  id: ID!
+  id: ID! # hash-logIndex
   userAddress: User!
   contractAddress: Bytes!
   poolId: Int

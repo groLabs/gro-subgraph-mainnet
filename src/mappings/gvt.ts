@@ -20,10 +20,10 @@ function parseTransfer(
   type: string,
 ): void {
 
-  // Step 1: create User if first transaction
+  // Step 1: Manage User
   setUser(userAddress);
 
-  //Step 2: create Transaction
+  //Step 2: Manage Transaction
   const tx = setCoreTx(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString(), // id
     type, // type
@@ -36,7 +36,7 @@ function parseTransfer(
     event.params.value, // value
   );
 
-  //Step 3: update Totals
+  //Step 3: Manage Totals
   setTotals(
     type, // type
     'gvt', // coin
@@ -50,6 +50,7 @@ function parseApproval(
   userAddress: string,
   spenderAddress: Bytes,
 ): void {
+
   // Step 1: Manage User
   setUser(userAddress);
 
@@ -67,7 +68,7 @@ function parseApproval(
   );
 }
 
-export function handleGvtTransfer(event: GvtTransferEvent): void {
+export function handleTransfer(event: GvtTransferEvent): void {
   let type: string = '';
   let userAddressIn: string = '';
   let userAddressOut: string = '';
@@ -99,7 +100,7 @@ export function handleGvtTransfer(event: GvtTransferEvent): void {
   }
 }
 
-export function handleGvtApproval(event: GvtApprovalEvent): void {
+export function handleApproval(event: GvtApprovalEvent): void {
   const userAddress = event.params.owner.toHexString();
   const spenderAddress = event.params.spender;
   parseApproval(event, userAddress, spenderAddress);
