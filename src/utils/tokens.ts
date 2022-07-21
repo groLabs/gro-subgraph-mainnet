@@ -23,7 +23,7 @@ const getPricePerShare = (
             log.info('getPricePerShare() reverted in src/utils/tokens.ts', []);
             price = ZERO;
         } else {
-            price = tokenToDecimal(pricePerShare.value, 18);
+            price = tokenToDecimal(pricePerShare.value, 18, 7);
         }
     } else if (token === 'pwrd') {
         price = ONE;
@@ -58,15 +58,18 @@ const getTokenFromPoolId = (
     }
 }
 
-// TODO: pass precision & decimals
+// Converts a BigInt into a 7-decimal BigDecimal
 function tokenToDecimal(
     amount: BigInt,
-    decimals: i32
+    precision: i32,
+    decimals: i32,
 ): BigDecimal {
-    let scale = BigInt.fromI32(10)
-        .pow(decimals as u8)
+    const scale = BigInt.fromI32(10)
+        .pow(precision as u8)
         .toBigDecimal();
-    return amount.toBigDecimal().div(scale);
+    return amount.toBigDecimal()
+        .div(scale)
+        .truncate(decimals);
 }
 
 export {

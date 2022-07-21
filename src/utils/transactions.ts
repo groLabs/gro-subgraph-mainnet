@@ -25,7 +25,7 @@ const setCoreTx = (
     timestamp: BigInt,
     value: BigInt
 ): CoreTx => {
-    const coinAmount = tokenToDecimal(value, 18);
+    const coinAmount = tokenToDecimal(value, 18, 7);
     const pricePerShare = getPricePerShare(
         contractAddress,
         token,
