@@ -30,8 +30,8 @@ enum TxType {
 type User @entity {
   id: ID! # userAddress
   timestamp: Int
-  coreTxs: [CoreTx!] @derivedFrom(field: "userAddress")
-  poolTxs: [PoolTx!] @derivedFrom(field: "userAddress")
+  transfers: [TransferTx!] @derivedFrom(field: "userAddress")
+  approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
   totals: Totals! @derivedFrom(field: "userAddress")
 }
 
@@ -46,33 +46,49 @@ type Totals @entity {
   eth_amount_removed_total: BigDecimal!
 }
 
-type CoreTx @entity {
+
+type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
-  userAddress: User!
-  spenderAddress: Bytes
   contractAddress: Bytes!
   block: Int! 
   timestamp: Int!
   hash: Bytes!
   type: TxType!
   token: Token!
+  userAddress: User!
+  fromAddress: Bytes!
+  toAddress: Bytes!
   coinAmount: BigDecimal!
   usdAmount: BigDecimal!
 }
 
-type PoolTx @entity {
-  id: ID! # hash-logIndex
-  userAddress: User!
+type ApprovalTx @entity {
+  id: ID! # hash-logIndex(-in|-out)
   contractAddress: Bytes!
-  poolId: Int
-  token: Token!
   block: Int! 
   timestamp: Int!
   hash: Bytes!
   type: TxType!
-  coinAmount: BigInt!
-  timestamp2: Int
+  token: Token!
+  ownerAddress: User!
+  spenderAddress: Bytes
+  coinAmount: BigDecimal!
+  usdAmount: BigDecimal!
 }
+
+# type PoolTx @entity {
+#   id: ID! # hash-logIndex
+#   userAddress: User!
+#   contractAddress: Bytes!
+#   poolId: Int
+#   token: Token!
+#   block: Int! 
+#   timestamp: Int!
+#   hash: Bytes!
+#   type: TxType!
+#   coinAmount: BigInt!
+#   timestamp2: Int
+# }
 
 #---
 

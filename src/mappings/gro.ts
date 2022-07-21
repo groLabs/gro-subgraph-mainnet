@@ -10,10 +10,11 @@ import {
 
 export function handleTransfer(event: GvtTransferEvent): void {
     const ev = parseTransferEvent(event);
-    manageTransfer(ev, 'pwrd');
+    manageTransfer(ev, 'gro');
   }
   
   export function handleApproval(event: GvtApprovalEvent): void {
     const ev = parseApprovalEvent(event);
-    manageApproval(ev, 'pwrd');
+    manageApproval(ev, 'gro');
   }
+  
