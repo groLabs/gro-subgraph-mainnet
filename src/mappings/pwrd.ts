@@ -1,14 +1,17 @@
-import { Bytes } from "@graphprotocol/graph-ts"
+import { Bytes } from '@graphprotocol/graph-ts';
 import {
   Approval as PwrdApprovalEvent,
   Transfer as PwrdTransferEvent
-} from '../../generated/Pwrd/ERC20'
+} from '../../generated/Pwrd/ERC20';
 import {
   NO_ADDR,
   ZERO_ADDR
-} from '../utils/constants'
-import { setUser } from '../utils/users'
-import { setCoreTx, setTotals } from '../utils/transactions'
+} from '../utils/constants';
+import { setUser } from '../utils/users';
+import {
+  setCoreTx,
+  setTotals
+} from '../utils/transactions';
 
 
 function parseTransfer(
@@ -47,26 +50,21 @@ function parseApproval(
   userAddress: string,
   spenderAddress: Bytes,
 ): void {
-  // // Step 1: create User if first transaction
-  // const user = setUser(userAddress);
+  // Step 1: Manage User
+  setUser(userAddress);
 
-  // //Step 2: create Transaction
-  // let tx = new CoreTx(
-  //   event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  // );
-
-  // const coinAmount = tokenToDecimal(event.params.value, 18);
-
-  // tx.userAddress = userAddress;
-  // tx.contractAddress = event.address.toHexString();
-  // tx.block = event.block.number.toI32();
-  // tx.timestamp = event.block.timestamp.toI32();
-  // tx.token = 'pwrd';
-  // tx.type = 'approval';
-  // tx.coinAmount = coinAmount;
-  // tx.usdAmount = coinAmount;
-  // tx.spenderAddress = spenderAddress;
-  // tx.save();
+  //Step 2: Manage Transaction
+  const tx = setCoreTx(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString(), // id
+    'approval', // type
+    'pwrd', // coin
+    userAddress, // userAddress
+    event.address, // contractAddress
+    spenderAddress, // spenderAddress
+    event.block.number, // block
+    event.block.timestamp, // timestamp
+    event.params.value, // value
+  );
 }
 
 export function handlePwrdTransfer(event: PwrdTransferEvent): void {
@@ -102,7 +100,7 @@ export function handlePwrdTransfer(event: PwrdTransferEvent): void {
 }
 
 export function handlePwrdApproval(event: PwrdApprovalEvent): void {
-  // const userAddress = event.params.owner.toHexString()
-  // const spenderAddress = event.params.spender
-  // parseTx(event, userAddress, spenderAddress, 'approval', 'pwrd')
+  const userAddress = event.params.owner.toHexString();
+  const spenderAddress = event.params.spender;
+  parseApproval(event, userAddress, spenderAddress);
 }

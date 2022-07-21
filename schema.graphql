@@ -1,4 +1,125 @@
 
+# New enums
+
+enum Token {
+  unknown
+  pwrd
+  gvt
+  gro
+  usdc
+  usdt
+  dai
+  balancer_gro_weth
+  uniswap_gvt_gro
+  uniswap_gro_usdc
+  curve_pwrd3crv
+}
+
+enum TxType {
+  deposit
+  withdrawal
+  transfer_in
+  transfer_out
+  claim
+  vest
+  approval
+}
+
+# Entities
+
+type User @entity {
+  id: ID! 
+  timestamp: Int
+  coreTxs: [CoreTx!] @derivedFrom(field: "userAddress")
+  poolTxs: [PoolTx!] @derivedFrom(field: "userAddress")
+  totals: Totals! @derivedFrom(field: "userAddress")
+}
+
+type Totals @entity {
+  id: ID! # userAddress
+  userAddress: User!
+  eth_amount_added_pwrd: BigDecimal!
+  eth_amount_added_gvt: BigDecimal!
+  eth_amount_added_total: BigDecimal!
+  eth_amount_removed_pwrd: BigDecimal!
+  eth_amount_removed_gvt: BigDecimal!
+  eth_amount_removed_total: BigDecimal!
+}
+
+type CoreTx @entity {
+  id: ID!
+  userAddress: User!
+  spenderAddress: Bytes
+  contractAddress: Bytes!
+  block: Int! 
+  timestamp: Int!
+  hash: Bytes!
+  type: TxType!
+  token: Token!
+  coinAmount: BigDecimal!
+  usdAmount: BigDecimal!
+}
+
+type PoolTx @entity {
+  id: ID!
+  userAddress: User!
+  contractAddress: Bytes!
+  poolId: Int
+  token: Token!
+  block: Int! 
+  timestamp: Int!
+  hash: Bytes!
+  type: TxType!
+  coinAmount: BigInt!
+  timestamp2: Int
+}
+
+#---
+
+# type User2 @entity {
+#   id: ID!
+#   # migrated: Boolean!
+#   # timestamp: Int
+#   transaction: [Transactions!] @derivedFrom(field: "userAddress")
+# }
+
+# type Transactions @entity {
+#   id: ID!
+#   userAddress: User2!
+#   deposits: [TransferTx!] @derivedFrom(field: "userAddress")
+#   withdrawals: [TransferTx!] @derivedFrom(field: "userAddress")
+#   transfers_in: [TransferTx!] @derivedFrom(field: "userAddress")
+#   transfers_out: [TransferTx!] @derivedFrom(field: "userAddress")
+#   approvals: [ApprovalTx!] @derivedFrom(field: "userAddress")
+# }
+
+# type TransferTx @entity {
+#   id: ID!
+#   userAddress: Transactions!
+#   contractAddress: Bytes!
+#   block: Int!
+#   token: Token!
+#   type: TxType!
+#   hash: Bytes!
+#   timestamp: Int!
+#   coinAmount: BigDecimal!
+#   usdAmount: BigDecimal!
+# }
+
+# type ApprovalTx @entity {
+#   id: ID!
+#   userAddress: Transactions!
+#   token: Token!
+#   hash: Bytes!
+#   spender: Bytes!
+#   timestamp: Int!
+#   usd_amount: Int!
+#   coin_amount: Int!
+#   block_number: Int!
+# }
+
+
+
 # type ExampleEntity @entity {
 #   id: ID!
 #   count: BigInt!
@@ -69,125 +190,3 @@
 #   previousOwner: Bytes! # address
 #   newOwner: Bytes! # address
 # }
-
-
-
-# New enums
-
-enum Token {
-  unknown
-  pwrd
-  gvt
-  gro
-  usdc
-  usdt
-  dai
-  balancer_gro_weth
-  uniswap_gvt_gro
-  uniswap_gro_usdc
-  curve_pwrd3crv
-}
-
-enum TxType {
-  deposit
-  withdrawal
-  transfer_in
-  transfer_out
-  claim
-  vest
-  approval
-}
-
-# New entities
-
-type User @entity {
-  id: ID! 
-  timestamp: Int
-  coreTxs: [CoreTx!] @derivedFrom(field: "userAddress")
-  poolTxs: [PoolTx!] @derivedFrom(field: "userAddress")
-  totals: Totals! @derivedFrom(field: "userAddress")
-}
-
-type Totals @entity {
-  id: ID! # userAddress
-  userAddress: User!
-  eth_amount_added_pwrd: BigDecimal!
-  eth_amount_added_gvt: BigDecimal!
-  eth_amount_added_total: BigDecimal!
-  eth_amount_removed_pwrd: BigDecimal!
-  eth_amount_removed_gvt: BigDecimal!
-  eth_amount_removed_total: BigDecimal!
-}
-
-type CoreTx @entity {
-  id: ID!
-  userAddress: User!
-  spenderAddress: Bytes
-  contractAddress: Bytes!
-  block: Int! 
-  timestamp: Int!
-  type: TxType!
-  token: Token!
-  coinAmount: BigDecimal!
-  usdAmount: BigDecimal!
-}
-
-type PoolTx @entity {
-  id: ID!
-  userAddress: User!
-  contractAddress: Bytes!
-  poolId: Int
-  token: Token!
-  block: Int! 
-  timestamp: Int!
-  type: TxType!
-  coinAmount: BigInt!
-  timestamp2: Int
-}
-
-#---
-
-# type User2 @entity {
-#   id: ID!
-#   # migrated: Boolean!
-#   # timestamp: Int
-#   transaction: [Transactions!] @derivedFrom(field: "userAddress")
-# }
-
-# type Transactions @entity {
-#   id: ID!
-#   userAddress: User2!
-#   deposits: [TransferTx!] @derivedFrom(field: "userAddress")
-#   withdrawals: [TransferTx!] @derivedFrom(field: "userAddress")
-#   transfers_in: [TransferTx!] @derivedFrom(field: "userAddress")
-#   transfers_out: [TransferTx!] @derivedFrom(field: "userAddress")
-#   approvals: [ApprovalTx!] @derivedFrom(field: "userAddress")
-# }
-
-# type TransferTx @entity {
-#   id: ID!
-#   userAddress: Transactions!
-#   contractAddress: Bytes!
-#   block: Int!
-#   token: Token!
-#   type: TxType!
-#   hash: Bytes!
-#   timestamp: Int!
-#   coinAmount: BigDecimal!
-#   usdAmount: BigDecimal!
-# }
-
-# type ApprovalTx @entity {
-#   id: ID!
-#   userAddress: Transactions!
-#   token: Token!
-#   hash: Bytes!
-#   spender: Bytes!
-#   timestamp: Int!
-#   usd_amount: Int!
-#   coin_amount: Int!
-#   block_number: Int!
-# }
-
-
-

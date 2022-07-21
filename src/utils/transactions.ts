@@ -30,6 +30,7 @@ const setCoreTx = (
     tx.timestamp = timestamp.toI32();
     tx.token = token;
     tx.type = type;
+    tx.hash = Bytes.fromHexString(id.split('-')[0]);
     tx.coinAmount = coinAmount;
     tx.usdAmount = coinAmount;
     tx.spenderAddress = spenderAddress;

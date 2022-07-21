@@ -1,13 +1,17 @@
+import { Bytes } from '@graphprotocol/graph-ts';
 import {
   Approval as GvtApprovalEvent,
   Transfer as GvtTransferEvent
-} from '../../generated/Gvt/ERC20'
+} from '../../generated/Gvt/ERC20';
 import {
   NO_ADDR,
-  ZERO_ADDR
+  ZERO_ADDR,
 } from '../utils/constants';
 import { setUser } from '../utils/users';
-import { setCoreTx, setTotals } from '../utils/transactions'
+import {
+  setCoreTx,
+  setTotals
+} from '../utils/transactions';
 
 
 function parseTransfer(
@@ -17,7 +21,7 @@ function parseTransfer(
 ): void {
 
   // Step 1: create User if first transaction
-  setUser(userAddress)
+  setUser(userAddress);
 
   //Step 2: create Transaction
   const tx = setCoreTx(
@@ -41,8 +45,29 @@ function parseTransfer(
   );
 }
 
+function parseApproval(
+  event: GvtApprovalEvent,
+  userAddress: string,
+  spenderAddress: Bytes,
+): void {
+  // Step 1: Manage User
+  setUser(userAddress);
+
+  //Step 2: Manage Transaction
+  const tx = setCoreTx(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString(), // id
+    'approval', // type
+    'gvt', // coin
+    userAddress, // userAddress
+    event.address, // contractAddress
+    spenderAddress, // spenderAddress
+    event.block.number, // block
+    event.block.timestamp, // timestamp
+    event.params.value, // value
+  );
+}
+
 export function handleGvtTransfer(event: GvtTransferEvent): void {
-  const coin: string = 'gvt';
   let type: string = '';
   let userAddressIn: string = '';
   let userAddressOut: string = '';
@@ -75,7 +100,7 @@ export function handleGvtTransfer(event: GvtTransferEvent): void {
 }
 
 export function handleGvtApproval(event: GvtApprovalEvent): void {
-  // const userAddress = event.params.owner.toHexString()
-  // const spenderAddress = event.params.spender
-  // parseTx(event, userAddress, spenderAddress, 'approval', 'gvt')
+  const userAddress = event.params.owner.toHexString();
+  const spenderAddress = event.params.spender;
+  parseApproval(event, userAddress, spenderAddress);
 }
