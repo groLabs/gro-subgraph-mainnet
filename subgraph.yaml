@@ -83,11 +83,7 @@ dataSources:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/gro.ts
-
-
-
-
-
+# AVALANCHE CONTRACTS
   # - kind: ethereum
   #   name: avaxdaivault_v1_7
   #   network: avalanche
@@ -106,7 +102,7 @@ dataSources:
   #       # - Totals
   #     abis:
   #       - name: avaxdaivault_v1_7
-  #         file: ./abis/ethereum/VaultAdaptorMK2_v1_7.json
+  #         file: ./abis/avalanche/VaultAdaptorMK2_v1_7.json
   #       - name: ERC20
   #         file: ./abis/ethereum/ERC20.json
   #     eventHandlers:

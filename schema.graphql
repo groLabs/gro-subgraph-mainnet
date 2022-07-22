@@ -46,7 +46,6 @@ type Totals @entity {
   eth_amount_removed_total: BigDecimal!
 }
 
-
 type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
   contractAddress: Bytes!

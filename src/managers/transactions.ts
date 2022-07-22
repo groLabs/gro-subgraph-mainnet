@@ -1,9 +1,7 @@
 import { ZERO_ADDR } from '../utils/constants';
-import { setUser } from '../utils/users';
-import {
-    setTransferTx,
-    setTotals
-} from '../utils/transactions';
+import { setUser } from '../setters/users';
+import { setTransferTx } from '../setters/transactions';
+import { setTotals } from '../setters/totals';
 import { TransferEvent } from '../utils/types';
 
 function parseTransfer(
@@ -11,32 +9,26 @@ function parseTransfer(
     userAddress: string,
     type: string,
     token: string,
-  ): void {
+): void {
     // Step 1: Manage User
     setUser(userAddress);
-  
+
     //Step 2: Manage Transaction
     const tx = setTransferTx(
-      ev.id,
-      type,
-      token,
-      ev.contractAddress,
-      userAddress,
-      ev.fromAddress,
-      ev.toAddress,
-      ev.block,
-      ev.timestamp,
-      ev.value,
+        ev,
+        userAddress,
+        type,
+        token,
     );
-  
+
     //Step 3: Manage Totals
     setTotals(
-      type,
-      'gvt',
-      userAddress,
-      tx.usdAmount,
+        type,
+        token,
+        userAddress,
+        tx.usdAmount,
     );
-  }
+}
 
 export const manageTransfer = (
     ev: TransferEvent,
