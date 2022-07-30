@@ -1,4 +1,3 @@
-
 # Enums
 
 enum Token {
@@ -21,6 +20,7 @@ enum TxType {
   transfer_in
   transfer_out
   claim
+  multiclaim
   vest
   approval
 }
@@ -33,17 +33,26 @@ type User @entity {
   transfers: [TransferTx!] @derivedFrom(field: "userAddress")
   approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
   totals: Totals! @derivedFrom(field: "userAddress")
+  pools: [Pool!] @derivedFrom(field: "userAddress")
 }
 
 type Totals @entity {
   id: ID! # userAddress
-  userAddress: User!
-  eth_amount_added_pwrd: BigDecimal!
-  eth_amount_added_gvt: BigDecimal!
-  eth_amount_added_total: BigDecimal!
-  eth_amount_removed_pwrd: BigDecimal!
-  eth_amount_removed_gvt: BigDecimal!
-  eth_amount_removed_total: BigDecimal!
+  userAddress: User! # FK to User
+  amount_added_pwrd: BigDecimal!
+  amount_added_gvt: BigDecimal!
+  amount_added_total: BigDecimal!
+  amount_removed_pwrd: BigDecimal!
+  amount_removed_gvt: BigDecimal!
+  amount_removed_total: BigDecimal!
+}
+
+type Pool @entity {
+  id: ID! # userAddress-poolId
+  userAddress: User!  # FK to User
+  poolId: Int!
+  net_reward: BigDecimal!
+  balance: BigDecimal!
 }
 
 type TransferTx @entity {
@@ -54,7 +63,7 @@ type TransferTx @entity {
   hash: Bytes!
   type: TxType!
   token: Token!
-  userAddress: User!
+  userAddress: User!  # FK to User
   fromAddress: Bytes!
   toAddress: Bytes!
   coinAmount: BigDecimal!
@@ -62,146 +71,28 @@ type TransferTx @entity {
 }
 
 type ApprovalTx @entity {
-  id: ID! # hash-logIndex(-in|-out)
+  id: ID! # hash-logIndex
   contractAddress: Bytes!
   block: Int! 
   timestamp: Int!
   hash: Bytes!
   type: TxType!
   token: Token!
-  ownerAddress: User!
+  ownerAddress: User!  # FK to User
   spenderAddress: Bytes
   coinAmount: BigDecimal!
   usdAmount: BigDecimal!
 }
 
-# type PoolTx @entity {
-#   id: ID! # hash-logIndex
-#   userAddress: User!
-#   contractAddress: Bytes!
-#   poolId: Int
-#   token: Token!
-#   block: Int! 
-#   timestamp: Int!
-#   hash: Bytes!
-#   type: TxType!
-#   coinAmount: BigInt!
-#   timestamp2: Int
-# }
-
-#---
-
-# type User2 @entity {
-#   id: ID!
-#   # migrated: Boolean!
-#   # timestamp: Int
-#   transaction: [Transactions!] @derivedFrom(field: "userAddress")
-# }
-
-# type Transactions @entity {
-#   id: ID!
-#   userAddress: User2!
-#   deposits: [TransferTx!] @derivedFrom(field: "userAddress")
-#   withdrawals: [TransferTx!] @derivedFrom(field: "userAddress")
-#   transfers_in: [TransferTx!] @derivedFrom(field: "userAddress")
-#   transfers_out: [TransferTx!] @derivedFrom(field: "userAddress")
-#   approvals: [ApprovalTx!] @derivedFrom(field: "userAddress")
-# }
-
-# type TransferTx @entity {
-#   id: ID!
-#   userAddress: Transactions!
-#   contractAddress: Bytes!
-#   block: Int!
-#   token: Token!
-#   type: TxType!
-#   hash: Bytes!
-#   timestamp: Int!
-#   coinAmount: BigDecimal!
-#   usdAmount: BigDecimal!
-# }
-
-# type ApprovalTx @entity {
-#   id: ID!
-#   userAddress: Transactions!
-#   token: Token!
-#   hash: Bytes!
-#   spender: Bytes!
-#   timestamp: Int!
-#   usd_amount: Int!
-#   coin_amount: Int!
-#   block_number: Int!
-# }
-
-
-
-# type ExampleEntity @entity {
-#   id: ID!
-#   count: BigInt!
-#   pid: BigInt! # uint256
-#   allocPoint: BigInt! # uint256
-# }
-
-# type Approval @entity {
-#   id: ID!
-#   owner: Bytes! # address
-#   spender: Bytes! # address
-#   value: BigInt! # uint256
-# }
-
-# type LogDistributer @entity {
-#   id: ID!
-#   newDistributer: Bytes! # address
-# }
-
-# type LogInflationRate @entity {
-#   id: ID!
-#   newInflationRate: BigInt! # uint256
-#   newInflationPerSecond: BigInt! # uint256
-#   lastMaxTotalSupply: BigInt! # uint256
-#   lastMaxTotalSupplyTime: BigInt! # uint256
-# }
-
-# type GroOwnershipTransferred @entity {
-#   id: ID!
-#   previousOwner: Bytes! # address
-#   newOwner: Bytes! # address
-# }
-
-# type Transfer @entity {
-#   id: ID!
-#   from: Bytes! # address
-#   to: Bytes! # address
-#   value: BigInt! # uint256
-# }
-
-# type GvtApproval @entity {
-#   id: ID!
-#   owner: Bytes! # address
-#   spender: Bytes! # address
-#   value: BigInt! # uint256
-# }
-
-# type LogAddToWhitelist @entity {
-#   id: ID!
-#   user: Bytes! # address
-# }
-
-# type LogRemoveFromWhitelist @entity {
-#   id: ID!
-#   user: Bytes! # address
-# }
-
-# type LogTransfer @entity {
-#   id: ID!
-#   sender: Bytes! # address
-#   recipient: Bytes! # address
-#   amount: BigInt! # uint256
-#   factor: BigInt! # uint256
-# }
-
-# type GvtOwnershipTransferred @entity {
-#   id: ID!
-#   previousOwner: Bytes! # address
-#   newOwner: Bytes! # address
-# }
+type ClaimTx @entity {
+  id: ID! # hash-logIndex
+  contractAddress: Bytes!
+  block: Int! 
+  timestamp: Int!
+  hash: Bytes!
+  type: TxType!
+  userAddress: User!  # FK to User
+  poolId: [Int!]!
+  vest: Boolean,
+  amount: BigDecimal!
+}

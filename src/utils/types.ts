@@ -1,6 +1,6 @@
 import {
     Address,
-    BigInt
+    BigInt,
 } from '@graphprotocol/graph-ts';
 
 export class ApprovalEvent {
@@ -56,5 +56,39 @@ export class TransferEvent {
         this.fromAddress = fromAddress
         this.toAddress = toAddress
         this.value = value
+    }
+}
+
+export class ClaimEvent {
+    id: string
+    block: i32
+    timestamp: i32
+    contractAddress: Address
+    type: string
+    userAddress: string
+    vest: boolean
+    pid: i32[]
+    amount: BigInt
+
+    constructor(
+        id: string,
+        block: i32,
+        timestamp: i32,
+        contractAddress: Address,
+        type: string,
+        userAddress: string,
+        vest: boolean,
+        pid: i32[],
+        amount: BigInt,
+    ) {
+        this.id = id
+        this.block = block
+        this.timestamp = timestamp
+        this.contractAddress = contractAddress
+        this.type = type
+        this.userAddress = userAddress
+        this.vest = vest
+        this.pid = pid
+        this.amount = amount
     }
 }
