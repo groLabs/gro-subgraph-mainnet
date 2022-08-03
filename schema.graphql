@@ -32,6 +32,7 @@ type User @entity {
   timestamp: Int
   transfers: [TransferTx!] @derivedFrom(field: "userAddress")
   approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
+  claims: [ClaimTx!] @derivedFrom(field: "userAddress")
   totals: Totals! @derivedFrom(field: "userAddress")
   pools: [Pool!] @derivedFrom(field: "userAddress")
 }
