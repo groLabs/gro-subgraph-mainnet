@@ -1,6 +1,6 @@
 import { ZERO_ADDR } from '../utils/constants';
 import { setUser } from '../setters/users';
-import { setTransferTx } from '../setters/transactions';
+import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
 import { TransferEvent } from '../utils/types';
 

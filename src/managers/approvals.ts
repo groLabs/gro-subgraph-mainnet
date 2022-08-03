@@ -1,5 +1,5 @@
 import { setUser } from '../setters/users'
-import { setApprovalTx } from '../setters/transactions';
+import { setApprovalTx } from '../setters/approvals';
 import { ApprovalEvent } from '../utils/types';
 
 export const manageApproval = (
