@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { TransferEvent } from '../utils/types';
+import { TransferEvent } from '../types/transfer';
 
 function parseTransferEvent<T>(ev: T): TransferEvent {
     const event = new TransferEvent(

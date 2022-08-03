@@ -4,7 +4,7 @@ import {
     tokenToDecimal,
     getPricePerShare,
 } from '../utils/tokens';
-import { ClaimEvent } from '../utils/types';
+import { ClaimEvent } from '../types/claim';
 
 
 export const setClaimTx = (

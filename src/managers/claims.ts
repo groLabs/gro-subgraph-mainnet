@@ -1,7 +1,7 @@
 import { setUser } from '../setters/users'
 import { setClaimTx } from '../setters/claims';
 import { setPools } from '../setters/pools';
-import { ClaimEvent } from '../utils/types';
+import { ClaimEvent } from '../types/claim';
 
 export const manageClaim = (
     ev: ClaimEvent,

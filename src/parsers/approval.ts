@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ApprovalEvent } from '../utils/types';
+import { ApprovalEvent } from '../types/approval';
 
 //TODO: Careful, DAI has different fields!
 function parseApprovalEvent<T>(ev: T): ApprovalEvent {

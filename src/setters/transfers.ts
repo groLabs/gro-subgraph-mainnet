@@ -4,7 +4,7 @@ import {
     tokenToDecimal,
     getPricePerShare,
 } from '../utils/tokens';
-import { TransferEvent } from '../utils/types';
+import { TransferEvent } from '../types/transfer';
 
 
 export const setTransferTx = (

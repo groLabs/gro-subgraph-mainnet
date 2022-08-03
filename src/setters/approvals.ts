@@ -4,7 +4,7 @@ import {
     tokenToDecimal,
     getPricePerShare,
 } from '../utils/tokens';
-import { ApprovalEvent } from '../utils/types';
+import { ApprovalEvent } from '../types/approval';
 
 
 export const setApprovalTx = (

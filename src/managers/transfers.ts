@@ -2,7 +2,7 @@ import { ZERO_ADDR } from '../utils/constants';
 import { setUser } from '../setters/users';
 import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
-import { TransferEvent } from '../utils/types';
+import { TransferEvent } from '../types/transfer';
 
 function parseTransfer(
     ev: TransferEvent,

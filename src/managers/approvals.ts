@@ -1,6 +1,6 @@
 import { setUser } from '../setters/users'
 import { setApprovalTx } from '../setters/approvals';
-import { ApprovalEvent } from '../utils/types';
+import { ApprovalEvent } from '../types/approval';
 
 export const manageApproval = (
     ev: ApprovalEvent,
