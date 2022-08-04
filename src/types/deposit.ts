@@ -11,8 +11,7 @@ export class DepositEvent {
     contractAddress: Address
     type: string
     userAddress: string
-    vest: boolean
-    pid: i32[]
+    pid: i32
     amount: BigInt
 
     constructor(
@@ -22,8 +21,7 @@ export class DepositEvent {
         contractAddress: Address,
         type: string,
         userAddress: string,
-        vest: boolean,
-        pid: i32[],
+        pid: i32,
         amount: BigInt,
     ) {
         this.id = id
@@ -32,7 +30,6 @@ export class DepositEvent {
         this.contractAddress = contractAddress
         this.type = type
         this.userAddress = userAddress
-        this.vest = vest
         this.pid = pid
         this.amount = amount
     }

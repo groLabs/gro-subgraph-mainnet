@@ -33,6 +33,7 @@ type User @entity {
   transfers: [TransferTx!] @derivedFrom(field: "userAddress")
   approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
   claims: [ClaimTx!] @derivedFrom(field: "userAddress")
+  deposits: [DepositTx!] @derivedFrom(field: "userAddress")
   totals: Totals! @derivedFrom(field: "userAddress")
   pools: [Pool!] @derivedFrom(field: "userAddress")
 }
@@ -95,5 +96,17 @@ type ClaimTx @entity {
   userAddress: User!  # FK to User
   poolId: [Int!]!
   vest: Boolean,
+  amount: BigDecimal!
+}
+
+type DepositTx @entity {
+  id: ID! # hash-logIndex
+  contractAddress: Bytes!
+  block: Int! 
+  timestamp: Int!
+  hash: Bytes!
+  type: TxType!
+  userAddress: User!  # FK to User
+  poolId: Int!
   amount: BigDecimal!
 }
