@@ -134,6 +134,8 @@ dataSources:
           handler: handleMultiClaimV2
         - event: LogDeposit(indexed address,indexed uint256,uint256)
           handler: handleDepositV2
+        - event: LogWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleWithdrawalV2
       file: ./src/mappings/staker.ts
 # AVALANCHE CONTRACTS
   # - kind: ethereum

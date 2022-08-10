@@ -4,7 +4,7 @@ import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
 import { TransferEvent } from '../types/transfer';
 
-function parseTransfer(
+function buildTransfer(
     ev: TransferEvent,
     userAddress: string,
     type: string,
@@ -58,9 +58,9 @@ export const manageTransfer = (
         let userAddress = (type == 'deposit')
             ? userAddressIn
             : userAddressOut;
-        parseTransfer(ev, userAddress, type, token);
+        buildTransfer(ev, userAddress, type, token);
     } else {
-        parseTransfer(ev, userAddressIn, 'transfer_in', token);
-        parseTransfer(ev, userAddressOut, 'transfer_out', token);
+        buildTransfer(ev, userAddressIn, 'transfer_in', token);
+        buildTransfer(ev, userAddressOut, 'transfer_out', token);
     }
 }
