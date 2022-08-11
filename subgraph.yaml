@@ -137,6 +137,31 @@ dataSources:
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
           handler: handleWithdrawalV2
       file: ./src/mappings/staker.ts
+  - kind: ethereum
+    name: PnL
+    network: mainnet
+    source:
+      address: "0xF67A426e110c74c566174a37C9269780fB48096d"
+      abi: PnL
+      # startBlock: 12522446
+      startBlock: 15000000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Price
+      abis:
+        - name: PnL
+          file: ./abis/ethereum/PnL.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+      eventHandlers:
+        - event: LogPnLExecution(uint256,int256,int256,int256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handlePnLExecution
+      file: ./src/mappings/pnl.ts
+
+
 # AVALANCHE CONTRACTS
   # - kind: ethereum
   #   name: avaxdaivault_v1_7

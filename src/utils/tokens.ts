@@ -15,6 +15,7 @@ const getPricePerShare = (
     contractAddress: Address,
     token: string,
 ): BigDecimal => {
+    // log.info('hheeoo contractAddress: {}', [contractAddress.toHexString()])
     let price: BigDecimal;
     if (token === 'gvt') {
         const contract = Gvt.bind(contractAddress);

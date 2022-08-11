@@ -27,6 +27,7 @@ enum TxType {
 
 # Entities
 
+# User
 type User @entity {
   id: ID! # userAddress
   timestamp: Int
@@ -39,6 +40,7 @@ type User @entity {
   pools: [Pool!] @derivedFrom(field: "userAddress")
 }
 
+# aggregated amounts for personal stats
 type Totals @entity {
   id: ID! # userAddress
   userAddress: User! # FK to User
@@ -50,6 +52,16 @@ type Totals @entity {
   amount_removed_total: BigDecimal!
 }
 
+# latest token price
+type Price @entity {
+  id: ID! #TBC (token contract? 0x for ETH)
+  pwrd: BigDecimal!
+  gvt: BigDecimal!
+  gro: BigDecimal!
+  weth: BigDecimal!
+}
+
+# staker pools
 type Pool @entity {
   id: ID! # userAddress-poolId
   userAddress: User!  # FK to User
