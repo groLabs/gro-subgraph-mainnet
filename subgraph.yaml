@@ -124,6 +124,8 @@ dataSources:
         - User
         - Pools
         - ClaimTx
+        - DepositTx
+        - WithdrawalTx
       abis:
         - name: LpTokenStaker
           file: ./abis/ethereum/LpTokenStakerV2.json

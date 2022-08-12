@@ -50,6 +50,21 @@ type Totals @entity {
   amount_removed_pwrd: BigDecimal!
   amount_removed_gvt: BigDecimal!
   amount_removed_total: BigDecimal!
+  value_added_pwrd: BigDecimal!
+  value_added_gvt: BigDecimal!
+  value_added_total: BigDecimal!
+  value_removed_pwrd: BigDecimal!
+  value_removed_gvt: BigDecimal!
+  value_removed_total: BigDecimal!
+  net_value_pwrd: BigDecimal!
+  net_value_gvt: BigDecimal!
+  net_value_total: BigDecimal!
+  # current_balance_pwrd: BigDecimal!
+  # current_balance_gvt: BigDecimal!
+  # current_balance_total: BigDecimal!
+  # net_returns_pwrd: BigDecimal!
+  # net_returns_gvt: BigDecimal!
+  # net_returns_total: BigDecimal!
 }
 
 # latest token price
@@ -70,7 +85,7 @@ type Pool @entity {
   balance: BigDecimal!
 }
 
-# gro protocol transfers
+# gro protocol transfers, deposits & withdrawals
 type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
   contractAddress: Bytes!

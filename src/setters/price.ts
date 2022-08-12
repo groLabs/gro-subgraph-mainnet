@@ -11,12 +11,12 @@ const initPrice = (): Price => {
 
     if (!price) {
         price = new Price('0x');
-        price.pwrd = BigDecimal.fromString('0');
+        price.pwrd = BigDecimal.fromString('1');
         price.gvt = BigDecimal.fromString('0');
         price.gro = BigDecimal.fromString('0');
         price.weth = BigDecimal.fromString('0');
     }
-    
+
     return price;
 }
 
