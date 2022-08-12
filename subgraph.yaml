@@ -162,6 +162,46 @@ dataSources:
         - event: LogPnLExecution(uint256,int256,int256,int256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handlePnLExecution
       file: ./src/mappings/pnl.ts
+  - kind: ethereum
+    name: UniswapV2GroUsdc
+    network: mainnet
+    source:
+      address: "0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6"
+      abi: UniswapV2GroUsdc
+      startBlock: 15327000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Price
+      abis:
+        - name: UniswapV2GroUsdc
+          file: ./abis/ethereum/UniswapV2GroUsdc.json
+      eventHandlers:
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/mappings/uniswapv2GroUsdc.ts
+  - kind: ethereum
+    name: UniswapV2UsdcWeth
+    network: mainnet
+    source:
+      address: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc"
+      abi: UniswapV2UsdcWeth
+      startBlock: 15327000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Price
+      abis:
+        - name: UniswapV2UsdcWeth
+          file: ./abis/ethereum/UniswapV2UsdcWeth.json
+      eventHandlers:
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+      file: ./src/mappings/uniswapV2UsdcWeth.ts
 
 
 # AVALANCHE CONTRACTS
