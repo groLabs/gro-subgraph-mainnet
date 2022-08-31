@@ -3,6 +3,7 @@ import { TransferTx } from '../../generated/schema';
 import {
     tokenToDecimal,
     getPricePerShare,
+    getFactor,
 } from '../utils/tokens';
 import { TransferEvent } from '../types/transfer';
 
@@ -38,6 +39,7 @@ export const setTransferTx = (
     tx.toAddress = ev.toAddress;
     tx.coinAmount = coinAmount;
     tx.usdAmount = coinAmount.times(pricePerShare);
+    tx.factor = getFactor(token);
     tx.save();
     return tx;
 }

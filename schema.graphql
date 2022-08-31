@@ -106,6 +106,7 @@ type TransferTx @entity {
   toAddress: Bytes!
   coinAmount: BigDecimal!
   usdAmount: BigDecimal!
+  factor: BigDecimal!
 }
 
 # gro protocol approvals

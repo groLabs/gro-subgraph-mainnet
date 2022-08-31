@@ -185,26 +185,27 @@ dataSources:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwap
       file: ./src/mappings/uniswapv2GroUsdc.ts
-  - kind: ethereum
-    name: UniswapV2UsdcWeth
-    network: mainnet
-    source:
-      address: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc"
-      abi: UniswapV2UsdcWeth
-      startBlock: 15327000
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - Price
-      abis:
-        - name: UniswapV2UsdcWeth
-          file: ./abis/ethereum/UniswapV2UsdcWeth.json
-      eventHandlers:
-        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
-          handler: handleSwap
-      file: ./src/mappings/uniswapV2UsdcWeth.ts
+  # too slow?
+  # - kind: ethereum
+  #   name: UniswapV2UsdcWeth
+  #   network: mainnet
+  #   source:
+  #     address: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc"
+  #     abi: UniswapV2UsdcWeth
+  #     startBlock: 15327000
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.5
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - Price
+  #     abis:
+  #       - name: UniswapV2UsdcWeth
+  #         file: ./abis/ethereum/UniswapV2UsdcWeth.json
+  #     eventHandlers:
+  #       - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+  #         handler: handleSwap
+  #     file: ./src/mappings/uniswapV2UsdcWeth.ts
 
 
 # AVALANCHE CONTRACTS
