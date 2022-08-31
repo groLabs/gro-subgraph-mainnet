@@ -13,10 +13,8 @@ export const setApprovalTx = (
 ): ApprovalTx => {
     let tx = new ApprovalTx(ev.id);
     const coinAmount = tokenToDecimal(ev.value, 18, 7);
-    const pricePerShare = getPricePerShare(
-        ev.contractAddress,
-        token,
-    );
+    const pricePerShare = getPricePerShare(token);
+    
     tx.ownerAddress = ev.ownerAddress;
     tx.contractAddress = ev.contractAddress;
     tx.block = ev.block.toI32();

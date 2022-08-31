@@ -1,35 +1,69 @@
-import {
-    Address,
-    BigDecimal,
-    BigInt,
-    log,
-} from '@graphprotocol/graph-ts';
 import { Gvt } from '../../generated/Gvt/Gvt';
 import { Pwrd } from '../../generated/Pwrd/Pwrd';
+import { UniswapV2Pair } from '../../generated/UniswapV2Pair/UniswapV2Pair';
+import {
+    log,
+    Address,
+    BigInt,
+    BigDecimal,
+} from '@graphprotocol/graph-ts';
 import {
     ZERO,
     ONE,
+    DECIMALS,
     GVT_ADDRESS,
     PWRD_ADDRESS,
+    UNISWAPV2_GRO_USDC_ADDRESS,
+    UNISWAPV2_USDC_WETH_ADDRESS,
 } from '../utils/constants';
 
 
-const getPricePerShare = (
-    contractAddress: Address,
-    token: string,
-): BigDecimal => {
+export const getGvtPrice = (): BigDecimal => {
+    const contract = Gvt.bind(GVT_ADDRESS);
+    const pricePerShare = contract.try_getPricePerShare();
+    if (pricePerShare.reverted) {
+        log.error('getGvtPrice() reverted in src/utils/tokens.ts', []);
+        return ZERO;
+    } else {
+        return tokenToDecimal(pricePerShare.value, 18, 7);
+    }
+}
+
+export const getUniV2Price = (poolAddress: Address): BigDecimal => {
+    const contract = UniswapV2Pair.bind(poolAddress);
+    const reserves = contract.try_getReserves();
+    if (reserves.reverted) {
+        log.error('getUniV2Price() reverted in src/utils/tokens.ts', []);
+        return ZERO;
+    } else {
+        if (poolAddress === UNISWAPV2_GRO_USDC_ADDRESS) {
+            // return GRO price per share
+            const gvt_reserve = reserves.value.get_reserve0();
+            const usdc_reserve = reserves.value.get_reserve1();
+            // TODO: chainlink to calc the USD price of USDC.
+            return tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(gvt_reserve, 18, 7)).truncate(DECIMALS);
+        } else if (poolAddress === UNISWAPV2_USDC_WETH_ADDRESS) {
+            // return WETH price per share
+            const usdc_reserve = reserves.value.get_reserve0();
+            const weth_reserve = reserves.value.get_reserve1();
+            // TODO: chainlink to calc the USD price of USDC.
+            return tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(weth_reserve, 18, 7)).truncate(DECIMALS);
+        } else {
+            return ZERO;
+        }
+
+    }
+}
+
+// Retrieves price per share for a given token
+const getPricePerShare = (token: string): BigDecimal => {
     let price: BigDecimal;
     if (token === 'gvt') {
-        const contract = Gvt.bind(contractAddress);
-        const pricePerShare = contract.try_getPricePerShare();
-        if (pricePerShare.reverted) {
-            log.info('getPricePerShare() reverted in src/utils/tokens.ts', []);
-            price = ZERO;
-        } else {
-            price = tokenToDecimal(pricePerShare.value, 18, 7);
-        }
+        price = getGvtPrice();
     } else if (token === 'pwrd') {
         price = ONE;
+    } else if (token === 'gro') {
+        price = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS);
     } else {
         price = ZERO;
     }
@@ -75,7 +109,7 @@ function tokenToDecimal(
         .truncate(decimals);
 }
 
-// Retrieve gvt or pwrd factor at the time of a transfer
+// Retrieves gvt or pwrd factor at the time of a transfer
 const getFactor = (token: string): BigDecimal => {
     if (token === 'gvt') {
         const contract = Gvt.bind(GVT_ADDRESS);

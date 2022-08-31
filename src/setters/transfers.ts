@@ -22,11 +22,9 @@ export const setTransferTx = (
     let tx = new TransferTx(
         ev.id + transfer_tag
     );
+
     const coinAmount = tokenToDecimal(ev.value, 18, 7);
-    const pricePerShare = getPricePerShare(
-        ev.contractAddress,
-        token,
-    );
+    const pricePerShare = getPricePerShare(token);
 
     tx.contractAddress = ev.contractAddress;
     tx.block = ev.block.toI32();
