@@ -3,5 +3,5 @@ import { setWethPrice } from '../setters/price';
 
 
 export function handleSwap(event: SwapEvent): void {
-    setWethPrice()
+    setWethPrice();
 }

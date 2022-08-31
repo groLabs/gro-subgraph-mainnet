@@ -1,5 +1,6 @@
-import { Price } from '../../generated/schema';
 import {
+    ONE,
+    ZERO,
     DECIMALS,
     GVT_ADDRESS,
     UNISWAPV2_GRO_USDC_ADDRESS,
@@ -9,10 +10,8 @@ import {
     tokenToDecimal,
     getPricePerShare,
 } from '../utils/tokens';
-import {
-    BigDecimal,
-    log
-} from '@graphprotocol/graph-ts';
+import { log } from '@graphprotocol/graph-ts';
+import { Price } from '../../generated/schema';
 import { UniswapV2GroUsdc } from '../../generated/UniswapV2GroUsdc/UniswapV2GroUsdc';
 import { UniswapV2UsdcWeth } from '../../generated/UniswapV2UsdcWeth/UniswapV2UsdcWeth';
 
@@ -21,10 +20,10 @@ const initPrice = (): Price => {
     let price = Price.load('0x');
     if (!price) {
         price = new Price('0x');
-        price.pwrd = BigDecimal.fromString('1');
-        price.gvt = BigDecimal.fromString('0');
-        price.gro = BigDecimal.fromString('0');
-        price.weth = BigDecimal.fromString('0');
+        price.pwrd = ONE;
+        price.gvt = ZERO;
+        price.gro = ZERO;
+        price.weth = ZERO;
     }
     return price;
 }

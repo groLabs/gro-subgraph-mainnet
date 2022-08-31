@@ -59,7 +59,7 @@ const getTokenFromPoolId = (
     }
 }
 
-// Converts a BigInt into a 7-decimal BigDecimal
+// Converts a BigInt into a N-decimal BigDecimal
 function tokenToDecimal(
     amount: BigInt,
     precision: i32,

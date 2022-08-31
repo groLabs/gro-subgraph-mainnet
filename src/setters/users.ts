@@ -1,4 +1,4 @@
-import { User } from "../../generated/schema"
+import { User } from '../../generated/schema';
 
 export const setUser = (userAddress: string): User => {
     let user = User.load(userAddress)

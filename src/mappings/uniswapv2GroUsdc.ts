@@ -3,5 +3,5 @@ import { setGroPrice } from '../setters/price';
 
 
 export function handleSwap(event: SwapEvent): void {
-    setGroPrice()
+    setGroPrice();
 }

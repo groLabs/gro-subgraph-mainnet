@@ -76,6 +76,13 @@ type Price @entity {
   weth: BigDecimal!
 }
 
+# latest factor
+type Factor @entity {
+  id: ID! #TBC
+  pwrd: BigDecimal!
+  gvt: BigDecimal!
+}
+
 # staker pools
 type Pool @entity {
   id: ID! # userAddress-poolId

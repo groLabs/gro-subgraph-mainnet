@@ -1,5 +1,6 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { Totals } from '../../generated/schema';
+import { ZERO } from '../utils/constants';
 
 
 export const setTotals = (
@@ -14,21 +15,21 @@ export const setTotals = (
     if (!total) {
         total = new Totals(userAddress);
         total.userAddress = userAddress;
-        total.amount_added_gvt = BigDecimal.fromString('0');
-        total.amount_added_pwrd = BigDecimal.fromString('0');
-        total.amount_added_total = BigDecimal.fromString('0');
-        total.amount_removed_gvt = BigDecimal.fromString('0');
-        total.amount_removed_pwrd = BigDecimal.fromString('0');
-        total.amount_removed_total = BigDecimal.fromString('0');
-        total.value_added_gvt = BigDecimal.fromString('0');
-        total.value_added_pwrd = BigDecimal.fromString('0');
-        total.value_added_total = BigDecimal.fromString('0');
-        total.value_removed_gvt = BigDecimal.fromString('0');
-        total.value_removed_pwrd = BigDecimal.fromString('0');
-        total.value_removed_total = BigDecimal.fromString('0');
-        total.net_value_gvt = BigDecimal.fromString('0');
-        total.net_value_pwrd = BigDecimal.fromString('0');
-        total.net_value_total = BigDecimal.fromString('0');
+        total.amount_added_gvt = ZERO;
+        total.amount_added_pwrd = ZERO;
+        total.amount_added_total = ZERO;
+        total.amount_removed_gvt = ZERO;
+        total.amount_removed_pwrd = ZERO;
+        total.amount_removed_total = ZERO;
+        total.value_added_gvt = ZERO;
+        total.value_added_pwrd = ZERO;
+        total.value_added_total = ZERO;
+        total.value_removed_gvt = ZERO;
+        total.value_removed_pwrd = ZERO;
+        total.value_removed_total = ZERO;
+        total.net_value_gvt = ZERO;
+        total.net_value_pwrd = ZERO;
+        total.net_value_total = ZERO;
         // total.current_balance_pwrd = BigDecimal.fromString('0');
         // total.current_balance_gvt = BigDecimal.fromString('0');
         // total.current_balance_total = BigDecimal.fromString('0');
