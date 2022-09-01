@@ -59,6 +59,8 @@ type Totals @entity {
   net_value_pwrd: BigDecimal!
   net_value_gvt: BigDecimal!
   net_value_total: BigDecimal!
+  net_amount_gvt: BigDecimal!
+  net_based_amount_pwrd: BigDecimal!
   # current_balance_pwrd: BigDecimal!
   # current_balance_gvt: BigDecimal!
   # current_balance_total: BigDecimal!

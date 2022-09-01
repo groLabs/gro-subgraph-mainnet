@@ -8,7 +8,8 @@ export const setTotals = (
     coin: string,
     userAddress: string,
     coinAmount: BigDecimal,
-    usdAmount: BigDecimal
+    usdAmount: BigDecimal,
+    factor: BigDecimal,
 ): void => {
     let total = Totals.load(userAddress);
 
@@ -30,6 +31,8 @@ export const setTotals = (
         total.net_value_gvt = ZERO;
         total.net_value_pwrd = ZERO;
         total.net_value_total = ZERO;
+        total.net_amount_gvt = ZERO;
+        total.net_based_amount_pwrd = ZERO;
         // total.current_balance_pwrd = BigDecimal.fromString('0');
         // total.current_balance_gvt = BigDecimal.fromString('0');
         // total.current_balance_total = BigDecimal.fromString('0');
@@ -44,10 +47,12 @@ export const setTotals = (
         if (coin === 'gvt') {
             total.amount_added_gvt = total.amount_added_gvt.plus(coinAmount);
             total.value_added_gvt = total.value_added_gvt.plus(usdAmount);
+            total.net_amount_gvt = total.net_amount_gvt.plus(coinAmount);
             total.net_value_gvt = total.net_value_gvt.plus(usdAmount);
         } else if (coin === 'pwrd') {
             total.amount_added_pwrd = total.amount_added_pwrd.plus(coinAmount);
             total.value_added_pwrd = total.value_added_pwrd.plus(usdAmount);
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus(coinAmount).times(factor); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.plus(usdAmount);
         }
         total.amount_added_total = total.amount_added_total.plus(coinAmount);
@@ -57,10 +62,12 @@ export const setTotals = (
         if (coin === 'gvt') {
             total.amount_removed_gvt = total.amount_removed_gvt.plus(coinAmount);
             total.value_removed_gvt = total.value_removed_gvt.plus(usdAmount);
+            total.net_amount_gvt = total.net_amount_gvt.minus(coinAmount);
             total.net_value_gvt = total.net_value_gvt.minus(usdAmount);
         } else if (coin === 'pwrd') {
             total.amount_removed_pwrd = total.amount_removed_pwrd.plus(coinAmount);
             total.value_removed_pwrd = total.value_removed_pwrd.plus(usdAmount);
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus(coinAmount).times(factor); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.minus(usdAmount);
         }
         total.amount_removed_total = total.amount_removed_total.plus(coinAmount);

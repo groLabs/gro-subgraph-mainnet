@@ -28,6 +28,7 @@ function buildTransfer(
         userAddress,
         tx.coinAmount,
         tx.usdAmount,
+        tx.factor,
     );
 }
 
