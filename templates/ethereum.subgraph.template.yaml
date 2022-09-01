@@ -103,9 +103,11 @@ dataSources:
           file: ./abis/ethereum/LpTokenStakerV1.json
       eventHandlers:
         - event: LogClaim(indexed address,indexed uint256,uint256)
-          handler: handleLogClaimV1
-        # - event: LogDeposit(indexed address,indexed uint256,uint256)
-        #   handler: handleDepositV1
+          handler: handleClaimV1
+        - event: LogDeposit(indexed address,indexed uint256,uint256)
+          handler: handleDepositV1
+        - event: LogWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleWithdrawV1
       file: ./src/mappings/staker.ts
   - kind: ethereum
     name: LpTokenStakerV2
@@ -135,7 +137,7 @@ dataSources:
         - event: LogDeposit(indexed address,indexed uint256,uint256)
           handler: handleDepositV2
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
-          handler: handleWithdrawalV2
+          handler: handleWithdrawV2
       file: ./src/mappings/staker.ts
   - kind: ethereum
     name: PnL
@@ -226,98 +228,3 @@ dataSources:
   #     file: ./src/mappings/uniswapV2UsdcWeth.ts
 
 
-# AVALANCHE CONTRACTS
-  # - kind: ethereum
-  #   name: avaxdaivault_v1_7
-  #   network: avalanche
-  #   source:
-  #     address: "0x6063597B9356B246E706Fd6A48C780F897e3ef55"
-  #     abi: VaultAdaptorMK2_v1_7
-  #     # startBlock: 10364122
-  #     startBlock: 16620572
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.5
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - User
-  #       - CoreTx
-  #       # - Totals
-  #     abis:
-  #       - name: avaxdaivault_v1_7
-  #         file: ./abis/avalanche/VaultAdaptorMK2_v1_7.json
-  #       - name: ERC20
-  #         file: ./abis/ethereum/ERC20.json
-  #     eventHandlers:
-  #       - event: Transfer(indexed address,indexed address,uint256)
-  #         handler: handleTransfer
-  #       - event: Approval(indexed address,indexed address,uint256)
-  #         handler: handleApproval
-  #     file: ./src/mappings/gro.ts
-  # - kind: ethereum
-  #   name: GROVestingV1
-  #   network: mainnet
-  #   source:
-  #     address: "0xA28693bf01Dc261887b238646Bb9636cB3a3730B"
-  #     abi: GROVesting
-  #     # startBlock: 13405101
-  #     startBlock: 14900000
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.5
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - User
-  #       - CoreTx
-  #     abis:
-  #       - name: GROVesting
-  #         file: ./abis/GROVestingV1.json
-  #     eventHandlers:
-  #       - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
-  #         handler: handleVestV1
-  #       - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
-  #         handler: handleExitV1
-  #     file: ./src/mappings/gro-vesting.ts
-  # - kind: ethereum
-    # name: GROVestingV2
-    # network: mainnet
-    # source:
-    #   address: "0x748218256AfE0A19a88EBEB2E0C5Ce86d2178360"
-    #   abi: GROVesting
-    #   # startBlock: 13405101
-    #   startBlock: 14900000
-    # mapping:
-    #   kind: ethereum/events
-    #   apiVersion: 0.0.5
-    #   language: wasm/assemblyscript
-    #   entities:
-    #     - User
-    #     - CoreTx
-    #   abis:
-    #     - name: GROVesting
-    #       file: ./abis/GROVestingV2.json
-    #   eventHandlers:
-    #     - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
-    #       handler: handleVestV2
-    #     - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
-    #       handler: handleExitV2
-    #   file: ./src/mappings/gro-vesting.ts
-  # - kind: ethereum
-  #   name: Blocks
-  #   network: mainnet
-  #   source:
-  #     address: "0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b"
-  #     abi: ERC20
-  #     startBlock: 15060000
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.5
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - Block
-  #     abis:
-  #       - name: ERC20
-  #         file: ./abis/ERC20.json
-  #     blockHandlers:
-  #       - handler: handleBlock
-  #     file: ./src/mappings/block.ts
