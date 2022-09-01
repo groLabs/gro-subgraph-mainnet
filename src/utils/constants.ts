@@ -1,7 +1,6 @@
 import {
     Address,
     BigDecimal,
-    BigInt,
     Bytes,
 } from "@graphprotocol/graph-ts";
 
@@ -9,15 +8,12 @@ import {
 export const DECIMALS = 7;
 export const ZERO = BigDecimal.fromString('0');
 export const ONE = BigDecimal.fromString('1');
-// export const EXP_6 = BigInt.fromString('1000000');
-// export const EXP_18 = BigInt.fromString('1000000000000000000');
 
 // Addresses
 export const NO_ADDR = Bytes.empty();
 export const ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000');
 
 // Contract addresses
-// export const GVT_ADDRESS = Address.fromString('0x3adb04e127b9c0a5d36094125669d4603ac52a0c');
 export const GVT_ADDRESS = Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c');
 export const PWRD_ADDRESS = Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b');
 export const UNISWAPV2_GRO_USDC_ADDRESS = Address.fromString('0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6');

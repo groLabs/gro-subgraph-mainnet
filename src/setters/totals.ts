@@ -33,12 +33,6 @@ export const setTotals = (
         total.net_value_total = ZERO;
         total.net_amount_gvt = ZERO;
         total.net_based_amount_pwrd = ZERO;
-        // total.current_balance_pwrd = BigDecimal.fromString('0');
-        // total.current_balance_gvt = BigDecimal.fromString('0');
-        // total.current_balance_total = BigDecimal.fromString('0');
-        // total.net_returns_pwrd = BigDecimal.fromString('0');
-        // total.net_returns_gvt = BigDecimal.fromString('0');
-        // total.net_returns_total = BigDecimal.fromString('0');
     }
 
     if (coin === 'gro') {
