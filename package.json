@@ -2,15 +2,20 @@
   "name": "staker",
   "license": "UNLICENSED",
   "scripts": {
+    "prepare:subgraph": "mustache ./config/${NETWORK}-${SCOPE}.json ./templates/${BLOCKCHAIN}.subgraph.template.yaml > subgraph.yaml && graph codegen && graph build",
+    "prepare2": "mustache ./config/${NETWORK}-${SCOPE}.json ./templates/${BLOCKCHAIN}.subgraph.template.yaml > subgraph.yaml && rm -rf generated && npm run generate:schema && npm run subgraph:codegen && npm run subgraph:build",
+    "go": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph",
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/Staker",
+    "deploy_full": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-sjs",
     "create-local": "graph create --node http://localhost:8020/ sjuanati/Staker",
     "remove-local": "graph remove --node http://localhost:8020/ sjuanati/Staker",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sjuanati/Staker"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.31.0",
-    "@graphprotocol/graph-ts": "0.27.0"
+    "@graphprotocol/graph-ts": "0.27.0",
+    "mustache": "^4.2.0"
   }
 }
