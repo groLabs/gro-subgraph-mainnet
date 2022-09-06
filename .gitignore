@@ -2,4 +2,5 @@ build
 generated
 node_modules
 subgraph.yaml
+schema.graphql
 .DS_Store

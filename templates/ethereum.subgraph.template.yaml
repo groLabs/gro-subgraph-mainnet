@@ -2,7 +2,7 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Gvt
     network: {{network}}
     source:
@@ -11,7 +11,7 @@ dataSources:
       startBlock: {{GvtStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - User
@@ -28,7 +28,7 @@ dataSources:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/gvt.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Pwrd
     network: {{network}}
     source:
@@ -37,7 +37,7 @@ dataSources:
       startBlock: {{PwrdStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - User
@@ -54,7 +54,7 @@ dataSources:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/pwrd.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Gro
     network: {{network}}
     source:
@@ -63,7 +63,7 @@ dataSources:
       startBlock: {{GroStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - User
@@ -83,7 +83,7 @@ dataSources:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/gro.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: LpTokenStakerV1
     network: {{network}}
     source:
@@ -92,7 +92,7 @@ dataSources:
       startBlock: {{LpTokenStakerV1StartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - User
@@ -109,7 +109,7 @@ dataSources:
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
           handler: handleWithdrawV1
       file: ./src/mappings/staker.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: LpTokenStakerV2
     network: {{network}}
     source:
@@ -118,7 +118,7 @@ dataSources:
       startBlock: {{LpTokenStakerV2StartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - User
@@ -139,7 +139,7 @@ dataSources:
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
           handler: handleWithdrawV2
       file: ./src/mappings/staker.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: PnL
     network: {{network}}
     source:
@@ -148,7 +148,7 @@ dataSources:
       startBlock: {{PnLStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Price
@@ -164,7 +164,7 @@ dataSources:
         - event: LogPnLExecution(uint256,int256,int256,int256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handlePnLExecution
       file: ./src/mappings/pnl.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: UniswapV2Pair
     network: {{network}}
     source:
@@ -173,7 +173,7 @@ dataSources:
       startBlock: {{UniswapV2PairStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Price
@@ -184,47 +184,60 @@ dataSources:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwap
       file: ./src/mappings/uniswapV2Pair.ts
+
+
+
+
+
+
+
+
   # - kind: ethereum
-  #   name: UniswapV2GroUsdc
+  #   name: GROVestingV1
   #   network: mainnet
   #   source:
-  #     address: "0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6"
-  #     abi: UniswapV2GroUsdc
-  #     startBlock: 15327000
+  #     address: "0xA28693bf01Dc261887b238646Bb9636cB3a3730B"
+  #     abi: GROVesting
+  #     # startBlock: 13405101
+  #     startBlock: 14900000
   #   mapping:
   #     kind: ethereum/events
   #     apiVersion: 0.0.5
   #     language: wasm/assemblyscript
   #     entities:
-  #       - Price
+  #       - User
+  #       - CoreTx
   #     abis:
-  #       - name: UniswapV2GroUsdc
-  #         file: ./abis/ethereum/UniswapV2GroUsdc.json
+  #       - name: GROVesting
+  #         file: ./abis/GROVestingV1.json
   #     eventHandlers:
-  #       - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
-  #         handler: handleSwap
-  #     file: ./src/mappings/uniswapv2GroUsdc.ts
-  # very slow processing -> put latest block as much as possible
+  #       - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
+  #         handler: handleVestV1
+  #       - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
+  #         handler: handleExitV1
+  #     file: ./src/mappings/gro-vesting.ts
   # - kind: ethereum
-  #   name: UniswapV2UsdcWeth
-  #   network: mainnet
-  #   source:
-  #     # address: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc"
-  #     address: "0x397ff1542f962076d0bfe58ea045ffa2d347aca0"
-  #     abi: UniswapV2UsdcWeth
-  #     startBlock: 15447411
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.5
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - Price
-  #     abis:
-  #       - name: UniswapV2UsdcWeth
-  #         file: ./abis/ethereum/UniswapV2UsdcWeth.json
-  #     eventHandlers:
-  #       - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
-  #         handler: handleSwap
-  #     file: ./src/mappings/uniswapV2UsdcWeth.ts
-
-
+    # name: GROVestingV2
+    # network: mainnet
+    # source:
+    #   address: "0x748218256AfE0A19a88EBEB2E0C5Ce86d2178360"
+    #   abi: GROVesting
+    #   # startBlock: 13405101
+    #   startBlock: 14900000
+    # mapping:
+    #   kind: ethereum/events
+    #   apiVersion: 0.0.5
+    #   language: wasm/assemblyscript
+    #   entities:
+    #     - User
+    #     - CoreTx
+    #   abis:
+    #     - name: GROVesting
+    #       file: ./abis/GROVestingV2.json
+    #   eventHandlers:
+    #     - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
+    #       handler: handleVestV2
+    #     - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
+    #       handler: handleExitV2
+    #   file: ./src/mappings/gro-vesting.ts
+  # - kind: ethereum
