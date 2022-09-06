@@ -25,7 +25,7 @@ const setGvtFactor = (): void => {
     const contract = Gvt.bind(GVT_ADDRESS);
     const gvtFactor = contract.try_factor();
     if (gvtFactor.reverted) {
-        log.info('setGvtFactor() reverted in src/setters/factors.ts', []);
+        log.error('setGvtFactor() reverted in src/setters/factors.ts', []);
     } else {
         factor.gvt = tokenToDecimal(gvtFactor.value, 18, 12);
     }
@@ -37,7 +37,7 @@ const setPwrdFactor = (): void => {
     const contract = Pwrd.bind(PWRD_ADDRESS);
     const pwrdFactor = contract.try_factor();
     if (pwrdFactor.reverted) {
-        log.info('getPwrdFactor() reverted in src/setters/factors.ts', []);
+        log.error('getPwrdFactor() reverted in src/setters/factors.ts', []);
     } else {
         factor.pwrd = tokenToDecimal(pwrdFactor.value, 18, 12);
     }

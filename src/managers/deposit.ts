@@ -2,6 +2,8 @@ import { setUser } from '../setters/users'
 import { setDepositTx } from '../setters/deposits';
 import { DepositEvent } from '../types/deposit';
 
+
+// Deposit to Staker
 export const manageDeposit = (
     ev: DepositEvent,
 ): void => {

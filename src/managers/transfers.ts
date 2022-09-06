@@ -4,6 +4,7 @@ import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
 import { TransferEvent } from '../types/transfer';
 
+
 function buildTransfer(
     ev: TransferEvent,
     userAddress: string,
@@ -50,7 +51,6 @@ export const manageTransfer = (
     } else if (ev.toAddress == ZERO_ADDR) {
         userAddressOut = ev.fromAddress.toHexString();
         type = 'withdrawal';
-        //TODO: updated latest GVT price
     } else {
         userAddressIn = ev.toAddress.toHexString();
         userAddressOut = ev.fromAddress.toHexString();

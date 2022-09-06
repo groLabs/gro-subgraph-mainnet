@@ -2,6 +2,8 @@ import { setUser } from '../setters/users'
 import { setWithdrawalTx } from '../setters/withdrawals';
 import { WithdrawalEvent } from '../types/withdrawal';
 
+
+// Withdrawal from Staker
 export const manageWithdrawal = (
     ev: WithdrawalEvent,
 ): void => {

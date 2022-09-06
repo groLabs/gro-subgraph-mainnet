@@ -3,6 +3,8 @@ import { setClaimTx } from '../setters/claims';
 import { setPools } from '../setters/pools';
 import { ClaimEvent } from '../types/claim';
 
+
+// Claim from Staker
 export const manageClaim = (
     ev: ClaimEvent,
 ): void => {
