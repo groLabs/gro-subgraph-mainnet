@@ -36,22 +36,23 @@ export const getUniV2Price = (poolAddress: Address): BigDecimal => {
         log.error('getUniV2Price() reverted in src/utils/tokens.ts', []);
         return ZERO;
     } else {
-        if (poolAddress === UNISWAPV2_GRO_USDC_ADDRESS) {
+        if (poolAddress == UNISWAPV2_GRO_USDC_ADDRESS) {
             // return GRO price per share
             const gvt_reserve = reserves.value.get_reserve0();
             const usdc_reserve = reserves.value.get_reserve1();
             // TODO: chainlink to calc the USD price of USDC.
-            return tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(gvt_reserve, 18, 7)).truncate(DECIMALS);
-        } else if (poolAddress === UNISWAPV2_USDC_WETH_ADDRESS) {
+            const pps = tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(gvt_reserve, 18, 7)).truncate(DECIMALS);
+            return pps;
+        } else if (poolAddress == UNISWAPV2_USDC_WETH_ADDRESS) {
             // return WETH price per share
             const usdc_reserve = reserves.value.get_reserve0();
             const weth_reserve = reserves.value.get_reserve1();
             // TODO: chainlink to calc the USD price of USDC.
-            return tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(weth_reserve, 18, 7)).truncate(DECIMALS);
+            const pps = tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(weth_reserve, 18, 7)).truncate(DECIMALS);
+            return pps;
         } else {
             return ZERO;
         }
-
     }
 }
 
@@ -74,7 +75,7 @@ const getTokenFromPoolId = (
     poolId: i32,
     type: string
 ): string => {
-    if (type == 'claim') return 'gro'
+    if (type === 'claim') return 'gro'
     switch (poolId) {
         case 0:
             return 'gro';

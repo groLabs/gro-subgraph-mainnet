@@ -31,7 +31,7 @@ export const setGvtPrice = (): void => {
 
 export const setGroPrice = (): void => {
     const groPrice = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS);
-    if (groPrice !== ZERO) {
+    if (groPrice != ZERO) {
         let price = initPrice();
         price.gro = groPrice;
         price.save();
@@ -40,7 +40,7 @@ export const setGroPrice = (): void => {
 
 export const setWethPrice = (): void => {
     const wethPrice = getUniV2Price(UNISWAPV2_USDC_WETH_ADDRESS);
-    if (wethPrice !== ZERO) {
+    if (wethPrice != ZERO) {
         let price = initPrice();
         price.weth = wethPrice;
         price.save();
