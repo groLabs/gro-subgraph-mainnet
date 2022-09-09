@@ -12,6 +12,6 @@
     "LpTokenStakerV2StartBlock": 15000000,
     "PnLAddress": "0xF67A426e110c74c566174a37C9269780fB48096d",
     "PnLStartBlock": 15000000,
-    "UniswapV2PairAddress": "0x2E32bAd45a1C29c1EA27cf4dD588DF9e68ED376C",
+    "UniswapV2PairAddress": "0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB",
     "UniswapV2PairStartBlock": 15327000
   }
