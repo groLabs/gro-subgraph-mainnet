@@ -14,11 +14,12 @@ import {
     parseClaimV2Event,
     parseMultiClaimV2Event,
 } from '../parsers/claim';
-import { parseDepositEvent } from '../parsers/deposit';
+import { parseStakerDepositEvent } from '../parsers/deposit';
+import { parseStakerWithdrawalEvent } from '../parsers/withdrawals';
 import { manageClaim } from '../managers/claims';
-import { manageDeposit } from '../managers/deposit';
-import { manageWithdrawal } from '../managers/withdrawal';
-import { parseWithdrawalEvent } from '../parsers/withdrawals';
+import { manageStakerDeposit } from '../managers/deposit';
+import { manageStakerWithdrawal } from '../managers/withdrawal';
+
 
 
 export function handleClaimV1(event: LogClaimV1Event): void {
@@ -37,22 +38,22 @@ export function handleMultiClaimV2(event: LogMultiClaimV2Event): void {
 }
 
 export function handleDepositV1(event: LogDepositV1Event): void {
-    const ev = parseDepositEvent(event);
-    manageDeposit(ev);
+    const ev = parseStakerDepositEvent(event);
+    manageStakerDeposit(ev);
 }
 
 export function handleDepositV2(event: LogDepositV2Event): void {
-    const ev = parseDepositEvent(event);
-    manageDeposit(ev);
+    const ev = parseStakerDepositEvent(event);
+    manageStakerDeposit(ev);
 }
 
 export function handleWithdrawV1(event: LogWithdrawV1Event): void {
-    const ev = parseWithdrawalEvent(event);
-    manageWithdrawal(ev);
+    const ev = parseStakerWithdrawalEvent(event);
+    manageStakerWithdrawal(ev);
 }
 
 export function handleWithdrawV2(event: LogWithdrawV2Event): void {
-    const ev = parseWithdrawalEvent(event);
-    manageWithdrawal(ev);
+    const ev = parseStakerWithdrawalEvent(event);
+    manageStakerWithdrawal(ev);
 }
 
