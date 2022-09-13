@@ -2,6 +2,170 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
+  # deposit handlers *********************************************
+  - kind: ethereum/contract
+    name: DepositHandlerV1
+    network: {{network}}
+    source:
+      address: '{{DepositHandlerV1Address}}'
+      abi: DepositHandler
+      startBlock: {{DepositHandlerV1StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - TransferTx
+      abis:
+        - name: DepositHandler
+          file: ./abis/ethereum/DepositHandlerV1.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogNewDeposit(indexed address,indexed address,bool,uint256,uint256[])
+          handler: handleDepositV1
+          receipt: true
+      file: ./src/mappings/depositHandler.ts
+  - kind: ethereum/contract
+    name: DepositHandlerV2
+    network: {{network}}
+    source:
+      address: '{{DepositHandlerV2Address}}'
+      abi: DepositHandler
+      startBlock: {{DepositHandlerV2StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - TransferTx
+      abis:
+        - name: DepositHandler
+          file: ./abis/ethereum/DepositHandlerV2.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogNewDeposit(indexed address,indexed address,bool,uint256,uint256[3])
+          handler: handleDepositV2
+          receipt: true
+      file: ./src/mappings/depositHandler.ts
+  - kind: ethereum/contract
+    name: DepositHandlerV3
+    network: {{network}}
+    source:
+      address: '{{DepositHandlerV3Address}}'
+      abi: DepositHandler
+      startBlock: {{DepositHandlerV3StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - TransferTx
+      abis:
+        - name: DepositHandler
+          file: ./abis/ethereum/DepositHandlerV3.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogNewDeposit(indexed address,indexed address,bool,uint256,uint256[3])
+          handler: handleDepositV3
+          receipt: true
+      file: ./src/mappings/depositHandler.ts
+# withdrawal handlers *********************************
+  - kind: ethereum/contract
+    name: WithdrawHandlerV1
+    network: {{network}}
+    source:
+      address: '{{WithdrawHandlerV1Address}}'
+      abi: WithdrawHandler
+      startBlock: {{WithdrawHandlerV1StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - TransferTx
+      abis:
+        - name: WithdrawHandler
+          file: ./abis/ethereum/WithdrawHandlerV1.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogNewWithdrawal(indexed address,indexed address,bool,bool,bool,uint256,uint256,uint256,uint256[])
+          handler: handleWithdrawalV1
+          receipt: true
+      file: ./src/mappings/withdrawHandler.ts
+  - kind: ethereum/contract
+    name: WithdrawHandlerV2
+    network: {{network}}
+    source:
+      address: '{{WithdrawHandlerV2Address}}'
+      abi: WithdrawHandler
+      startBlock: {{WithdrawHandlerV2StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - TransferTx
+      abis:
+        - name: WithdrawHandler
+          file: ./abis/ethereum/WithdrawHandlerV2.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogNewWithdrawal(indexed address,indexed address,bool,bool,bool,uint256,uint256,uint256,uint256[3])
+          handler: handleWithdrawalV2
+          receipt: true
+      file: ./src/mappings/withdrawHandler.ts
+  - kind: ethereum/contract
+    name: WithdrawHandlerV3
+    network: {{network}}
+    source:
+      address: '{{WithdrawHandlerV3Address}}'
+      abi: WithdrawHandler
+      startBlock: {{WithdrawHandlerV3StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - TransferTx
+      abis:
+        - name: WithdrawHandler
+          file: ./abis/ethereum/WithdrawHandlerV3.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogNewWithdrawal(indexed address,indexed address,bool,bool,bool,uint256,uint256,uint256,uint256[3])
+          handler: handleWithdrawalV3
+          receipt: true
+      file: ./src/mappings/withdrawHandler.ts
   - kind: ethereum/contract
     name: Gvt
     network: {{network}}
@@ -184,12 +348,6 @@ dataSources:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwap
       file: ./src/mappings/uniswapV2Pair.ts
-
-
-
-
-
-
 
 
   # - kind: ethereum

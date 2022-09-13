@@ -13,5 +13,18 @@
     "PnLAddress": "0xF67A426e110c74c566174a37C9269780fB48096d",
     "PnLStartBlock": 15000000,
     "UniswapV2PairAddress": "0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB",
-    "UniswapV2PairStartBlock": 15327000
+    "UniswapV2PairStartBlock": 15327000,
+    "DepositHandlerV1Address": "0x79b14d909381D79B655C0700d0fdc2C7054635b9",
+    "DepositHandlerV1StartBlock": 15000000,
+    "DepositHandlerV2Address": "0x9da6ad743F4F2A247A56350703A4B501c7f2C224",
+    "DepositHandlerV2StartBlock": 15000000,
+    "DepositHandlerV3Address": "0xB7207Ea9446DcA1dEC1c1FC93c6Fcdf8B4a44F40",
+    "DepositHandlerV3StartBlock": 15000000,
+    "WithdrawHandlerV1Address": "0xd89512Bdf570476310DE854Ef69D715E0e85B09F",
+    "WithdrawHandlerV1StartBlock": 15000000,
+    "WithdrawHandlerV2Address": "0x59B6b763509198d07cF8F13a2dc6F2df98CB0a1d",
+    "WithdrawHandlerV2StartBlock": 15000000,
+    "WithdrawHandlerV3Address": "0x641bEFA4dB601578A64F0Fc1f4E89E9869268Fe7",
+    "WithdrawHandlerV3StartBlock": 15000000
   }
+  
