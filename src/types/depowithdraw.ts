@@ -4,16 +4,18 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
-// Staker withdrawal
-export class WithdrawalEvent {
+// Core deposit or withdrawal
+export class DepoWithdraw {
     id: string
     block: i32
     timestamp: i32
     contractAddress: Address
     type: string
     userAddress: string
-    pid: i32
-    amount: BigInt
+    fromAddress: Address
+    toAddress: Address
+    coinAmount: BigInt
+    usdAmount: BigInt
 
     constructor(
         id: string,
@@ -22,8 +24,10 @@ export class WithdrawalEvent {
         contractAddress: Address,
         type: string,
         userAddress: string,
-        pid: i32,
-        amount: BigInt,
+        fromAddress: Address,
+        toAddress: Address,
+        coinAmount: BigInt,
+        usdAmount: BigInt,
     ) {
         this.id = id
         this.block = block
@@ -31,7 +35,9 @@ export class WithdrawalEvent {
         this.contractAddress = contractAddress
         this.type = type
         this.userAddress = userAddress
-        this.pid = pid
-        this.amount = amount
+        this.fromAddress = fromAddress
+        this.toAddress = toAddress
+        this.coinAmount = coinAmount
+        this.usdAmount = usdAmount
     }
 }

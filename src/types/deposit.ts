@@ -4,6 +4,7 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
+// Staker deposit
 export class DepositEvent {
     id: string
     block: i32
