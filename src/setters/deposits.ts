@@ -8,7 +8,7 @@ import { DepositEvent } from '../types/deposit';
 
 
 //TODO: base depends on token?
-export const setDepositTx = (
+export const setStakerDepositTx = (
     ev: DepositEvent,
 ): DepositTx => {
     let tx = new DepositTx(ev.id);
@@ -28,3 +28,4 @@ export const setDepositTx = (
     tx.save();
     return tx;
 }
+

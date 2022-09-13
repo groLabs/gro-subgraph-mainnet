@@ -4,7 +4,7 @@ import { tokenToDecimal } from '../utils/tokens';
 import { WithdrawalEvent } from '../types/withdrawal';
 
 
-export const setWithdrawalTx = (
+export const setStakerWithdrawalTx = (
     ev: WithdrawalEvent,
 ): WithdrawalTx => {
     let tx = new WithdrawalTx(ev.id);
