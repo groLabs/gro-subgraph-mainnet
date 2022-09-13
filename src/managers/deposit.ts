@@ -1,10 +1,28 @@
 import { setUser } from '../setters/users'
-import { setDepositTx } from '../setters/deposits';
+import { setStakerDepositTx } from '../setters/deposits';
+import { setDepoWithdrawTx } from '../setters/depowithdraw';
 import { DepositEvent } from '../types/deposit';
+import { DepoWithdraw } from '../types/depowithdraw';
+import { Log } from '../types/log';
 
 
-// Deposit to Staker
-export const manageDeposit = (
+// Manage core deposit
+export const manageCoreDeposit = (
+    ev: DepoWithdraw,
+    logs: Log[],
+    token: string
+): void => {
+
+    // Step 1: Manage User
+    setUser(ev.userAddress);
+
+    //Step 2: Manage Transaction
+    setDepoWithdrawTx(ev, logs, token);
+}
+
+
+// Manage staker deposit
+export const manageStakerDeposit = (
     ev: DepositEvent,
 ): void => {
 
@@ -12,5 +30,5 @@ export const manageDeposit = (
     setUser(ev.userAddress);
 
     //Step 2: Manage Transaction
-    setDepositTx(ev);
+    setStakerDepositTx(ev);
 }
