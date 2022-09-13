@@ -18,6 +18,12 @@ import {
 } from '../utils/constants';
 
 
+export const getGroToken = (isPwrd: bool): string => {
+    return (isPwrd)
+        ? 'pwrd'
+        : 'gvt';
+}
+
 export const getGvtPrice = (): BigDecimal => {
     const contract = Gvt.bind(GVT_ADDRESS);
     const pricePerShare = contract.try_getPricePerShare();
