@@ -1,8 +1,31 @@
 // @ts-nocheck
 import { DepositEvent } from '../types/deposit';
+import { DepoWithdraw as DepoWithdrawEvent} from '../types/depowithdraw';
+import { 
+    ZERO,
+    ZERO_ADDR,
+} from '../utils/constants';
 
 
-function parseDepositEvent<T>(ev: T): DepositEvent {
+// parse core deposit events
+function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
+    const event = new DepoWithdrawEvent(
+        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.block.number.toI32(),
+        ev.block.timestamp.toI32(),
+        ev.address,
+        'deposit',
+        ev.params.user.toHexString(),   // links with User.id,
+        ZERO_ADDR,                      // from
+        ev.params.user,                 // to
+        ZERO,                           // coinAmount
+        ev.params.usdAmount,            // usdAmount
+    )
+    return event;
+}
+
+// parse staker deposit events
+function parseStakerDepositEvent<T>(ev: T): DepositEvent {
     const event = new DepositEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -17,5 +40,6 @@ function parseDepositEvent<T>(ev: T): DepositEvent {
 }
 
 export {
-    parseDepositEvent
+    parseCoreDepositEvent,
+    parseStakerDepositEvent,
 }

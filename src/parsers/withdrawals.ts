@@ -1,8 +1,31 @@
 // @ts-nocheck
 import { WithdrawalEvent } from '../types/withdrawal';
+import { DepoWithdraw as DepoWithdrawEvent} from '../types/depowithdraw';
+import { 
+    ZERO,
+    ZERO_ADDR,
+} from '../utils/constants';
 
 
-function parseWithdrawalEvent<T>(ev: T): WithdrawalEvent {
+// parse core withdrawal events
+function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
+    const event = new DepoWithdrawEvent(
+        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.block.number.toI32(),
+        ev.block.timestamp.toI32(),
+        ev.address,
+        'withdrawal',
+        ev.params.user.toHexString(),   // links with User.id,
+        ev.params.user,                 // from
+        ZERO_ADDR,                      // to
+        ZERO,                           // coinAmount
+        ev.params.returnUsd,            // usdAmount
+    )
+    return event;
+}
+
+// parse staker withdrawal events
+function parseStakerWithdrawalEvent<T>(ev: T): WithdrawalEvent {
     const event = new WithdrawalEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -17,5 +40,6 @@ function parseWithdrawalEvent<T>(ev: T): WithdrawalEvent {
 }
 
 export {
-    parseWithdrawalEvent
+    parseCoreWithdrawalEvent,
+    parseStakerWithdrawalEvent,
 }
