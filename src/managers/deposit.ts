@@ -4,6 +4,7 @@ import { setDepoWithdrawTx } from '../setters/depowithdraw';
 import { DepositEvent } from '../types/deposit';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
+import { setTotals } from '../setters/totals';
 
 
 // Manage core deposit
@@ -17,9 +18,18 @@ export const manageCoreDeposit = (
     setUser(ev.userAddress);
 
     //Step 2: Manage Transaction
-    setDepoWithdrawTx(ev, logs, token);
-}
+    const tx = setDepoWithdrawTx(ev, logs, token);
 
+    //Step 3: Manage Totals
+    setTotals(
+        tx.type,
+        token,
+        ev.userAddress,
+        tx.coinAmount,
+        tx.usdAmount,
+        tx.factor,
+    );
+}
 
 // Manage staker deposit
 export const manageStakerDeposit = (

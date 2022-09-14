@@ -1,10 +1,8 @@
 // @ts-nocheck
 import { WithdrawalEvent } from '../types/withdrawal';
-import { DepoWithdraw as DepoWithdrawEvent} from '../types/depowithdraw';
-import { 
-    ZERO,
-    ZERO_ADDR,
-} from '../utils/constants';
+import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
+import { ZERO_ADDR } from '../utils/constants';
+import { BigInt } from '@graphprotocol/graph-ts';
 
 
 // parse core withdrawal events
@@ -18,7 +16,7 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.params.user.toHexString(),   // links with User.id,
         ev.params.user,                 // from
         ZERO_ADDR,                      // to
-        ZERO,                           // coinAmount
+        BigInt.fromString('0'),         // coinAmount
         ev.params.returnUsd,            // usdAmount
     )
     return event;
