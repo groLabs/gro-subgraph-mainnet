@@ -1,19 +1,44 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ZERO_ADDR } from '../utils/constants';
+import {
+    ZERO_ADDR,
+    STAKERS
+} from '../utils/constants';
 
+
+// const isDepositOrWithdrawal = (
+//     from: Address,
+//     to: Address,
+// ): bool => {
+//     const res = (from == ZERO_ADDR || to == ZERO_ADDR)
+//         ? true
+//         : false;
+
+//     return res;
+// }
+
+// check if Transfer is a deposit or withdrawal
 const isDepositOrWithdrawal = (
     from: Address,
     to: Address,
 ): bool => {
-    const res = (from == ZERO_ADDR || to == ZERO_ADDR)
+    return (from == ZERO_ADDR || to == ZERO_ADDR)
         ? true
         : false;
+}
 
-    return res;
+// check if Transfer comes in or out of a staker contract
+const isStakerTransfer = (
+    from: Address,
+    to: Address,
+): bool => {
+    return (STAKERS.includes(from) || STAKERS.includes(to))
+        ? true
+        : false;
 }
 
 export {
     isDepositOrWithdrawal,
+    isStakerTransfer,
 }
 
 
