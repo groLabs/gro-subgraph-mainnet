@@ -348,8 +348,74 @@ dataSources:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwap
       file: ./src/mappings/uniswapV2Pair.ts
-
-
+# stablecoins *********************************
+  - kind: ethereum/contract
+    name: Dai
+    network: {{network}}
+    source:
+      address: '{{DaiAddress}}'
+      abi: Dai
+      startBlock: {{DaiStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - CoreTx
+      abis:
+        - name: Dai
+          file: ./abis/ethereum/Dai.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mappings/Dai.ts
+  - kind: ethereum/contract
+    name: Usdc
+    network: {{network}}
+    source:
+      address: '{{UsdcAddress}}'
+      abi: ERC20
+      startBlock: {{UsdcStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - CoreTx
+      abis:
+        - name: Usdc
+          file: ./abis/ethereum/Usdc.json
+        - name: ERC20
+          file: ./abis/ethereum/ERC20.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mappings/Usdc.ts
+  - kind: ethereum/contract
+    name: Usdt
+    network: {{network}}
+    source:
+      address: '{{UsdtAddress}}'
+      abi: ERC20
+      startBlock: {{UsdtStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - CoreTx
+      abis:
+        - name: Usdt
+          file: ./abis/ethereum/Usdt.json
+        - name: ERC20
+          file: ./abis/ethereum/ERC20.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mappings/Usdt.ts
   # - kind: ethereum
   #   name: GROVestingV1
   #   network: mainnet

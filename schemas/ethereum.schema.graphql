@@ -5,9 +5,9 @@ enum Token {
   pwrd
   gvt
   gro
+  dai
   usdc
   usdt
-  dai
   balancer_gro_weth
   uniswap_gvt_gro
   uniswap_gro_usdc
