@@ -10,10 +10,8 @@ export const initTotals = (userAddress: string): Totals => {
         total.userAddress = userAddress;
         total.amount_added_gvt = ZERO;
         total.amount_added_pwrd = ZERO;
-        total.amount_added_total = ZERO;
         total.amount_removed_gvt = ZERO;
         total.amount_removed_pwrd = ZERO;
-        total.amount_removed_total = ZERO;
         total.value_added_gvt = ZERO;
         total.value_added_pwrd = ZERO;
         total.value_added_total = ZERO;
@@ -53,7 +51,6 @@ export const setTotals = (
             total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus(coinAmount).times(factor); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.plus(usdAmount);
         }
-        total.amount_added_total = total.amount_added_total.plus(coinAmount);
         total.value_added_total = total.value_added_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.plus(usdAmount);
     } else if (type === 'withdrawal' || type === 'transfer_out') {
@@ -68,7 +65,6 @@ export const setTotals = (
             total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus(coinAmount).times(factor); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.minus(usdAmount);
         }
-        total.amount_removed_total = total.amount_removed_total.plus(coinAmount);
         total.value_removed_total = total.value_removed_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.minus(usdAmount);
     }

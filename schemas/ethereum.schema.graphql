@@ -46,10 +46,8 @@ type Totals @entity {
   userAddress: User! # FK to User
   amount_added_pwrd: BigDecimal!
   amount_added_gvt: BigDecimal!
-  amount_added_total: BigDecimal!
   amount_removed_pwrd: BigDecimal!
   amount_removed_gvt: BigDecimal!
-  amount_removed_total: BigDecimal!
   value_added_pwrd: BigDecimal!
   value_added_gvt: BigDecimal!
   value_added_total: BigDecimal!
