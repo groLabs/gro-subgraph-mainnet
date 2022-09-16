@@ -88,6 +88,7 @@ type Pool @entity {
   balance: BigDecimal!
 }
 
+# TODO: Rename to CoreTransferTx
 # gro protocol transfers, deposits & withdrawals
 type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
@@ -120,6 +121,7 @@ type ApprovalTx @entity {
   usdAmount: BigDecimal!
 }
 
+# TODO: Rename into StakerClaimTx
 # staker claims
 type ClaimTx @entity {
   id: ID! # hash-logIndex
@@ -134,6 +136,7 @@ type ClaimTx @entity {
   amount: BigDecimal!
 }
 
+# TODO: Merge deposits & withdrawals into StakerTransferTx
 # staker deposits
 type DepositTx @entity {
   id: ID! # hash-logIndex

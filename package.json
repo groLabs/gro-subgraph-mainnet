@@ -1,16 +1,17 @@
 {
-  "name": "staker",
+  "name": "gro-subgraph-eth",
   "license": "UNLICENSED",
   "scripts": {
     "eth-test": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test",
     "eth-prod": "SCOPE=prod BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:prod",
+    "eth-test-local": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:local",
     "prepare:subgraph": "mustache ./config/${NETWORK}-${SCOPE}.json ./templates/${BLOCKCHAIN}.subgraph.template.yaml > subgraph.yaml && rm -rf generated && yarn generate:schema && graph codegen && graph build",
     "generate:schema": "cp ./schemas/${BLOCKCHAIN}.schema.graphql schema.graphql",
     "deploy:mainnet:test": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
     "deploy:mainnet:prod": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-prod-eth",
+    "deploy:mainnet:test:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sjuanati/gro-test-eth",
     "create-local": "graph create --node http://localhost:8020/ sjuanati/gro-test-eth",
     "remove-local": "graph remove --node http://localhost:8020/ sjuanati/gro-test-eth",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sjuanati/gro-test-eth",
     "codegen": "graph codegen",
     "build": "graph build"
   },

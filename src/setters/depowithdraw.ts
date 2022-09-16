@@ -17,7 +17,7 @@ import {
     ZERO_ADDR,
     GVT_ADDRESS,
     PWRD_ADDRESS,
-    ERC20_TRANSFER_SIGNATURE,
+    ERC20_TRANSFER_SIG,
 } from '../utils/constants';
 
 
@@ -54,7 +54,7 @@ export function getCoinAmount(
         if (
             (log.address == GVT_ADDRESS
                 || log.address == PWRD_ADDRESS)
-            && log.topics[0].toHexString() == ERC20_TRANSFER_SIGNATURE
+            && log.topics[0].toHexString() == ERC20_TRANSFER_SIG
             && log.topics.length === 3
         ) {
             const from = ethereum.decode('address', log.topics[1])!.toAddress();

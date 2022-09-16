@@ -1,7 +1,7 @@
 import { Address } from '@graphprotocol/graph-ts';
 import {
     ZERO_ADDR,
-    STAKERS
+    STAKER_ADDRESSES
 } from '../utils/constants';
 
 
@@ -31,7 +31,7 @@ const isStakerTransfer = (
     from: Address,
     to: Address,
 ): bool => {
-    return (STAKERS.includes(from) || STAKERS.includes(to))
+    return (STAKER_ADDRESSES.includes(from) || STAKER_ADDRESSES.includes(to))
         ? true
         : false;
 }

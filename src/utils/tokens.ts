@@ -64,15 +64,20 @@ export const getUniV2Price = (poolAddress: Address): BigDecimal => {
 
 // Retrieves price per share for a given token
 const getPricePerShare = (token: string): BigDecimal => {
-    let price: BigDecimal;
+    let price: BigDecimal = ZERO;
     if (token === 'gvt') {
         price = getGvtPrice();
-    } else if (token === 'pwrd') {
-        price = ONE;
     } else if (token === 'gro') {
         price = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS);
+    } else if (
+        token === 'pwrd'
+        || token === 'dai'
+        || token === 'usdc'
+        || token === 'usdt'
+    ) {
+        price = ONE;
     } else {
-        price = ZERO;
+        // TODO: show log
     }
     return price;
 }
