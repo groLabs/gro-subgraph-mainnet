@@ -2,13 +2,17 @@
   "name": "gro-subgraph-eth",
   "license": "UNLICENSED",
   "scripts": {
-    "eth-test": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test",
-    "eth-prod": "SCOPE=prod BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:prod",
+    "eth-test-hosted": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:hosted",
+    "eth-prod-hosted": "SCOPE=prod BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:prod:hosted",
+    "eth-test-studio": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:studio",
+    "eth-prod-studio": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:prod:studio",
     "eth-test-local": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:local",
     "prepare:subgraph": "mustache ./config/${NETWORK}-${SCOPE}.json ./templates/${BLOCKCHAIN}.subgraph.template.yaml > subgraph.yaml && rm -rf generated && yarn generate:schema && graph codegen && graph build",
     "generate:schema": "cp ./schemas/${BLOCKCHAIN}.schema.graphql schema.graphql",
-    "deploy:mainnet:test": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
-    "deploy:mainnet:prod": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-prod-eth",
+    "deploy:mainnet:test:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
+    "deploy:mainnet:prod:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-prod-eth",
+    "deploy:mainnet:test:studio": "graph deploy --studio gro-mainnet-test",
+    "deploy:mainnet:prod:studio": "graph deploy --studio gro-mainnet",
     "deploy:mainnet:test:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sjuanati/gro-test-eth",
     "create-local": "graph create --node http://localhost:8020/ sjuanati/gro-test-eth",
     "remove-local": "graph remove --node http://localhost:8020/ sjuanati/gro-test-eth",
@@ -16,7 +20,7 @@
     "build": "graph build"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.31.0",
+    "@graphprotocol/graph-cli": "0.33.1",
     "@graphprotocol/graph-ts": "0.27.0",
     "mustache": "^4.2.0"
   }
