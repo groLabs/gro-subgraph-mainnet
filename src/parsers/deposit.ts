@@ -12,7 +12,7 @@ function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
         ev.address,
-        'deposit',
+        'core_deposit',
         ev.params.user.toHexString(),   // links with User.id,
         ZERO_ADDR,                      // from
         ev.params.user,                 // to
@@ -29,7 +29,7 @@ function parseStakerDepositEvent<T>(ev: T): DepositEvent {
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
         ev.address,
-        'deposit',
+        'staker_deposit',
         ev.params.user.toHexString(),  // links with User.id,
         ev.params.pid.toI32(),
         ev.params.amount,
@@ -37,7 +37,24 @@ function parseStakerDepositEvent<T>(ev: T): DepositEvent {
     return event;
 }
 
+function parseStakerDepositEvent2<T>(ev: T): DepoWithdrawEvent {
+    const event = new DepoWithdrawEvent(
+        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.block.number.toI32(),
+        ev.block.timestamp.toI32(),
+        ev.address,
+        'staker_deposit',
+        ev.params.user.toHexString(),   // links with User.id,
+        ev.params.user,                 // from
+        ev.address,                     // to
+        ev.params.amount,               // coinAmount
+        BigInt.fromString('0'),         // usdAmount
+    )
+    return event;
+}
+
 export {
     parseCoreDepositEvent,
     parseStakerDepositEvent,
+    parseStakerDepositEvent2,
 }

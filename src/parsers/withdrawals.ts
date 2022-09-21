@@ -12,7 +12,7 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
         ev.address,
-        'withdrawal',
+        'core_withdrawal',
         ev.params.user.toHexString(),   // links with User.id,
         ev.params.user,                 // from
         ZERO_ADDR,                      // to
@@ -29,7 +29,7 @@ function parseStakerWithdrawalEvent<T>(ev: T): WithdrawalEvent {
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
         ev.address,
-        'withdrawal',
+        'staker_withdrawal',
         ev.params.user.toHexString(),  // links with User.id,
         ev.params.pid.toI32(),
         ev.params.amount,

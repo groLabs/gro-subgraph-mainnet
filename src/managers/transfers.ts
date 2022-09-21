@@ -47,10 +47,10 @@ export const manageTransfer = (
     // case C -> else, transfer between users (transfer_in & transfer_out)
     if (ev.fromAddress == ZERO_ADDR) {
         userAddressIn = ev.toAddress.toHexString();
-        type = 'deposit';
+        type = 'core_deposit';
     } else if (ev.toAddress == ZERO_ADDR) {
         userAddressOut = ev.fromAddress.toHexString();
-        type = 'withdrawal';
+        type = 'core_withdrawal';
     } else {
         userAddressIn = ev.toAddress.toHexString();
         userAddressOut = ev.fromAddress.toHexString();
@@ -58,7 +58,7 @@ export const manageTransfer = (
 
     // Create one tx (mint OR burn) or two txs (transfer_in AND transfer_out)
     if (type !== '') {
-        let userAddress = (type == 'deposit')
+        let userAddress = (type == 'core_deposit')
             ? userAddressIn
             : userAddressOut;
         buildTransfer(ev, userAddress, type, token);

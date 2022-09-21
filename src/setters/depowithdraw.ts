@@ -59,8 +59,8 @@ export function getCoinAmount(
         ) {
             const from = ethereum.decode('address', log.topics[1])!.toAddress();
             const to = ethereum.decode('address', log.topics[2])!.toAddress();
-            if ((tx.type === 'deposit' && from == ZERO_ADDR)
-                || (tx.type === 'withdrawal' && to == ZERO_ADDR)) {
+            if ((tx.type === 'core_deposit' && from == ZERO_ADDR)
+                || (tx.type === 'core_withdrawal' && to == ZERO_ADDR)) {
                 const value = ethereum.decode('uin256', log.data)!.toBigInt();
                 return tokenToDecimal(value, 18, 7);
             }

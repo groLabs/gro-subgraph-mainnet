@@ -39,7 +39,7 @@ export const setTotals = (
 
     if (coin === 'gro') {
         // do nothing for now (required to initialise non-null amounts to 0)
-    } else if (type === 'deposit' || type === 'transfer_in') {
+    } else if (type === 'core_deposit' || type === 'transfer_in') {
         if (coin === 'gvt') {
             total.amount_added_gvt = total.amount_added_gvt.plus(coinAmount);
             total.value_added_gvt = total.value_added_gvt.plus(usdAmount);
@@ -53,7 +53,7 @@ export const setTotals = (
         }
         total.value_added_total = total.value_added_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.plus(usdAmount);
-    } else if (type === 'withdrawal' || type === 'transfer_out') {
+    } else if (type === 'core_withdrawal' || type === 'transfer_out') {
         if (coin === 'gvt') {
             total.amount_removed_gvt = total.amount_removed_gvt.plus(coinAmount);
             total.value_removed_gvt = total.value_removed_gvt.plus(usdAmount);
