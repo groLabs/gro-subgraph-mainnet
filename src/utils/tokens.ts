@@ -82,11 +82,9 @@ const getPricePerShare = (token: string): BigDecimal => {
     return price;
 }
 
-const getTokenFromPoolId = (
+const getTokenByPoolId = (
     poolId: i32,
-    type: string
 ): string => {
-    if (type === 'claim') return 'gro'
     switch (poolId) {
         case 0:
             return 'gro';
@@ -148,7 +146,7 @@ const getFactor = (token: string): BigDecimal => {
 
 export {
     getPricePerShare,
-    getTokenFromPoolId,
+    getTokenByPoolId,
     tokenToDecimal,
     getFactor,
 }

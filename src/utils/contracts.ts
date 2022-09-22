@@ -5,17 +5,6 @@ import {
 } from '../utils/constants';
 
 
-// const isDepositOrWithdrawal = (
-//     from: Address,
-//     to: Address,
-// ): bool => {
-//     const res = (from == ZERO_ADDR || to == ZERO_ADDR)
-//         ? true
-//         : false;
-
-//     return res;
-// }
-
 // check if Transfer is a deposit or withdrawal
 const isDepositOrWithdrawal = (
     from: Address,

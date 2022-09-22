@@ -8,6 +8,7 @@ import {
 export const DECIMALS = 7;
 export const ZERO = BigDecimal.fromString('0');
 export const ONE = BigDecimal.fromString('1');
+export const NO_POOL = -1;
 
 // Addresses
 export const NO_ADDR = Bytes.empty();
@@ -20,12 +21,12 @@ export const UNISWAPV2_GRO_USDC_ADDRESS = Address.fromString('0x21C5918CcB42d20A
 export const UNISWAPV2_USDC_WETH_ADDRESS = Address.fromString('0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc');
 export const STAKER_V1_ADDRESS = Address.fromString('0x001C249c09090D79Dc350A286247479F08c7aaD7');
 export const STAKER_V2_ADDRESS = Address.fromString('0x2E32bAd45a1C29c1EA27cf4dD588DF9e68ED376C');
-// export const DAI_ADDRESS = Address.fromString('0x6B175474E89094C44Da98b954EedeAC495271d0F');
-// export const USDC_ADDRESS = Address.fromString('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48');
-// export const USDT_ADDRESS = Address.fromString('0xdAC17F958D2ee523a2206206994597C13D831ec7');
 export const DEPOSIT_HANDLER_V1_ADDRESS = Address.fromString('0x79b14d909381D79B655C0700d0fdc2C7054635b9');
 export const DEPOSIT_HANDLER_V2_ADDRESS = Address.fromString('0x9da6ad743F4F2A247A56350703A4B501c7f2C224');
 export const DEPOSIT_HANDLER_V3_ADDRESS = Address.fromString('0xB7207Ea9446DcA1dEC1c1FC93c6Fcdf8B4a44F40');
+// export const DAI_ADDRESS = Address.fromString('0x6B175474E89094C44Da98b954EedeAC495271d0F');
+// export const USDC_ADDRESS = Address.fromString('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48');
+// export const USDT_ADDRESS = Address.fromString('0xdAC17F958D2ee523a2206206994597C13D831ec7');
 
 // Groups of contract addresses
 export const STAKER_ADDRESSES = [

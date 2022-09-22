@@ -1,9 +1,6 @@
 import { Bytes } from '@graphprotocol/graph-ts';
 import { ClaimTx } from '../../generated/schema';
-import {
-    tokenToDecimal,
-    getPricePerShare,
-} from '../utils/tokens';
+import { tokenToDecimal } from '../utils/tokens';
 import { ClaimEvent } from '../types/claim';
 
 
@@ -12,10 +9,6 @@ export const setClaimTx = (
 ): ClaimTx => {
     let tx = new ClaimTx(ev.id);
     const coinAmount = tokenToDecimal(ev.amount, 18, 7);
-    // const pricePerShare = getPricePerShare(
-    //     ev.contractAddress,
-    //     token,
-    // );
     tx.contractAddress = ev.contractAddress;
     tx.block = ev.block;
     tx.timestamp = ev.timestamp;
@@ -26,7 +19,7 @@ export const setClaimTx = (
     tx.userAddress = ev.userAddress;
     tx.poolId = ev.pid;
     tx.vest = ev.vest;
-    tx.amount = coinAmount; // coinAmount.times(pricePerShare);
+    tx.amount = coinAmount;
     tx.save();
     return tx;
 }

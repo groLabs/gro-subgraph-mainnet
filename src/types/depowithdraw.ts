@@ -16,6 +16,7 @@ export class DepoWithdraw {
     toAddress: Address
     coinAmount: BigInt
     usdAmount: BigInt
+    poolId: i32
 
     constructor(
         id: string,
@@ -28,6 +29,7 @@ export class DepoWithdraw {
         toAddress: Address,
         coinAmount: BigInt,
         usdAmount: BigInt,
+        poolId: i32,
     ) {
         this.id = id
         this.block = block
@@ -39,5 +41,6 @@ export class DepoWithdraw {
         this.toAddress = toAddress
         this.coinAmount = coinAmount
         this.usdAmount = usdAmount
+        this.poolId = poolId
     }
 }
