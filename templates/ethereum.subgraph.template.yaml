@@ -265,6 +265,10 @@ dataSources:
       abis:
         - name: LpTokenStaker
           file: ./abis/ethereum/LpTokenStakerV1.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
       eventHandlers:
         - event: LogClaim(indexed address,indexed uint256,uint256)
           handler: handleClaimV1
@@ -293,6 +297,10 @@ dataSources:
       abis:
         - name: LpTokenStaker
           file: ./abis/ethereum/LpTokenStakerV2.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
       eventHandlers:
         - event: LogClaim(indexed address,bool,indexed uint256,uint256)
           handler: handleClaimV2
