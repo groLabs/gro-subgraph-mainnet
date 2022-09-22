@@ -9,10 +9,12 @@ import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
 import {
     getFactor,
-    tokenToDecimal
+    tokenToDecimal,
+    getTokenByPoolId,
 } from '../utils/tokens';
 import {
     ZERO,
+    NO_POOL,
     DECIMALS,
     ZERO_ADDR,
     GVT_ADDRESS,
@@ -20,7 +22,7 @@ import {
     ERC20_TRANSFER_SIG,
 } from '../utils/constants';
 
-
+// core deposits & withdrawals
 export const setDepoWithdrawTx = (
     ev: DepoWithdraw,
     logs: Log[],
@@ -39,6 +41,30 @@ export const setDepoWithdrawTx = (
     tx.coinAmount = getCoinAmount(logs, tx);
     tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
     tx.factor = getFactor(token);
+    tx.poolId = ev.poolId;
+    tx.save();
+    return tx;
+}
+
+// staker deposits & withdrawals
+export const setStakerDepoWithdrawTx = (
+    ev: DepoWithdraw,
+): TransferTx => {
+    const token = getTokenByPoolId(ev.poolId);
+    let tx = new TransferTx(ev.id);
+    tx.contractAddress = ev.contractAddress;
+    tx.block = ev.block;
+    tx.timestamp = ev.timestamp;
+    tx.token = token
+    tx.type = ev.type;
+    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.userAddress = ev.userAddress;
+    tx.fromAddress = ev.fromAddress;
+    tx.toAddress = ev.toAddress;
+    tx.coinAmount = tokenToDecimal(ev.coinAmount, 18, DECIMALS);
+    tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
+    tx.factor = getFactor(token);
+    tx.poolId = ev.poolId;
     tx.save();
     return tx;
 }

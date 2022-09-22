@@ -32,12 +32,9 @@ enum TxType {
 # User
 type User @entity {
   id: ID! # userAddress
-  timestamp: Int
   transfers: [TransferTx!] @derivedFrom(field: "userAddress")
   approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
   claims: [ClaimTx!] @derivedFrom(field: "userAddress")
-  deposits: [DepositTx!] @derivedFrom(field: "userAddress")
-  withdrawals: [WithdrawalTx!] @derivedFrom(field: "userAddress")
   totals: Totals! @derivedFrom(field: "userAddress")
   pools: [Pool!] @derivedFrom(field: "userAddress")
 }
@@ -65,7 +62,7 @@ type Totals @entity {
 
 # latest token price
 type Price @entity {
-  id: ID! #TBC (token contract? 0x for ETH)
+  id: ID! # 0x
   pwrd: BigDecimal!
   gvt: BigDecimal!
   gro: BigDecimal!
@@ -74,7 +71,7 @@ type Price @entity {
 
 # latest factor
 type Factor @entity {
-  id: ID! #TBC
+  id: ID! # 0x
   pwrd: BigDecimal!
   gvt: BigDecimal!
 }
@@ -88,8 +85,8 @@ type Pool @entity {
   balance: BigDecimal!
 }
 
-# TODO: Rename to CoreTransferTx
-# gro protocol transfers, deposits & withdrawals
+# gro protocol deposits, withdrawals & transfers
+# staker deposits & withdrawals
 type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
   contractAddress: Bytes!
@@ -122,7 +119,6 @@ type ApprovalTx @entity {
   usdAmount: BigDecimal!
 }
 
-# TODO: Rename into StakerClaimTx
 # staker claims
 type ClaimTx @entity {
   id: ID! # hash-logIndex
@@ -137,29 +133,3 @@ type ClaimTx @entity {
   amount: BigDecimal!
 }
 
-# TODO: Merge deposits & withdrawals into StakerTransferTx
-# staker deposits
-type DepositTx @entity {
-  id: ID! # hash-logIndex
-  contractAddress: Bytes!
-  block: Int! 
-  timestamp: Int!
-  hash: Bytes!
-  type: TxType!
-  userAddress: User!  # FK to User
-  poolId: Int!
-  amount: BigDecimal!
-}
-
-# staker withdrawals
-type WithdrawalTx @entity {
-  id: ID! # hash-logIndex
-  contractAddress: Bytes!
-  block: Int! 
-  timestamp: Int!
-  hash: Bytes!
-  type: TxType!
-  userAddress: User!  # FK to User
-  poolId: Int!
-  amount: BigDecimal!
-}

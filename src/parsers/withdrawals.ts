@@ -1,8 +1,10 @@
 // @ts-nocheck
-import { WithdrawalEvent } from '../types/withdrawal';
-import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
-import { ZERO_ADDR } from '../utils/constants';
 import { BigInt } from '@graphprotocol/graph-ts';
+import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
+import {
+    NO_POOL,
+    ZERO_ADDR,
+} from '../utils/constants';
 
 
 // parse core withdrawal events
@@ -18,21 +20,28 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ZERO_ADDR,                      // to
         BigInt.fromString('0'),         // coinAmount
         ev.params.returnUsd,            // usdAmount
+        NO_POOL,                        // poolId
     )
     return event;
 }
 
 // parse staker withdrawal events
-function parseStakerWithdrawalEvent<T>(ev: T): WithdrawalEvent {
-    const event = new WithdrawalEvent(
+function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
+    const poolId = (ev.params.pid)
+        ? ev.params.pid.toI32()
+        : NO_POOL;
+    const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
         ev.address,
         'staker_withdrawal',
-        ev.params.user.toHexString(),  // links with User.id,
-        ev.params.pid.toI32(),
-        ev.params.amount,
+        ev.params.user.toHexString(),   // links with User.id,
+        ev.address,                     // from
+        ev.params.user,                 // to
+        ev.params.amount,               // coinAmount
+        BigInt.fromString('0'),         // usdAmount // TODO **************************
+        poolId,                         // poolId
     )
     return event;
 }

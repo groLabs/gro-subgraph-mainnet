@@ -1,7 +1,6 @@
 import { setUser } from '../setters/users'
-import { setStakerDepositTx } from '../setters/deposits';
-import { setDepoWithdrawTx } from '../setters/depowithdraw';
-import { DepositEvent } from '../types/deposit';
+// import { setStakerDepositTx } from '../setters/deposits';
+import { setDepoWithdrawTx, setStakerDepoWithdrawTx } from '../setters/depowithdraw';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
@@ -13,7 +12,6 @@ export const manageCoreDeposit = (
     logs: Log[],
     token: string
 ): void => {
-
     // Step 1: Manage User
     setUser(ev.userAddress);
 
@@ -31,14 +29,12 @@ export const manageCoreDeposit = (
     );
 }
 
-// Manage staker deposit
 export const manageStakerDeposit = (
-    ev: DepositEvent,
+    ev: DepoWithdraw,
 ): void => {
-
     // Step 1: Manage User
     setUser(ev.userAddress);
 
     //Step 2: Manage Transaction
-    setStakerDepositTx(ev);
+    setStakerDepoWithdrawTx(ev);
 }

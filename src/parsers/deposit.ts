@@ -1,8 +1,10 @@
 // @ts-nocheck
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
-import { DepositEvent } from '../types/deposit';
+import { BigInt } from '@graphprotocol/graph-ts';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
-import { ZERO_ADDR } from '../utils/constants';
+import {
+    NO_POOL,
+    ZERO_ADDR,
+} from '../utils/constants';
 
 
 // parse core deposit events
@@ -18,26 +20,16 @@ function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.params.user,                 // to
         BigInt.fromString('0'),         // coinAmount
         ev.params.usdAmount,            // usdAmount
+        NO_POOL,                        // poolId
     )
     return event;
 }
 
 // parse staker deposit events
-function parseStakerDepositEvent<T>(ev: T): DepositEvent {
-    const event = new DepositEvent(
-        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
-        ev.block.number.toI32(),
-        ev.block.timestamp.toI32(),
-        ev.address,
-        'staker_deposit',
-        ev.params.user.toHexString(),  // links with User.id,
-        ev.params.pid.toI32(),
-        ev.params.amount,
-    )
-    return event;
-}
-
-function parseStakerDepositEvent2<T>(ev: T): DepoWithdrawEvent {
+function parseStakerDepositEvent<T>(ev: T): DepoWithdrawEvent {
+    const poolId = (ev.params.pid)
+        ? ev.params.pid.toI32()
+        : NO_POOL;
     const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -48,7 +40,8 @@ function parseStakerDepositEvent2<T>(ev: T): DepoWithdrawEvent {
         ev.params.user,                 // from
         ev.address,                     // to
         ev.params.amount,               // coinAmount
-        BigInt.fromString('0'),         // usdAmount
+        BigInt.fromString('0'),         // usdAmount // TODO **************************
+        poolId,                         // poolId
     )
     return event;
 }
@@ -56,5 +49,4 @@ function parseStakerDepositEvent2<T>(ev: T): DepoWithdrawEvent {
 export {
     parseCoreDepositEvent,
     parseStakerDepositEvent,
-    parseStakerDepositEvent2,
 }
