@@ -97,7 +97,144 @@ Staking pools \[currently out of scope\]
 
 Contains the following transactions depending on field `type`:
 
-<table data-layout="wide" data-local-id="9ae48a4d-bebb-437c-8e6f-c6ad0a91293f" class="confluenceTable"><colgroup><col style="width: 189.0px;"><col style="width: 343.0px;"><col style="width: 252.0px;"><col style="width: 176.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Type</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th><th class="confluenceTh"><p><strong>Contract</strong></p></th><th class="confluenceTh"><p><strong>Event</strong></p></th></tr><tr><td class="confluenceTd"><p>approval</p></td><td class="confluenceTd"><p>GVT, PWRD &amp; GRO token approvals</p></td><td class="confluenceTd"><p>Gro, Gvt, Pwrd</p></td><td class="confluenceTd"><p><code>Approval</code></p></td></tr><tr><td class="confluenceTd"><p>core_deposit</p></td><td class="confluenceTd"><p>GVT &amp; PWRD deposits into the protocol</p></td><td class="confluenceTd"><p>Deposit handlers</p></td><td class="confluenceTd"><p><code>LogNewDeposit</code></p></td></tr><tr><td class="confluenceTd"><p>core_withdrawal</p></td><td class="confluenceTd"><p>GVT &amp; PWRD withdrawals from the protocol</p></td><td class="confluenceTd"><p>Withdraw handlers</p></td><td class="confluenceTd"><p><code>LogNewWithdrawal</code></p></td></tr><tr><td class="confluenceTd"><p>staker_deposit</p></td><td class="confluenceTd"><p>Deposits into staking contracts <sup>(1)</sup></p></td><td class="confluenceTd"><p>Stakers</p></td><td class="confluenceTd"><p><code>LogDeposit</code></p></td></tr><tr><td class="confluenceTd"><p>staker_withdrawal</p></td><td class="confluenceTd"><p>Withdrawals from staking contracts <sup>(1)</sup></p></td><td class="confluenceTd"><p>Stakers</p></td><td class="confluenceTd"><p><code>LogWithdraw</code></p></td></tr><tr><td class="confluenceTd"><p>transfer_in</p></td><td class="confluenceTd"><p>GVT, PWRD &amp; GRO transfers received</p><p>(excluding from Staker contract)</p></td><td class="confluenceTd"><p>Gro, Gvt, Pwrd</p></td><td class="confluenceTd"><p><code>Transfer</code></p></td></tr><tr><td class="confluenceTd"><p>transfer_out</p></td><td class="confluenceTd"><p>GVT, PWRD &amp; GRO transfers sent</p><p>(excluding to Staker contract)</p></td><td class="confluenceTd"><p>Gro, Gvt, Pwrd</p></td><td class="confluenceTd"><p><code>Transfer</code></p></td></tr><tr><td class="confluenceTd"><p>claim</p></td><td class="confluenceTd"><p>Claim GRO rewards</p></td><td class="confluenceTd"><p>Stakers</p></td><td class="confluenceTd"><p><code>LogClaim</code></p></td></tr><tr><td class="confluenceTd"><p>multiclaim</p></td><td class="confluenceTd"><p>Multi claim GRO rewards</p></td><td class="confluenceTd"><p>Stakers</p></td><td class="confluenceTd"><p><code>LogMultiClaim</code></p></td></tr></tbody></table>
+<table data-layout="wide" data-local-id="9ae48a4d-bebb-437c-8e6f-c6ad0a91293f" class="confluenceTable">
+    <colgroup>
+        <col style="width: 189.0px;">
+        <col style="width: 343.0px;">
+        <col style="width: 252.0px;">
+        <col style="width: 176.0px;">
+    </colgroup>
+    <tbody>
+        <tr>
+            <th class="confluenceTh">
+                <p><strong>Type</strong></p>
+            </th>
+            <th class="confluenceTh">
+                <p><strong>Description</strong></p>
+            </th>
+            <th class="confluenceTh">
+                <p><strong>Contract</strong></p>
+            </th>
+            <th class="confluenceTh">
+                <p><strong>Event</strong></p>
+            </th>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>core_deposit</p>
+            </td>
+            <td class="confluenceTd">
+                <p>GVT &amp; PWRD deposits into the protocol</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Deposit handlers</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>LogNewDeposit</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>core_withdrawal</p>
+            </td>
+            <td class="confluenceTd">
+                <p>GVT &amp; PWRD withdrawals from the protocol</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Withdraw handlers</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>LogNewWithdrawal</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>staker_deposit</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Deposits into staking contracts <sup>(1)</sup></p>
+            </td>
+            <td class="confluenceTd">
+                <p>Stakers</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>LogDeposit</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>staker_withdrawal</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Withdrawals from staking contracts <sup>(1)</sup></p>
+            </td>
+            <td class="confluenceTd">
+                <p>Stakers</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>LogWithdraw</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>transfer_in</p>
+            </td>
+            <td class="confluenceTd">
+                <p>GVT, PWRD &amp; GRO transfers received</p>
+                <p>(excluding from Staker contract)</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Gro, Gvt, Pwrd</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>Transfer</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>transfer_out</p>
+            </td>
+            <td class="confluenceTd">
+                <p>GVT, PWRD &amp; GRO transfers sent</p>
+                <p>(excluding to Staker contract)</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Gro, Gvt, Pwrd</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>Transfer</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>claim</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Claim GRO rewards</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Stakers</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>LogClaim</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>multiclaim</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Multi claim GRO rewards</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Stakers</p>
+            </td>
+            <td class="confluenceTd">
+                <p><code>LogMultiClaim</code></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 (1) Tokens will depend on the pool
 
@@ -109,7 +246,128 @@ Contains approval transactions for GVT, PWRD & GRO tokens
 
 Contains GRO claims from staking contracts where poolId indicates which pool/s are the rewards coming from:
 
-<table data-layout="default" data-local-id="8025a982-fd35-4a29-ab55-c3aaebf8a4e0" class="confluenceTable"><colgroup><col style="width: 126.0px;"><col style="width: 283.0px;"><col style="width: 351.0px;"></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Pool ID</strong></p></th><th class="confluenceTh"><p><strong>Tokens allocation</strong></p></th><th class="confluenceTh"><p><strong>Description</strong></p></th></tr><tr><td class="confluenceTd"><p>0</p></td><td class="confluenceTd"><p>100% GRO</p></td><td class="confluenceTd"><p><a class="external-link" href="https://etherscan.io/address/0x3Ec8798B81485A254928B70CDA1cf0A2BB0B74D7" rel="nofollow">Single Staking GRO</a></p></td></tr><tr><td class="confluenceTd"><p>1</p></td><td class="confluenceTd"><p>50 %GRO, 50% GVT</p></td><td class="confluenceTd"><p><a class="external-link" href="https://etherscan.io/address/0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB" rel="nofollow">Uniswap V2 GRO - GVT</a></p></td></tr><tr><td class="confluenceTd"><p>2</p></td><td class="confluenceTd"><p>50% GRO, 50% USDC</p></td><td class="confluenceTd"><p><a class="external-link" href="https://etherscan.io/address/0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6" rel="nofollow">Uniswap V2 GRO - USDC</a></p></td></tr><tr><td class="confluenceTd"><p>3</p></td><td class="confluenceTd"><p>100% GVT</p></td><td class="confluenceTd"><p><a class="external-link" href="https://etherscan.io/address/0x3ADb04E127b9C0a5D36094125669d4603AC52a0c" rel="nofollow">Single Staking GVT</a></p></td></tr><tr><td class="confluenceTd"><p>4</p></td><td class="confluenceTd"><p>PWRD, USDC, USDT, DAI</p></td><td class="confluenceTd"><p><a class="external-link" href="https://etherscan.io/address/0xbcb91E689114B9Cc865AD7871845C95241Df4105" rel="nofollow">Curve metapool PWRD</a></p></td></tr><tr><td class="confluenceTd"><p>5</p></td><td class="confluenceTd"><p>80% GRO, 20% WETH</p></td><td class="confluenceTd"><p><a class="external-link" href="https://etherscan.io/address/0x702605f43471183158938c1a3e5f5a359d7b31ba" rel="nofollow">Balancer V2 GRO - WETH</a></p></td></tr><tr><td class="confluenceTd"><p>6</p></td><td class="confluenceTd"><p>100% PWRD</p></td><td class="confluenceTd"><p><a class="external-link" href="https://etherscan.io/address/0xf0a93d4994b3d98fb5e3a2f90dbc2d69073cb86b" rel="nofollow">Single Staking PWRD</a></p></td></tr><tr><td class="confluenceTd"><p>-1</p></td><td class="confluenceTd"><p>N/A</p></td><td class="confluenceTd"><p>Missing pool</p></td></tr></tbody></table>
+<table data-layout="default" data-local-id="8025a982-fd35-4a29-ab55-c3aaebf8a4e0" class="confluenceTable">
+    <colgroup>
+        <col style="width: 126.0px;">
+        <col style="width: 283.0px;">
+        <col style="width: 351.0px;">
+    </colgroup>
+    <tbody>
+        <tr>
+            <th class="confluenceTh">
+                <p><strong>Pool ID</strong></p>
+            </th>
+            <th class="confluenceTh">
+                <p><strong>Tokens allocation</strong></p>
+            </th>
+            <th class="confluenceTh">
+                <p><strong>Description</strong></p>
+            </th>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>0</p>
+            </td>
+            <td class="confluenceTd">
+                <p>100% GRO</p>
+            </td>
+            <td class="confluenceTd">
+                <p><a class="external-link"
+                        href="https://etherscan.io/address/0x3Ec8798B81485A254928B70CDA1cf0A2BB0B74D7"
+                        rel="nofollow">Single Staking GRO</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>1</p>
+            </td>
+            <td class="confluenceTd">
+                <p>50 %GRO, 50% GVT</p>
+            </td>
+            <td class="confluenceTd">
+                <p><a class="external-link"
+                        href="https://etherscan.io/address/0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB"
+                        rel="nofollow">Uniswap V2 GRO - GVT</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>2</p>
+            </td>
+            <td class="confluenceTd">
+                <p>50% GRO, 50% USDC</p>
+            </td>
+            <td class="confluenceTd">
+                <p><a class="external-link"
+                        href="https://etherscan.io/address/0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6"
+                        rel="nofollow">Uniswap V2 GRO - USDC</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>3</p>
+            </td>
+            <td class="confluenceTd">
+                <p>100% GVT</p>
+            </td>
+            <td class="confluenceTd">
+                <p><a class="external-link"
+                        href="https://etherscan.io/address/0x3ADb04E127b9C0a5D36094125669d4603AC52a0c"
+                        rel="nofollow">Single Staking GVT</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>4</p>
+            </td>
+            <td class="confluenceTd">
+                <p>PWRD, USDC, USDT, DAI</p>
+            </td>
+            <td class="confluenceTd">
+                <p><a class="external-link"
+                        href="https://etherscan.io/address/0xbcb91E689114B9Cc865AD7871845C95241Df4105"
+                        rel="nofollow">Curve metapool PWRD</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>5</p>
+            </td>
+            <td class="confluenceTd">
+                <p>80% GRO, 20% WETH</p>
+            </td>
+            <td class="confluenceTd">
+                <p><a class="external-link"
+                        href="https://etherscan.io/address/0x702605f43471183158938c1a3e5f5a359d7b31ba"
+                        rel="nofollow">Balancer V2 GRO - WETH</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>6</p>
+            </td>
+            <td class="confluenceTd">
+                <p>100% PWRD</p>
+            </td>
+            <td class="confluenceTd">
+                <p><a class="external-link"
+                        href="https://etherscan.io/address/0xf0a93d4994b3d98fb5e3a2f90dbc2d69073cb86b"
+                        rel="nofollow">Single Staking PWRD</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td class="confluenceTd">
+                <p>-1</p>
+            </td>
+            <td class="confluenceTd">
+                <p>N/A</p>
+            </td>
+            <td class="confluenceTd">
+                <p>Missing pool</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 Queries
 -------
@@ -117,7 +375,7 @@ Queries
 *   Personal stats
     
 
-```java
+```graphql
 {
   users(where: {id: "0x....."}) {
     address: id
