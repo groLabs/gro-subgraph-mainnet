@@ -6,6 +6,7 @@ import {
     getFactor,
 } from '../utils/tokens';
 import { TransferEvent } from '../types/transfer';
+import { NO_POOL } from '../utils/constants';
 
 
 export const setTransferTx = (
@@ -38,6 +39,7 @@ export const setTransferTx = (
     tx.coinAmount = coinAmount;
     tx.usdAmount = coinAmount.times(pricePerShare);
     tx.factor = getFactor(token);
+    tx.poolId = NO_POOL;
     tx.save();
     return tx;
 }
