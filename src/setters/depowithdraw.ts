@@ -14,7 +14,6 @@ import {
 } from '../utils/tokens';
 import {
     ZERO,
-    NO_POOL,
     DECIMALS,
     ZERO_ADDR,
     GVT_ADDRESS,

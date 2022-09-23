@@ -27,9 +27,28 @@ enum TxType {
   approval
 }
 
+enum Status {
+  ok
+  error
+}
+
+enum NetworkName {
+  mainnet
+  avalanche
+}
+
 # Entities
 
-# User
+# master data
+type MasterData  @entity {
+    id: ID! # 0x
+    status: Status!
+    networkId: Int!
+    networkName: NetworkName!
+    launchTimestamp: Int!
+}
+
+# user
 type User @entity {
   id: ID! # userAddress
   transfers: [TransferTx!] @derivedFrom(field: "userAddress")
