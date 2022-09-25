@@ -1,4 +1,10 @@
 {
+  masterDatas {
+    status
+    networkId
+    networkName
+    launchTimestamp
+  }
   prices {
     gvt
     gro
@@ -29,7 +35,7 @@
       # net_returns_pwrd = current_balance_pwrd - totals.net_value_pwrd
       # net_returns_total = current_balance_total - totals.net_value_total
     }
-    core_deposits: transfers(where: {type: deposit}) {
+    core_deposits: transfers(where: {type: core_deposit}) {
       block
       timestamp
       hash
@@ -37,7 +43,7 @@
       coinAmount
       usdAmount
     }
-    core_withdrawals: transfers(where: {type: withdrawal}) {
+    core_withdrawals: transfers(where: {type: core_withdrawal}) {
       block
       timestamp
       hash
