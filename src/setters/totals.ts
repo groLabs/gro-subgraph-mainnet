@@ -48,7 +48,7 @@ export const setTotals = (
         } else if (coin === 'pwrd') {
             total.amount_added_pwrd = total.amount_added_pwrd.plus(coinAmount);
             total.value_added_pwrd = total.value_added_pwrd.plus(usdAmount);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus(coinAmount).times(factor); // based pwrd amount
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus((coinAmount).times(factor)); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.plus(usdAmount);
         }
         total.value_added_total = total.value_added_total.plus(usdAmount);
@@ -62,7 +62,7 @@ export const setTotals = (
         } else if (coin === 'pwrd') {
             total.amount_removed_pwrd = total.amount_removed_pwrd.plus(coinAmount);
             total.value_removed_pwrd = total.value_removed_pwrd.plus(usdAmount);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus(coinAmount).times(factor); // based pwrd amount
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus((coinAmount).times(factor)); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.minus(usdAmount);
         }
         total.value_removed_total = total.value_removed_total.plus(usdAmount);
