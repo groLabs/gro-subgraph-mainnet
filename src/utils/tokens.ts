@@ -1,6 +1,5 @@
 import { Gvt } from '../../generated/Gvt/Gvt';
 import { Pwrd } from '../../generated/Pwrd/Pwrd';
-import { UniswapV2Pair } from '../../generated/UniswapV2Pair/UniswapV2Pair';
 import {
     log,
     Address,
@@ -16,6 +15,7 @@ import {
     UNISWAPV2_GRO_USDC_ADDRESS,
     UNISWAPV2_USDC_WETH_ADDRESS,
 } from '../utils/constants';
+import { getUniV2Price } from '../utils/pool';
 
 
 export const getGroToken = (isPwrd: bool): string => {
@@ -35,35 +35,8 @@ export const getGvtPrice = (): BigDecimal => {
     }
 }
 
-export const getUniV2Price = (poolAddress: Address): BigDecimal => {
-    const contract = UniswapV2Pair.bind(poolAddress);
-    const reserves = contract.try_getReserves();
-    if (reserves.reverted) {
-        log.error('getUniV2Price() reverted in src/utils/tokens.ts', []);
-        return ZERO;
-    } else {
-        if (poolAddress == UNISWAPV2_GRO_USDC_ADDRESS) {
-            // return GRO price per share
-            const gvt_reserve = reserves.value.get_reserve0();
-            const usdc_reserve = reserves.value.get_reserve1();
-            // TODO: chainlink to calc the USD price of USDC.
-            const pps = tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(gvt_reserve, 18, 7)).truncate(DECIMALS);
-            return pps;
-        } else if (poolAddress == UNISWAPV2_USDC_WETH_ADDRESS) {
-            // return WETH price per share
-            const usdc_reserve = reserves.value.get_reserve0();
-            const weth_reserve = reserves.value.get_reserve1();
-            // TODO: chainlink to calc the USD price of USDC.
-            const pps = tokenToDecimal(usdc_reserve, 6, 7).div(tokenToDecimal(weth_reserve, 18, 7)).truncate(DECIMALS);
-            return pps;
-        } else {
-            return ZERO;
-        }
-    }
-}
-
 // Retrieves price per share for a given token
-const getPricePerShare = (token: string): BigDecimal => {
+export const getPricePerShare = (token: string): BigDecimal => {
     let price: BigDecimal = ZERO;
     if (token === 'gvt') {
         price = getGvtPrice();
@@ -82,7 +55,7 @@ const getPricePerShare = (token: string): BigDecimal => {
     return price;
 }
 
-const getTokenByPoolId = (
+export const getTokenByPoolId = (
     poolId: i32,
 ): string => {
     switch (poolId) {
@@ -106,7 +79,7 @@ const getTokenByPoolId = (
 }
 
 // Converts a BigInt into a N-decimal BigDecimal
-function tokenToDecimal(
+export function tokenToDecimal(
     amount: BigInt,
     precision: i32,
     decimals: i32,
@@ -120,7 +93,7 @@ function tokenToDecimal(
 }
 
 // Retrieves gvt or pwrd factor at the time of a transfer
-const getFactor = (token: string): BigDecimal => {
+export const getFactor = (token: string): BigDecimal => {
     if (token === 'gvt') {
         const contract = Gvt.bind(GVT_ADDRESS);
         const gvtFactor = contract.try_factor();
@@ -142,11 +115,4 @@ const getFactor = (token: string): BigDecimal => {
     } else {
         return ZERO;
     }
-}
-
-export {
-    getPricePerShare,
-    getTokenByPoolId,
-    tokenToDecimal,
-    getFactor,
 }
