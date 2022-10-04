@@ -41,7 +41,7 @@ export const getPricePerShare = (token: string): BigDecimal => {
     if (token === 'gvt') {
         price = getGvtPrice();
     } else if (token === 'gro') {
-        price = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS);
+        price = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS, false);
     } else if (
         token === 'pwrd'
         || token === 'dai'

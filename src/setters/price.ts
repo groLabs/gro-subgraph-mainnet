@@ -1,3 +1,5 @@
+import { Price } from '../../generated/schema';
+import { Address } from '@graphprotocol/graph-ts';
 import {
     ONE,
     ZERO,
@@ -5,8 +7,7 @@ import {
     UNISWAPV2_USDC_WETH_ADDRESS,
 } from '../utils/constants';
 import { getPricePerShare } from '../utils/tokens';
-import {getUniV2Price} from '../utils/pool'
-import { Price } from '../../generated/schema';
+import { getUniV2Price } from '../utils/pool'
 
 
 const initPrice = (): Price => {
@@ -33,8 +34,9 @@ export const setGvtPrice = (): void => {
 }
 
 // Triggered by UniswapV2 Gro-Usdc swap events
-export const setGroPrice = (): void => {
-    const groPrice = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS);
+export const setGroPrice = (contractAddress: Address): void => {
+    // const groPrice = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS);
+    const groPrice = getUniV2Price(contractAddress, true);
     if (groPrice != ZERO) {
         let price = initPrice();
         price.gro = groPrice;
@@ -44,7 +46,7 @@ export const setGroPrice = (): void => {
 
 // Triggered by UniswapV2 Gro-Usdc swap events
 export const setWethPrice = (): void => {
-    const wethPrice = getUniV2Price(UNISWAPV2_USDC_WETH_ADDRESS);
+    const wethPrice = getUniV2Price(UNISWAPV2_USDC_WETH_ADDRESS, true);
     if (wethPrice != ZERO) {
         let price = initPrice();
         price.weth = wethPrice;
