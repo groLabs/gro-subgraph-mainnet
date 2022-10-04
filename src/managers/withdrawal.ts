@@ -1,5 +1,4 @@
 import { setUser } from '../setters/users'
-// import { setStakerWithdrawalTx } from '../setters/withdrawals';
 import { setDepoWithdrawTx, setStakerDepoWithdrawTx } from '../setters/depowithdraw';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
@@ -44,6 +43,7 @@ export const manageStakerWithdrawal = (
         ev.type,
         ev.userAddress,
         ev.poolId,
-        ev.contractAddress
+        ev.contractAddress,
+        ev.coinAmount,
     );
 }

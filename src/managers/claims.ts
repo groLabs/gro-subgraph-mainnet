@@ -21,7 +21,8 @@ export const manageClaim = (
             ev.type,
             ev.userAddress,
             ev.pid[i],
-            ev.contractAddress
+            ev.contractAddress,
+            ev.amount,
         );
     }
 }
