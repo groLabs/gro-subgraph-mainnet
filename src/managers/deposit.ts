@@ -4,6 +4,7 @@ import { setDepoWithdrawTx, setStakerDepoWithdrawTx } from '../setters/depowithd
 import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
+import { setPools } from '../setters/pools';
 
 
 // Manage core deposit
@@ -37,4 +38,12 @@ export const manageStakerDeposit = (
 
     //Step 2: Manage Transaction
     setStakerDepoWithdrawTx(ev);
+
+    //Step 3: Manage Pools
+    setPools(
+        ev.type,
+        ev.userAddress,
+        ev.poolId,
+        ev.contractAddress
+    );
 }

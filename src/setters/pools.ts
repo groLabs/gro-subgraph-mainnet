@@ -1,19 +1,14 @@
 import { Pool } from '../../generated/schema';
-import { tokenToDecimal } from '../utils/tokens';
 import { ZERO } from '../utils/constants';
-import { BigInt } from '@graphprotocol/graph-ts';
+import { Address} from '@graphprotocol/graph-ts';
+import { getRewardDebt } from '../utils/staker';
 
 export const setPools = (
     type: string,
     userAddress: string,
-    // vest: bool,
     poolId: i32,
-    amount: BigInt,
+    contractAddress: Address
 ): void => {
-
-    // @dev: the code below might be removed considering TheGraph limitations for staker data:
-    // 1) Can't provide net rewards per pool for event <LogMultiClaim>
-    // 2) Can't provide claim now & vest all as they are based on current block
     const id = userAddress + '-' + poolId.toString();
     let pool = Pool.load(id);
     if (!pool) {
@@ -21,14 +16,27 @@ export const setPools = (
         pool.userAddress = userAddress;
         pool.poolId = poolId;
         pool.net_reward = ZERO;
+        pool.reward_debt = ZERO;
         pool.balance = ZERO;
     }
-    const parsedAmount = tokenToDecimal(amount, 18, 7);
-    if (type === 'claim') {
-        pool.net_reward = pool.net_reward.plus(parsedAmount);
-    } else if (type === 'multiclaim') {
-        // TODO: we should retrieve the claimable amount per pool in block - 1. Alternatives?
-        pool.net_reward = pool.net_reward.plus(parsedAmount);
+
+    // Retrieve rewards debt from function userInfo() in staker contract
+    // when there is any deposit, withdrawal or claim
+    const currentRewardDebt = getRewardDebt(
+        contractAddress,
+        userAddress,
+        poolId
+    );
+
+    // Reward = current reward from deposit/withdrawal/claim - last reward from deposit/withdrawal/claim
+    const currentNetReward = currentRewardDebt.minus(pool.reward_debt);
+
+    // If it's a claim, the reward is added to pool.net_reward for that pool
+    if (type === 'claim' || type === 'multiclaim') {
+        pool.net_reward = pool.net_reward.plus(currentNetReward);
     }
+    pool.reward_debt = currentRewardDebt;
     pool.save();
+
+
 }

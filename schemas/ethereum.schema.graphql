@@ -101,6 +101,7 @@ type Pool @entity {
   userAddress: User!  # FK to User
   poolId: Int!
   net_reward: BigDecimal!
+  reward_debt: BigDecimal!
   balance: BigDecimal!
 }
 
