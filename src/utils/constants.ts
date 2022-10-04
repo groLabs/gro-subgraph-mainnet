@@ -17,6 +17,7 @@ export const ZERO_ADDR = Address.fromString('0x000000000000000000000000000000000
 // Contract addresses
 export const GVT_ADDRESS = Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c');
 export const PWRD_ADDRESS = Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b');
+export const UNISWAPV2_GVT_GRO_ADDRESS = Address.fromString('0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB');
 export const UNISWAPV2_GRO_USDC_ADDRESS = Address.fromString('0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6');
 export const UNISWAPV2_USDC_WETH_ADDRESS = Address.fromString('0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc');
 export const STAKER_V1_ADDRESS = Address.fromString('0x001C249c09090D79Dc350A286247479F08c7aaD7');

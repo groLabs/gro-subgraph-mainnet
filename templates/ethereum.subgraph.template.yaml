@@ -336,13 +336,14 @@ dataSources:
         - event: LogPnLExecution(uint256,int256,int256,int256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handlePnLExecution
       file: ./src/mappings/pnl.ts
+  # Pool 1 : UniswapV2 50% GVT - 50% GRO    
   - kind: ethereum/contract
-    name: UniswapV2Pair
+    name: UniswapV2PairGvtGro
     network: {{network}}
     source:
-      address: '{{UniswapV2PairAddress}}'
+      address: '{{UniswapV2GvtGroAddress}}'
       abi: UniswapV2Pair
-      startBlock: {{UniswapV2PairStartBlock}}
+      startBlock: {{UniswapV2GvtGroStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -354,7 +355,28 @@ dataSources:
           file: ./abis/ethereum/UniswapV2Pair.json
       eventHandlers:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
-          handler: handleSwap
+          handler: handleSwapGvtGro
+      file: ./src/mappings/uniswapV2Pair.ts
+  # Pool 2 : UniswapV2 50% GRO - 50% USDC    
+  - kind: ethereum/contract
+    name: UniswapV2PairGroUsdc
+    network: {{network}}
+    source:
+      address: '{{UniswapV2GroUsdcAddress}}'
+      abi: UniswapV2Pair
+      startBlock: {{UniswapV2GroUsdcStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Price
+      abis:
+        - name: UniswapV2Pair
+          file: ./abis/ethereum/UniswapV2Pair.json
+      eventHandlers:
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwapGroUsdc
       file: ./src/mappings/uniswapV2Pair.ts
 # stablecoins *********************************
   # - kind: ethereum/contract
