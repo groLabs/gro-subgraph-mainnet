@@ -18,6 +18,8 @@ const initPool = (
         pool.net_reward = ZERO;
         pool.reward_debt = ZERO;
         pool.balance = ZERO;
+        pool.claim_now = ZERO;
+        pool.vest_all = ZERO;
     }
     return pool;
 }

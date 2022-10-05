@@ -2,6 +2,7 @@ import { setUser } from '../setters/users'
 import { setClaimTx } from '../setters/claims';
 import { setPools } from '../setters/pools';
 import { ClaimEvent } from '../types/claim';
+import { initTotals } from '../setters/totals';
 
 
 // Claim from Staker
@@ -25,4 +26,7 @@ export const manageClaim = (
             ev.amount,
         );
     }
+
+    // Step 4: Create Totals for staker-only users
+    initTotals(ev.userAddress, true);
 }

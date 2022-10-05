@@ -4,6 +4,7 @@ import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
 import { setPools } from '../setters/pools';
+import { initTotals } from '../setters/totals';
 
 
 // Manage core deposit
@@ -46,4 +47,7 @@ export const manageStakerDeposit = (
         ev.contractAddress,
         ev.coinAmount,
     );
+
+    // Step 4: Create Totals for Staker-only users
+    initTotals(ev.userAddress, true);
 }

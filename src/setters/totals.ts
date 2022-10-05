@@ -3,7 +3,11 @@ import { Totals } from '../../generated/schema';
 import { ZERO } from '../utils/constants';
 
 
-export const initTotals = (userAddress: string): Totals => {
+//@dev: <save> used to initialised totals for only-staker users, etc
+export const initTotals = (
+    userAddress: string,
+    save: boolean,
+    ): Totals => {
     let total = Totals.load(userAddress);
     if (!total) {
         total = new Totals(userAddress);
@@ -23,6 +27,8 @@ export const initTotals = (userAddress: string): Totals => {
         total.net_value_total = ZERO;
         total.net_amount_gvt = ZERO;
         total.net_based_amount_pwrd = ZERO;
+        if (save)
+            total.save();
     }
     return total;
 }
@@ -35,7 +41,7 @@ export const setTotals = (
     usdAmount: BigDecimal,
     factor: BigDecimal,
 ): void => {
-    let total = initTotals(userAddress);
+    let total = initTotals(userAddress, false);
 
     if (coin === 'gro') {
         // do nothing for now (required to initialise non-null amounts to 0)
