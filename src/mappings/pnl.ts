@@ -1,5 +1,5 @@
 import {
-  LogPnLExecution as LogPnLExecutionEvent,
+  LogPnLExecution,
 } from '../../generated/PnL/PnL';
 import { setGvtPrice } from '../setters/price';
 import {
@@ -8,7 +8,7 @@ import {
 } from '../setters/factors';
 
 
-export function handlePnLExecution(event: LogPnLExecutionEvent): void {
+export function handlePnLExecution(event: LogPnLExecution): void {
   setGvtPrice();
   setPwrdFactor();
   setGvtFactor();

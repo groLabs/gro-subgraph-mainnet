@@ -1,6 +1,6 @@
 import {
-  Approval as GvtApprovalEvent,
-  Transfer as GvtTransferEvent
+  Approval,
+  Transfer,
 } from '../../generated/Gvt/ERC20';
 import { parseApprovalEvent } from '../parsers/approval';
 import { manageApproval } from '../managers/approvals';
@@ -12,7 +12,12 @@ import {
 } from '../utils/contracts';
 
 
-export function handleTransfer(event: GvtTransferEvent): void {
+export function handleApproval(event: Approval): void {
+  const ev = parseApprovalEvent(event);
+  manageApproval(ev, 'pwrd');
+}
+
+export function handleTransfer(event: Transfer): void {
   if (
     !isDepositOrWithdrawal(
       event.params.from,
@@ -27,9 +32,4 @@ export function handleTransfer(event: GvtTransferEvent): void {
     const ev = parseTransferEvent(event);
     manageTransfer(ev, 'pwrd');
   }
-}
-
-export function handleApproval(event: GvtApprovalEvent): void {
-  const ev = parseApprovalEvent(event);
-  manageApproval(ev, 'pwrd');
 }

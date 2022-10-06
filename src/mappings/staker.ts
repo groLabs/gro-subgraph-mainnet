@@ -1,13 +1,13 @@
 import {
-    LogClaim as LogClaimV1Event,
-    LogDeposit as LogDepositV1Event,
-    LogWithdraw as LogWithdrawV1Event,
+    LogClaim as LogClaimV1,
+    LogDeposit as LogDepositV1,
+    LogWithdraw as LogWithdrawV1,
 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
 import {
-    LogClaim as LogClaimV2Event,
-    LogMultiClaim as LogMultiClaimV2Event,
-    LogDeposit as LogDepositV2Event,
-    LogWithdraw as LogWithdrawV2Event,
+    LogClaim as LogClaimV2,
+    LogMultiClaim as LogMultiClaimV2,
+    LogDeposit as LogDepositV2,
+    LogWithdraw as LogWithdrawV2,
 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
 import {
     parseClaimV1Event,
@@ -22,37 +22,37 @@ import { manageStakerWithdrawal } from '../managers/withdrawal';
 
 
 
-export function handleClaimV1(event: LogClaimV1Event): void {
+export function handleClaimV1(event: LogClaimV1): void {
     const ev = parseClaimV1Event(event);
     manageClaim(ev);
 }
 
-export function handleClaimV2(event: LogClaimV2Event): void {
+export function handleClaimV2(event: LogClaimV2): void {
     const ev = parseClaimV2Event(event);
     manageClaim(ev);
 }
 
-export function handleMultiClaimV2(event: LogMultiClaimV2Event): void {
+export function handleMultiClaimV2(event: LogMultiClaimV2): void {
     const ev = parseMultiClaimV2Event(event);
     manageClaim(ev);
 }
 
-export function handleDepositV1(event: LogDepositV1Event): void {
+export function handleDepositV1(event: LogDepositV1): void {
     const ev = parseStakerDepositEvent(event);
     manageStakerDeposit(ev);
 }
 
-export function handleDepositV2(event: LogDepositV2Event): void {
+export function handleDepositV2(event: LogDepositV2): void {
     const ev = parseStakerDepositEvent(event);
     manageStakerDeposit(ev);
 }
 
-export function handleWithdrawV1(event: LogWithdrawV1Event): void {
+export function handleWithdrawV1(event: LogWithdrawV1): void {
     const ev = parseStakerWithdrawalEvent(event);
     manageStakerWithdrawal(ev);
 }
 
-export function handleWithdrawV2(event: LogWithdrawV2Event): void {
+export function handleWithdrawV2(event: LogWithdrawV2): void {
     const ev = parseStakerWithdrawalEvent(event);
     manageStakerWithdrawal(ev);
 }
