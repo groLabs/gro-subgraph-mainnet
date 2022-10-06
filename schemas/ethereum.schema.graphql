@@ -107,6 +107,8 @@ type Pool @entity {
   net_reward: BigDecimal!
   reward_debt: BigDecimal!
   balance: BigDecimal!
+  claim_now: BigDecimal!
+  vest_all: BigDecimal!
 }
 
 # pool data

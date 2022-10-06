@@ -16,6 +16,8 @@
     "UniswapV2GvtGroStartBlock": 15500000,
     "UniswapV2GroUsdcAddress": "0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6",
     "UniswapV2GroUsdcStartBlock": 15500000,
+    "CurveMetapool3CRVAddress": "0xbcb91E689114B9Cc865AD7871845C95241Df4105",
+    "CurveMetapool3CRVStartBlock": 15000000,
     "DepositHandlerV1Address": "0x79b14d909381D79B655C0700d0fdc2C7054635b9",
     "DepositHandlerV1StartBlock": 15000000,
     "DepositHandlerV2Address": "0x9da6ad743F4F2A247A56350703A4B501c7f2C224",

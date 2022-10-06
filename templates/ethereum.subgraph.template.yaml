@@ -350,6 +350,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - PoolData
       abis:
         - name: UniswapV2Pair
           file: ./abis/ethereum/UniswapV2Pair.json
@@ -371,6 +372,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - PoolData
       abis:
         - name: UniswapV2Pair
           file: ./abis/ethereum/UniswapV2Pair.json
@@ -378,6 +380,31 @@ dataSources:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwapGroUsdc
       file: ./src/mappings/uniswapV2Pair.ts
+  # Pool 4 : Curve Metapool 50% 3CRV - 50% PWRD    
+  - kind: ethereum/contract
+    name: CurveMetapool3CRV
+    network: {{network}}
+    source:
+      address: '{{CurveMetapool3CRVAddress}}'
+      abi: Vyper_contract
+      startBlock: {{CurveMetapool3CRVStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Price
+        - PoolData
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/CurveMetapool3CRV.json
+      eventHandlers:
+        - event: TokenExchange(indexed address,int128,uint256,int128,uint256)
+          handler: handleTokenExchange
+        - event: TokenExchangeUnderlying(indexed address,int128,uint256,int128,uint256)
+          handler: handleTokenExchangeUnderlying
+      file: ./src/mappings/curveMetapool3CRV.ts
+
 # stablecoins *********************************
   # - kind: ethereum/contract
   #   name: Dai
