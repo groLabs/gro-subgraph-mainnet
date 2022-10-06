@@ -1,6 +1,9 @@
 import { Pool } from '../../generated/schema';
+import {
+    BigInt, 
+    Address, 
+} from '@graphprotocol/graph-ts';
 import { ZERO } from '../utils/constants';
-import { Address, BigInt} from '@graphprotocol/graph-ts';
 import { getRewardDebt } from '../utils/staker';
 import { tokenToDecimal } from '../utils/tokens';
 

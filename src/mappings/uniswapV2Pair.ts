@@ -2,8 +2,10 @@ import { Swap as SwapEventGvtGro } from '../../generated/UniswapV2PairGvtGro/Uni
 import { Swap as SwapEventGroUsdc } from '../../generated/UniswapV2PairGroUsdc/UniswapV2Pair';
 // import { Swap as SwapEvent } from '../../generated/UniswapV2Pair/UniswapV2Pair';
 import {
-    setGroPrice,
+    // setGroPrice,
     setWethPrice,
+    setUniswapGvtGroPrice,
+    setUniswapGroUsdcPrice,
 } from '../setters/price';
 
 
@@ -12,10 +14,12 @@ export function handleSwapGvtGro(event: SwapEventGvtGro): void {
     // TODO-1: If triggering price from USDC/WETH pool, performance goes brrrrr, though... WETH price can significantly
     // change is short periods of time, so probably to be updated more often based on any other more frequent event
     // TODO-2: add handlers for all GRO pools to capture latest reserves & totalSupply
-    setGroPrice(event.address);
+    // setGroPrice(event.address);
+    setUniswapGvtGroPrice();
     setWethPrice(); // to be moved
 }
 
 export function handleSwapGroUsdc(event: SwapEventGroUsdc): void {
-    setGroPrice(event.address);
+    // setGroPrice(event.address);
+    setUniswapGroUsdcPrice(); // This is updating GRO price
 }

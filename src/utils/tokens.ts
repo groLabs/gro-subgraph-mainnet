@@ -16,6 +16,26 @@ import {
     UNISWAPV2_USDC_WETH_ADDRESS,
 } from '../utils/constants';
 import { getUniV2Price } from '../utils/pool';
+// import { initPrice } from '../setters/price';
+
+
+// TEMPORARILY COPIED HERE
+import { Price } from '../../generated/schema';
+export const initPrice = (): Price => {
+    let price = Price.load('0x');
+    if (!price) {
+        price = new Price('0x');
+        price.pwrd = ONE;
+        price.gvt = ZERO;
+        price.gro = ZERO;
+        price.weth = ZERO;
+        price.balancer_gro_weth = ZERO;
+        price.uniswap_gvt_gro = ZERO;
+        price.uniswap_gro_usdc = ZERO;
+        price.curve_pwrd3crv = ZERO;
+    }
+    return price;
+}
 
 
 export const getGroToken = (isPwrd: bool): string => {
@@ -41,7 +61,10 @@ export const getPricePerShare = (token: string): BigDecimal => {
     if (token === 'gvt') {
         price = getGvtPrice();
     } else if (token === 'gro') {
-        price = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS, false);
+        // TODO: retrieve it from latest prices.gro
+        // price = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS, false);
+        const _price = initPrice();
+        price = _price.gro;
     } else if (
         token === 'pwrd'
         || token === 'dai'
