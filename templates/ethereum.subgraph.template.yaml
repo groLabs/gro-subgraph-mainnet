@@ -404,6 +404,58 @@ dataSources:
         - event: TokenExchangeUnderlying(indexed address,int128,uint256,int128,uint256)
           handler: handleTokenExchangeUnderlying
       file: ./src/mappings/curveMetapool3CRV.ts
+  # Pool 5 : Balancer Vault 80% GRO - 20% WETH [VAULT]
+  - kind: ethereum/contract
+    name: BalancerGroWethVault
+    network: {{network}}
+    source:
+      address: '{{BalancerGroWethVaultAddress}}'
+      abi: Vault
+      startBlock: {{BalancerGroWethVaultStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Price
+        - PoolData
+      abis:
+        - name: Vault
+          file: ./abis/ethereum/BalancerGroWethVault.json
+        - name: WeightedPool
+          file: ./abis/ethereum/BalancerGroWethPool.json
+      eventHandlers:
+        - event: PoolBalanceChanged(indexed bytes32,indexed address,address[],int256[],uint256[])
+          handler: handlePoolBalanceChanged
+        # - event: Swap(indexed bytes32,indexed address,indexed address,uint256,uint256)
+        #   handler: handleSwap
+      file: ./src/mappings/balancerGroWeth.ts
+  # Pool 5 : Balancer Vault 80% GRO - 20% WETH [POOL]
+  - kind: ethereum/contract
+    name: BalancerGroWethPool
+    network: {{network}}
+    source:
+      address: '{{BalancerGroWethPoolAddress}}'
+      abi: WeightedPool
+      startBlock: {{BalancerGroWethPoolStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Price
+        - PoolData
+      abis:
+        - name: ERC20
+          file: ./abis/ethereum/ERC20.json
+        - name: Vault
+          file: ./abis/ethereum/BalancerGroWethVault.json
+        - name: WeightedPool
+          file: ./abis/ethereum/BalancerGroWethPool.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mappings/balancerGroWeth.ts
 
 # stablecoins *********************************
   # - kind: ethereum/contract

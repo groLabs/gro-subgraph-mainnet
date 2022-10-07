@@ -3,6 +3,7 @@ import {
     log,
     Address,
     BigDecimal,
+    BigInt,
 } from '@graphprotocol/graph-ts';
 import {
     ONE,
@@ -12,12 +13,17 @@ import {
     UNISWAPV2_GVT_GRO_ADDRESS,
     UNISWAPV2_GRO_USDC_ADDRESS,
     UNISWAPV2_USDC_WETH_ADDRESS,
+    BALANCER_GRO_WETH_POOLID,
+    BALANCER_GRO_WETH_POOL_ADDRESS,
+    BALANCER_GRO_WETH_VAULT_ADDRESS,
 } from '../utils/constants';
 import { updatePoolData } from './poolData';
 import { getUniV2Price } from '../utils/pool';
 import { getPricePerShare, tokenToDecimal } from '../utils/tokens';
 import { UniswapV2Pair as UniswapV2PairGvtGro } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
 import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
+import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVault/Vault';
+import { WeightedPool as BalancerGroWethPool } from '../../generated/BalancerGroWethPool/WeightedPool';
 
 
 
@@ -29,7 +35,8 @@ export const initPrice = (): Price => {
         price.pwrd = ONE;
         price.gvt = ZERO;
         price.gro = ZERO;
-        price.weth = ZERO;
+        // price.weth = ZERO;
+        price.weth = BigDecimal.fromString('1350'); //TODO
         price.balancer_gro_weth = ZERO;
         price.uniswap_gvt_gro = ZERO;
         price.uniswap_gro_usdc = ZERO;
@@ -184,4 +191,46 @@ export const setCurvePwrd3crvPrice = (): void => {
         price.curve_pwrd3crv = lpPricePerShare;
         price.save();
     }
+}
+
+export const setBalancerGroWethPrice = (): void => {
+    const contractVault = BalancerGroWethVault.bind(BALANCER_GRO_WETH_VAULT_ADDRESS);
+    const contractPool = BalancerGroWethPool.bind(BALANCER_GRO_WETH_POOL_ADDRESS);
+    const _totalSupply = contractPool.try_totalSupply();
+    const poolTokens = contractVault.try_getPoolTokens(BALANCER_GRO_WETH_POOLID);
+    if (_totalSupply.reverted) {
+        log.error('setters/price.ts/setBalancerGroWethPrice()->try_totalSupply() reverted', []);
+    } else if (poolTokens.reverted) {
+        log.error('setters/price.ts/setBalancerGroWethPrice()->try_getPoolTokens() reverted', []);
+    } else {
+        const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
+        const reserves = poolTokens.value.getBalances().map<BigDecimal>((item: BigInt) => tokenToDecimal(item, 18, 7));
+        if (reserves.length !== 2) {
+            log.error('setters/price.ts/setBalancerGroWethPrice(): wrong reserves pair', []);
+        } else {
+            const groReserve = reserves[0];
+            const wethReserve = reserves[1];
+
+            // update Pool data
+            updatePoolData(
+                5,
+                BALANCER_GRO_WETH_POOL_ADDRESS.toHexString(),
+                groReserve,
+                wethReserve,
+                totalSupply,
+            );
+
+            // update lpToken price
+            const price = initPrice();
+            const oneGro = (ONE.div(totalSupply)).times(groReserve);
+            const oneWeth = (ONE.div(totalSupply)).times(wethReserve);
+            const oneGroValue = oneGro.times(price.gro);
+            const oneWethValue = oneWeth.times(price.weth);
+            const lpPricePerShare = oneGroValue.plus(oneWethValue);
+            price.balancer_gro_weth = lpPricePerShare.truncate(DECIMALS);
+            price.save();
+        }
+
+    }
+
 }

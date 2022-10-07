@@ -21,6 +21,8 @@ export const UNISWAPV2_GVT_GRO_ADDRESS = Address.fromString('0x2ac5bC9ddA37601ED
 export const UNISWAPV2_GRO_USDC_ADDRESS = Address.fromString('0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6');
 export const UNISWAPV2_USDC_WETH_ADDRESS = Address.fromString('0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc');
 export const CURVE_PWRD_3CRV_ADDRESS = Address.fromString('0xbcb91E689114B9Cc865AD7871845C95241Df4105');
+export const BALANCER_GRO_WETH_VAULT_ADDRESS = Address.fromString('0xBA12222222228d8Ba445958a75a0704d566BF2C8');
+export const BALANCER_GRO_WETH_POOL_ADDRESS = Address.fromString('0x702605F43471183158938C1a3e5f5A359d7b31ba');
 export const STAKER_V1_ADDRESS = Address.fromString('0x001C249c09090D79Dc350A286247479F08c7aaD7');
 export const STAKER_V2_ADDRESS = Address.fromString('0x2E32bAd45a1C29c1EA27cf4dD588DF9e68ED376C');
 export const DEPOSIT_HANDLER_V1_ADDRESS = Address.fromString('0x79b14d909381D79B655C0700d0fdc2C7054635b9');
@@ -29,6 +31,9 @@ export const DEPOSIT_HANDLER_V3_ADDRESS = Address.fromString('0xB7207Ea9446DcA1d
 // export const DAI_ADDRESS = Address.fromString('0x6B175474E89094C44Da98b954EedeAC495271d0F');
 // export const USDC_ADDRESS = Address.fromString('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48');
 // export const USDT_ADDRESS = Address.fromString('0xdAC17F958D2ee523a2206206994597C13D831ec7');
+
+// Pool ids
+export const BALANCER_GRO_WETH_POOLID = Bytes.fromHexString('0x702605f43471183158938c1a3e5f5a359d7b31ba00020000000000000000009f');
 
 // Groups of contract addresses
 export const STAKER_ADDRESSES = [
