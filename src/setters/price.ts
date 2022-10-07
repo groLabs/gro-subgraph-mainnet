@@ -1,7 +1,6 @@
 import { Price } from '../../generated/schema';
 import {
     log,
-    Address,
     BigDecimal,
     BigInt,
 } from '@graphprotocol/graph-ts';
@@ -18,9 +17,8 @@ import {
     BALANCER_GRO_WETH_VAULT_ADDRESS,
 } from '../utils/constants';
 import { updatePoolData } from './poolData';
-import { getUniV2Price } from '../utils/pool';
 import { getPricePerShare, tokenToDecimal } from '../utils/tokens';
-import { UniswapV2Pair as UniswapV2PairGvtGro } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
+import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
 import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVault/Vault';
 import { WeightedPool as BalancerGroWethPool } from '../../generated/BalancerGroWethPool/WeightedPool';
@@ -35,8 +33,7 @@ export const initPrice = (): Price => {
         price.pwrd = ONE;
         price.gvt = ZERO;
         price.gro = ZERO;
-        // price.weth = ZERO;
-        price.weth = BigDecimal.fromString('1350'); //TODO
+        price.weth = ZERO;
         price.balancer_gro_weth = ZERO;
         price.uniswap_gvt_gro = ZERO;
         price.uniswap_gro_usdc = ZERO;
@@ -65,14 +62,14 @@ export const setGvtPrice = (): void => {
 
 // Triggered by UniswapV2 Gro-Usdc swap events
 // TODO
-export const setWethPrice = (): void => {
-    const wethPrice = getUniV2Price(UNISWAPV2_USDC_WETH_ADDRESS, true);
-    if (wethPrice != ZERO) {
-        let price = initPrice();
-        price.weth = wethPrice;
-        price.save();
-    }
-}
+// export const setWethPrice = (): void => {
+//     const wethPrice = getUniV2Price(UNISWAPV2_USDC_WETH_ADDRESS, true);
+//     if (wethPrice != ZERO) {
+//         let price = initPrice();
+//         price.weth = wethPrice;
+//         price.save();
+//     }
+// }
 
 // export const setPwrd3CRVPrice = (): void => {
 //     const curve_pwrd3crv = getCurvePwrd3crvPrice(true);
@@ -85,7 +82,7 @@ export const setWethPrice = (): void => {
 
 // TODO: update gro price as well (knowing gvt price, we can update gro)
 export const setUniswapGvtGroPrice = (): void => {
-    const contract = UniswapV2PairGvtGro.bind(UNISWAPV2_GVT_GRO_ADDRESS);
+    const contract = UniswapV2Pair.bind(UNISWAPV2_GVT_GRO_ADDRESS);
     const reserves = contract.try_getReserves();
     const _totalSupply = contract.try_totalSupply();
     if (reserves.reverted) {
@@ -122,7 +119,7 @@ export const setUniswapGvtGroPrice = (): void => {
 }
 
 export const setUniswapGroUsdcPrice = (): void => {
-    const contract = UniswapV2PairGvtGro.bind(UNISWAPV2_GRO_USDC_ADDRESS);
+    const contract = UniswapV2Pair.bind(UNISWAPV2_GRO_USDC_ADDRESS);
     const reserves = contract.try_getReserves();
     const _totalSupply = contract.try_totalSupply();
     if (reserves.reverted) {
@@ -230,7 +227,22 @@ export const setBalancerGroWethPrice = (): void => {
             price.balancer_gro_weth = lpPricePerShare.truncate(DECIMALS);
             price.save();
         }
-
     }
+}
 
+export const setWethPrice = (): void => {
+    const contract = UniswapV2Pair.bind(UNISWAPV2_USDC_WETH_ADDRESS);
+    const reserves = contract.try_getReserves();
+    if (reserves.reverted) {
+        log.error('setters/price.ts/setWethPrice()->try_getReserves() reverted', []);
+    } else {
+        const usdcReserve = tokenToDecimal(reserves.value.get_reserve0(), 6, 7);
+        const wethReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, 7);
+
+        // update WETH price
+        // TODO: chainlink to calc the USD price of USDC.
+        const price = initPrice();
+        price.weth = usdcReserve.div(wethReserve).truncate(DECIMALS);
+        price.save();
+    }
 }
