@@ -454,6 +454,8 @@ dataSources:
           file: ./abis/ethereum/BalancerGroWethVault.json
         - name: WeightedPool
           file: ./abis/ethereum/BalancerGroWethPool.json
+        - name: UniswapV2Pair
+          file: ./abis/ethereum/UniswapV2Pair.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer

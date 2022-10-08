@@ -1,5 +1,6 @@
 
 import { PoolBalanceChanged } from '../../generated/BalancerGroWethVault/Vault';
+import { Transfer } from '../../generated/BalancerGroWethPool/ERC20';
 import { 
     setWethPrice, 
     setBalancerGroWethPrice
@@ -9,6 +10,11 @@ import {
 // Not using if because there aren't balance changes in our poolId.
 // if (event.params.poolId == BALANCER_GRO_WETH_POOLID) {}
 export function handlePoolBalanceChanged(event: PoolBalanceChanged): void {
+    setWethPrice();
+    setBalancerGroWethPrice();
+}
+
+export function handleTransfer(event: Transfer): void {
     setWethPrice();
     setBalancerGroWethPrice();
 }
