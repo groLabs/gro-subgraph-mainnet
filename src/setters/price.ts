@@ -1,8 +1,9 @@
 import { Price } from '../../generated/schema';
 import {
     log,
-    BigDecimal,
     BigInt,
+    Address,
+    BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
     ONE,
@@ -15,14 +16,18 @@ import {
     BALANCER_GRO_WETH_POOLID,
     BALANCER_GRO_WETH_POOL_ADDRESS,
     BALANCER_GRO_WETH_VAULT_ADDRESS,
+    CHAINLINK_DAI_USD_ADDRESS,
+    CHAINLINK_USDC_USD_ADDRESS,
+    CHAINLINK_USDT_USD_ADDRESS,
 } from '../utils/constants';
 import { updatePoolData } from './poolData';
 import { getPricePerShare, tokenToDecimal } from '../utils/tokens';
+// contracts
 import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
-import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVault/Vault';
 import { WeightedPool as BalancerGroWethPool } from '../../generated/BalancerGroWethPool/WeightedPool';
-
+import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
+import { AccessControlledOffchainAggregator as ChainlinkAggregator } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 
 
 // export function initPrice(): Price {
@@ -34,6 +39,9 @@ export const initPrice = (): Price => {
         price.gvt = ZERO;
         price.gro = ZERO;
         price.weth = ZERO;
+        price.dai = ZERO;
+        price.usdc = ZERO;
+        price.usdt = ZERO;
         price.balancer_gro_weth = ZERO;
         price.uniswap_gvt_gro = ZERO;
         price.uniswap_gro_usdc = ZERO;
@@ -48,37 +56,6 @@ export const setGvtPrice = (): void => {
     price.gvt = getPricePerShare('gvt');
     price.save();
 }
-
-// Triggered by UniswapV2 Gro-Usdc swap events
-// export const setGroPrice = (contractAddress: Address): void => {
-//     // const groPrice = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS);
-//     const groPrice = getUniV2Price(contractAddress, true);
-//     if (groPrice != ZERO) {
-//         let price = initPrice();
-//         price.gro = groPrice;
-//         price.save();
-//     }
-// }
-
-// Triggered by UniswapV2 Gro-Usdc swap events
-// TODO
-// export const setWethPrice = (): void => {
-//     const wethPrice = getUniV2Price(UNISWAPV2_USDC_WETH_ADDRESS, true);
-//     if (wethPrice != ZERO) {
-//         let price = initPrice();
-//         price.weth = wethPrice;
-//         price.save();
-//     }
-// }
-
-// export const setPwrd3CRVPrice = (): void => {
-//     const curve_pwrd3crv = getCurvePwrd3crvPrice(true);
-//     if (curve_pwrd3crv != ZERO) {
-//         let price = initPrice();
-//         price.curve_pwrd3crv = curve_pwrd3crv;
-//         price.save();
-//     }
-// }
 
 // TODO: update gro price as well (knowing gvt price, we can update gro)
 export const setUniswapGvtGroPrice = (): void => {
@@ -141,16 +118,16 @@ export const setUniswapGroUsdcPrice = (): void => {
         );
 
         // update GRO price
-        // TODO: chainlink to calc the USD price of USDC.
         const price = initPrice();
-        const groPricePerShare = usdcReserve.div(groReserve).truncate(DECIMALS);
+        const usdReserve = usdcReserve.times(price.usdc)
+        const groPricePerShare = usdReserve.div(groReserve).truncate(DECIMALS);
         price.gro = groPricePerShare;
 
         // update lpToken price
-        const oneGro = (ONE.div(totalSupply)).times(groReserve);
-        const oneUsdc = (ONE.div(totalSupply)).times(usdcReserve);
-        const oneGroValue = oneGro.times(price.gro);
-        const oneUsdcValue = oneUsdc.times(ONE/*price.usdc*/); //TODO
+        const oneGroAmount = (ONE.div(totalSupply)).times(groReserve);
+        const oneUsdcAmount = (ONE.div(totalSupply)).times(usdcReserve);
+        const oneGroValue = oneGroAmount.times(price.gro);
+        const oneUsdcValue = oneUsdcAmount.times(price.usdc);
         const lpPricePerShare = oneGroValue.plus(oneUsdcValue);
         price.uniswap_gro_usdc = lpPricePerShare.truncate(DECIMALS);
         price.save();
@@ -243,6 +220,32 @@ export const setWethPrice = (): void => {
         // TODO: chainlink to calc the USD price of USDC.
         const price = initPrice();
         price.weth = usdcReserve.div(wethReserve).truncate(DECIMALS);
+        price.save();
+    }
+}
+
+export const setStableCoinPrice = (
+    contractAddress: Address,
+): void => {
+    const contract = ChainlinkAggregator.bind(contractAddress);
+    const latestRound = contract.try_latestRoundData();
+    if (latestRound.reverted) {
+        log.error('setters/price.ts/setStableCoinPrice()->try_latestRoundData() reverted', []);
+    } else {
+        const usdPrice = tokenToDecimal(latestRound.value.getAnswer(), 8, 7);
+        const price = initPrice();
+        if (contractAddress == CHAINLINK_DAI_USD_ADDRESS) {
+            price.dai = usdPrice;
+        } else if (contractAddress == CHAINLINK_USDC_USD_ADDRESS) {
+            price.usdc = usdPrice;
+        } else if (contractAddress == CHAINLINK_USDT_USD_ADDRESS) {
+            price.usdt = usdPrice;
+        } else {
+            log.error(
+                'setters/price.ts/setStableCoinPrice()->Unknown chainlink feed address',
+                [contractAddress.toHexString()]
+            );
+        }
         price.save();
     }
 }

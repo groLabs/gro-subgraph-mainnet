@@ -2,6 +2,29 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
+# Chainlink: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
+# event and updating DAI, USDC & USDT based on contract call latestRoundData() on each
+# corresponding aggregator
+  - kind: ethereum/contract
+    name: ChainlinkAggregator
+    network: {{network}}
+    source:
+      address: '{{ChainlinkAggregatorAddress}}'
+      abi: AccessControlledOffchainAggregator
+      startBlock: {{ChainlinkAggregatorStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Price
+      abis:
+        - name: AccessControlledOffchainAggregator
+          file: ./abis/ethereum/ChainlinkAggregatorProxy.json
+      eventHandlers:
+        - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
+          handler: handleAnswerUpdated
+      file: ./src/mappings/chainlink.ts
   # deposit handlers *********************************************
   - kind: ethereum/contract
     name: DepositHandlerV1

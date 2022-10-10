@@ -39,6 +39,8 @@
     "UsdcAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     "UsdcStartBlock": 12522788,
     "UsdtAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-    "UsdtStartBlock": 12522788
+    "UsdtStartBlock": 12522788,
+    "ChainlinkAggregatorAddress": "0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82",
+    "ChainlinkAggregatorStartBlock": 13264500
   }
   

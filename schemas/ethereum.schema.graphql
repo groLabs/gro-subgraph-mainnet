@@ -8,10 +8,10 @@ enum Token {
   dai
   usdc
   usdt
-  balancer_gro_weth
   uniswap_gvt_gro
   uniswap_gro_usdc
   curve_pwrd3crv
+  balancer_gro_weth
 }
 
 enum TxType {
@@ -86,6 +86,9 @@ type Price @entity {
   gvt: BigDecimal!
   gro: BigDecimal!
   weth: BigDecimal!
+  dai: BigDecimal!
+  usdc: BigDecimal!
+  usdt: BigDecimal!
   balancer_gro_weth: BigDecimal!
   uniswap_gvt_gro: BigDecimal!
   uniswap_gro_usdc: BigDecimal!
@@ -106,7 +109,7 @@ type Pool @entity {
   poolId: Int!
   net_reward: BigDecimal!
   reward_debt: BigDecimal!
-  balance: BigDecimal!
+  balance: BigDecimal! # rename to coinBalance
   claim_now: BigDecimal!
   vest_all: BigDecimal!
 }
