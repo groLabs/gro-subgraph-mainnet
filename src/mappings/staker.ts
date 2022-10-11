@@ -2,12 +2,18 @@ import {
     LogClaim as LogClaimV1,
     LogDeposit as LogDepositV1,
     LogWithdraw as LogWithdrawV1,
+    LogSetPool as LogSetPoolV1,
+    LogUpdatePool as LogUpdatePoolV1,
+    LogGroPerBlock as LogGroPerBlockV1,
 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
 import {
     LogClaim as LogClaimV2,
     LogMultiClaim as LogMultiClaimV2,
     LogDeposit as LogDepositV2,
     LogWithdraw as LogWithdrawV2,
+    LogSetPool as LogSetPoolV2,
+    LogUpdatePool as LogUpdatePoolV2,
+    LogGroPerBlock as LogGroPerBlockV2,
 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
 import {
     parseClaimV1Event,
@@ -19,6 +25,11 @@ import { parseStakerWithdrawalEvent } from '../parsers/withdrawals';
 import { manageClaim } from '../managers/claims';
 import { manageStakerDeposit } from '../managers/deposit';
 import { manageStakerWithdrawal } from '../managers/withdrawal';
+import {
+    updateStakerSupply,
+    updateStakerAllocation,
+    updateStakerGroPerBlock,
+} from '../setters/staker';
 
 
 
@@ -57,3 +68,44 @@ export function handleWithdrawV2(event: LogWithdrawV2): void {
     manageStakerWithdrawal(ev);
 }
 
+export function handleSetPoolV1(event: LogSetPoolV1): void {
+    updateStakerAllocation(
+        event.params.pid,
+        event.params.allocPoint,
+    );
+}
+
+export function handleSetPoolV2(event: LogSetPoolV2): void {
+    updateStakerAllocation(
+        event.params.pid,
+        event.params.allocPoint,
+    );
+}
+
+export function handleUpdatePoolV1(event: LogUpdatePoolV1): void {
+    updateStakerSupply(
+        event.params.pid,
+        event.params.lpSupply,
+        event.params.accGroPerShare,
+    )
+}
+
+export function handleUpdatePoolV2(event: LogUpdatePoolV2): void {
+    updateStakerSupply(
+        event.params.pid,
+        event.params.lpSupply,
+        event.params.accGroPerShare,
+    )
+}
+
+export function handleGroPerBlockV1(event: LogGroPerBlockV1): void {
+    updateStakerGroPerBlock(
+        event.params.newGro
+    );
+}
+
+export function handleGroPerBlockV2(event: LogGroPerBlockV2): void {
+    updateStakerGroPerBlock(
+        event.params.newGro
+    );
+}

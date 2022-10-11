@@ -299,6 +299,12 @@ dataSources:
           handler: handleDepositV1
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
           handler: handleWithdrawV1
+        - event: LogSetPool(indexed uint256,uint256)
+          handler: handleSetPoolV1
+        - event: LogUpdatePool(indexed uint256,uint256,uint256,uint256)
+          handler: handleUpdatePoolV1
+        - event: LogGroPerBlock(uint256)
+          handler: handleGroPerBlockV1
       file: ./src/mappings/staker.ts
   - kind: ethereum/contract
     name: LpTokenStakerV2
@@ -333,6 +339,12 @@ dataSources:
           handler: handleDepositV2
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
           handler: handleWithdrawV2
+        - event: LogSetPool(indexed uint256,uint256)
+          handler: handleSetPoolV2
+        - event: LogUpdatePool(indexed uint256,uint256,uint256,uint256)
+          handler: handleUpdatePoolV2
+        - event: LogGroPerBlock(uint256)
+          handler: handleGroPerBlockV2
       file: ./src/mappings/staker.ts
   - kind: ethereum/contract
     name: PnL

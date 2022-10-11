@@ -4,18 +4,19 @@ import {
     setWethPrice, 
     setBalancerGroWethPrice
 } from '../setters/price';
+import {getTxData } from '../utils/tx';
 
 
 // Not using if because there aren't balance changes in our poolId.
 // if (event.params.poolId == BALANCER_GRO_WETH_POOLID) {}
 export function handlePoolBalanceChanged(event: PoolBalanceChanged): void {
     setWethPrice();
-    setBalancerGroWethPrice();
+    setBalancerGroWethPrice(getTxData(event));
 }
 
 export function handleTransfer(event: Transfer): void {
     setWethPrice();
-    setBalancerGroWethPrice();
+    setBalancerGroWethPrice(getTxData(event));
 }
 
 // Way too many swaps -> not feasible

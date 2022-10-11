@@ -9,6 +9,7 @@ import {
     ONE,
     ZERO,
     DECIMALS,
+    GENESIS_POOL_GRO_WETH,
     CURVE_PWRD_3CRV_ADDRESS,
     UNISWAPV2_GVT_GRO_ADDRESS,
     UNISWAPV2_GRO_USDC_ADDRESS,
@@ -21,7 +22,11 @@ import {
     CHAINLINK_USDT_USD_ADDRESS,
 } from '../utils/constants';
 import { updatePoolData } from './poolData';
-import { getPricePerShare, tokenToDecimal } from '../utils/tokens';
+import {
+    getPricePerShare,
+    tokenToDecimal
+} from '../utils/tokens';
+import { Tx } from '../types/tx';
 // contracts
 import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
 import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVault/Vault';
@@ -167,20 +172,33 @@ export const setCurvePwrd3crvPrice = (): void => {
     }
 }
 
-export const setBalancerGroWethPrice = (): void => {
+//@dev: Gro token was circulating before the GRO/WETH pool creation,
+//      so any tx before this creation must be ignored
+export const setBalancerGroWethPrice = (tx: Tx): void => {
     const contractVault = BalancerGroWethVault.bind(BALANCER_GRO_WETH_VAULT_ADDRESS);
     const contractPool = BalancerGroWethPool.bind(BALANCER_GRO_WETH_POOL_ADDRESS);
     const _totalSupply = contractPool.try_totalSupply();
     const poolTokens = contractVault.try_getPoolTokens(BALANCER_GRO_WETH_POOLID);
-    if (_totalSupply.reverted) {
-        log.error('setters/price.ts/setBalancerGroWethPrice()->try_totalSupply() reverted', []);
+    if (tx.block < GENESIS_POOL_GRO_WETH) {
+        log.warning(
+            `setters/price.ts/setBalancerGroWethPrice()->GRO/WETH Vault updates before its pool creation ${tx.msg}`,
+            tx.data
+        )
+    } else if (_totalSupply.reverted) {
+        log.error(
+            `setters/price.ts/setBalancerGroWethPrice()->try_totalSupply() reverted ${tx.msg}`,
+            tx.data
+        );
     } else if (poolTokens.reverted) {
-        log.error('setters/price.ts/setBalancerGroWethPrice()->try_getPoolTokens() reverted', []);
+        log.error(
+            `setters/price.ts/setBalancerGroWethPrice()->try_getPoolTokens() reverted ${tx.msg}`,
+            tx.data
+        );
     } else {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
         const reserves = poolTokens.value.getBalances().map<BigDecimal>((item: BigInt) => tokenToDecimal(item, 18, 7));
         if (reserves.length !== 2) {
-            log.error('setters/price.ts/setBalancerGroWethPrice(): wrong reserves pair', []);
+            log.error(`setters/price.ts/setBalancerGroWethPrice(): wrong reserves pair ${tx.msg}`, tx.data);
         } else {
             const groReserve = reserves[0];
             const wethReserve = reserves[1];

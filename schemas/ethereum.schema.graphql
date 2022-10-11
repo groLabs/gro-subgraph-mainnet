@@ -46,6 +46,8 @@ type MasterData  @entity {
     networkId: Int!
     networkName: NetworkName!
     launchTimestamp: Int!
+    gro_per_block: BigDecimal!
+    total_alloc: BigDecimal!
 }
 
 # user
@@ -116,11 +118,21 @@ type Pool @entity {
 
 # pool data
 type PoolData @entity {
+  # TODO: use pool id as id, and contractAddress as normal field (to be aligned with stakerData)
   id: ID! # pool address
   poolId: Int!
   reserve0: BigDecimal!
   reserve1: BigDecimal!
   total_supply: BigDecimal!
+}
+
+# staker data
+type StakerData @entity {
+  id: ID! # poolId
+  lp_supply: BigDecimal!
+  acc_gro_per_share: BigDecimal!
+  alloc_point: BigDecimal!
+  pool_share: BigDecimal!
 }
 
 # gro protocol deposits, withdrawals & transfers
