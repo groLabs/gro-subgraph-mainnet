@@ -133,6 +133,8 @@ type StakerData @entity {
   acc_gro_per_share: BigDecimal!
   alloc_point: BigDecimal!
   pool_share: BigDecimal!
+  block_number: Int!
+  block_timestamp: Int!
 }
 
 # gro protocol deposits, withdrawals & transfers

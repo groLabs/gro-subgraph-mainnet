@@ -87,6 +87,8 @@ export function handleUpdatePoolV1(event: LogUpdatePoolV1): void {
         event.params.pid,
         event.params.lpSupply,
         event.params.accGroPerShare,
+        event.block.number,
+        event.block.timestamp,
     )
 }
 
@@ -95,6 +97,8 @@ export function handleUpdatePoolV2(event: LogUpdatePoolV2): void {
         event.params.pid,
         event.params.lpSupply,
         event.params.accGroPerShare,
+        event.block.number,
+        event.block.timestamp,
     )
 }
 
