@@ -14,10 +14,8 @@ import {
 } from '../utils/tokens';
 import {
     NUM,
+    ADDR,
     DECIMALS,
-    ZERO_ADDR,
-    GVT_ADDRESS,
-    PWRD_ADDRESS,
     ERC20_TRANSFER_SIG,
 } from '../utils/constants';
 
@@ -77,15 +75,15 @@ export function getCoinAmount(
     for (let i = 0; i < logs.length; i++) {
         const log = logs[i];
         if (
-            (log.address == GVT_ADDRESS
-                || log.address == PWRD_ADDRESS)
+            (log.address == ADDR.GVT
+                || log.address == ADDR.PWRD)
             && log.topics[0].toHexString() == ERC20_TRANSFER_SIG
             && log.topics.length === 3
         ) {
             const from = ethereum.decode('address', log.topics[1])!.toAddress();
             const to = ethereum.decode('address', log.topics[2])!.toAddress();
-            if ((tx.type === 'core_deposit' && from == ZERO_ADDR)
-                || (tx.type === 'core_withdrawal' && to == ZERO_ADDR)) {
+            if ((tx.type === 'core_deposit' && from == ADDR.ZERO)
+                || (tx.type === 'core_withdrawal' && to == ADDR.ZERO)) {
                 const value = ethereum.decode('uin256', log.data)!.toBigInt();
                 return tokenToDecimal(value, 18, 7);
             }

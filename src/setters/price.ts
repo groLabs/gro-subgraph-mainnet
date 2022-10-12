@@ -7,18 +7,10 @@ import {
 } from '@graphprotocol/graph-ts';
 import {
     NUM,
+    ADDR,
     DECIMALS,
     GENESIS_POOL_GRO_WETH,
-    CURVE_PWRD_3CRV_ADDRESS,
-    UNISWAPV2_GVT_GRO_ADDRESS,
-    UNISWAPV2_GRO_USDC_ADDRESS,
-    UNISWAPV2_USDC_WETH_ADDRESS,
     BALANCER_GRO_WETH_POOLID,
-    BALANCER_GRO_WETH_POOL_ADDRESS,
-    BALANCER_GRO_WETH_VAULT_ADDRESS,
-    CHAINLINK_DAI_USD_ADDRESS,
-    CHAINLINK_USDC_USD_ADDRESS,
-    CHAINLINK_USDT_USD_ADDRESS,
 } from '../utils/constants';
 import { updatePoolData } from './poolData';
 import {
@@ -63,7 +55,7 @@ export const setGvtPrice = (): void => {
 
 // TODO: update gro price as well (knowing gvt price, we can update gro)
 export const setUniswapGvtGroPrice = (): void => {
-    const contract = UniswapV2Pair.bind(UNISWAPV2_GVT_GRO_ADDRESS);
+    const contract = UniswapV2Pair.bind(ADDR.UNISWAPV2_GVT_GRO);
     const reserves = contract.try_getReserves();
     const _totalSupply = contract.try_totalSupply();
     if (reserves.reverted) {
@@ -78,7 +70,7 @@ export const setUniswapGvtGroPrice = (): void => {
         // update Pool data
         updatePoolData(
             1,
-            UNISWAPV2_GVT_GRO_ADDRESS.toHexString(),
+            ADDR.UNISWAPV2_GVT_GRO.toHexString(),
             gvtReserve,
             groReserve,
             totalSupply,
@@ -100,7 +92,7 @@ export const setUniswapGvtGroPrice = (): void => {
 }
 
 export const setUniswapGroUsdcPrice = (): void => {
-    const contract = UniswapV2Pair.bind(UNISWAPV2_GRO_USDC_ADDRESS);
+    const contract = UniswapV2Pair.bind(ADDR.UNISWAPV2_GRO_USDC);
     const reserves = contract.try_getReserves();
     const _totalSupply = contract.try_totalSupply();
     if (reserves.reverted) {
@@ -115,7 +107,7 @@ export const setUniswapGroUsdcPrice = (): void => {
         // update Pool data
         updatePoolData(
             2,
-            UNISWAPV2_GRO_USDC_ADDRESS.toHexString(),
+            ADDR.UNISWAPV2_GRO_USDC.toHexString(),
             groReserve,
             usdcReserve,
             totalSupply,
@@ -139,7 +131,7 @@ export const setUniswapGroUsdcPrice = (): void => {
 }
 
 export const setCurvePwrd3crvPrice = (): void => {
-    const contract = CurveMetapool3CRV.bind(CURVE_PWRD_3CRV_ADDRESS);
+    const contract = CurveMetapool3CRV.bind(ADDR.CURVE_PWRD_3CRV);
     const reserves = contract.try_get_balances();
     const totalSupply = contract.try_totalSupply();
     const virtualPrice = contract.try_get_virtual_price();
@@ -157,7 +149,7 @@ export const setCurvePwrd3crvPrice = (): void => {
         // update Pool data
         updatePoolData(
             4,
-            CURVE_PWRD_3CRV_ADDRESS.toHexString(),
+            ADDR.CURVE_PWRD_3CRV.toHexString(),
             crv_reserve,
             pwrd_reserve,
             total_supply,
@@ -174,8 +166,8 @@ export const setCurvePwrd3crvPrice = (): void => {
 //@dev: Gro token was circulating before the GRO/WETH pool creation,
 //      so any tx before this creation must be ignored
 export const setBalancerGroWethPrice = (tx: Tx): void => {
-    const contractVault = BalancerGroWethVault.bind(BALANCER_GRO_WETH_VAULT_ADDRESS);
-    const contractPool = BalancerGroWethPool.bind(BALANCER_GRO_WETH_POOL_ADDRESS);
+    const contractVault = BalancerGroWethVault.bind(ADDR.BALANCER_GRO_WETH_VAULT);
+    const contractPool = BalancerGroWethPool.bind(ADDR.BALANCER_GRO_WETH_POOL);
     const _totalSupply = contractPool.try_totalSupply();
     const poolTokens = contractVault.try_getPoolTokens(BALANCER_GRO_WETH_POOLID);
     if (tx.block < GENESIS_POOL_GRO_WETH) {
@@ -205,7 +197,7 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
             // update Pool data
             updatePoolData(
                 5,
-                BALANCER_GRO_WETH_POOL_ADDRESS.toHexString(),
+                ADDR.BALANCER_GRO_WETH_POOL.toHexString(),
                 groReserve,
                 wethReserve,
                 totalSupply,
@@ -225,7 +217,7 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
 }
 
 export const setWethPrice = (): void => {
-    const contract = UniswapV2Pair.bind(UNISWAPV2_USDC_WETH_ADDRESS);
+    const contract = UniswapV2Pair.bind(ADDR.UNISWAPV2_USDC_WETH);
     const reserves = contract.try_getReserves();
     if (reserves.reverted) {
         log.error('setters/price.ts/setWethPrice()->try_getReserves() reverted', []);
@@ -251,11 +243,11 @@ export const setStableCoinPrice = (
     } else {
         const usdPrice = tokenToDecimal(latestRound.value.getAnswer(), 8, 7);
         const price = initPrice();
-        if (contractAddress == CHAINLINK_DAI_USD_ADDRESS) {
+        if (contractAddress == ADDR.CHAINLINK_DAI_USD) {
             price.dai = usdPrice;
-        } else if (contractAddress == CHAINLINK_USDC_USD_ADDRESS) {
+        } else if (contractAddress == ADDR.CHAINLINK_USDC_USD) {
             price.usdc = usdPrice;
-        } else if (contractAddress == CHAINLINK_USDT_USD_ADDRESS) {
+        } else if (contractAddress == ADDR.CHAINLINK_USDT_USD) {
             price.usdt = usdPrice;
         } else {
             log.error(

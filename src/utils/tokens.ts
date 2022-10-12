@@ -2,20 +2,13 @@ import { Gvt } from '../../generated/Gvt/Gvt';
 import { Pwrd } from '../../generated/Pwrd/Pwrd';
 import {
     log,
-    Address,
     BigInt,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
     NUM,
-    DECIMALS,
-    GVT_ADDRESS,
-    PWRD_ADDRESS,
-    UNISWAPV2_GRO_USDC_ADDRESS,
-    UNISWAPV2_USDC_WETH_ADDRESS,
+    ADDR,
 } from '../utils/constants';
-import { getUniV2Price } from '../utils/pool';
-// import { initPrice } from '../setters/price';
 
 
 // TEMPORARILY COPIED HERE
@@ -44,7 +37,7 @@ export const getGroToken = (isPwrd: bool): string => {
 }
 
 export const getGvtPrice = (): BigDecimal => {
-    const contract = Gvt.bind(GVT_ADDRESS);
+    const contract = Gvt.bind(ADDR.GVT);
     const pricePerShare = contract.try_getPricePerShare();
     if (pricePerShare.reverted) {
         log.error('getGvtPrice() reverted in src/utils/tokens.ts', []);
@@ -117,7 +110,7 @@ export function tokenToDecimal(
 // Retrieves gvt or pwrd factor at the time of a transfer
 export const getFactor = (token: string): BigDecimal => {
     if (token === 'gvt') {
-        const contract = Gvt.bind(GVT_ADDRESS);
+        const contract = Gvt.bind(ADDR.GVT);
         const gvtFactor = contract.try_factor();
         if (gvtFactor.reverted) {
             log.error('getFactor() on gvt reverted in src/utils/tokens.ts', []);
@@ -126,7 +119,7 @@ export const getFactor = (token: string): BigDecimal => {
             return tokenToDecimal(gvtFactor.value, 18, 12);
         }
     } else if (token === 'pwrd') {
-        const contract = Pwrd.bind(PWRD_ADDRESS);
+        const contract = Pwrd.bind(ADDR.PWRD);
         const pwrdFactor = contract.try_factor();
         if (pwrdFactor.reverted) {
             log.error('getFactor() on pwrd reverted in src/utils/tokens.ts', []);

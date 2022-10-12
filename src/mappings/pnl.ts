@@ -1,6 +1,4 @@
-import {
-  LogPnLExecution,
-} from '../../generated/PnL/PnL';
+import { LogPnLExecution } from '../../generated/PnL/PnL';
 import { setGvtPrice } from '../setters/price';
 import {
   setPwrdFactor,

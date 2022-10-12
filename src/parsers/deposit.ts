@@ -2,8 +2,8 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
 import {
+    ADDR,
     NO_POOL,
-    ZERO_ADDR,
 } from '../utils/constants';
 
 
@@ -16,7 +16,7 @@ function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.address,
         'core_deposit',
         ev.params.user.toHexString(),   // links with User.id,
-        ZERO_ADDR,                      // from
+        ADDR.ZERO,                      // from
         ev.params.user,                 // to
         BigInt.fromString('0'),         // coinAmount
         ev.params.usdAmount,            // usdAmount

@@ -2,6 +2,7 @@ import { User } from '../../generated/schema';
 import { setMasterData } from '../setters/masterdata';
 let isMasterDataInitialised = false;
 
+
 export const setUser = (userAddress: string): User => {
   if (!isMasterDataInitialised) {
     setMasterData();

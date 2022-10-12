@@ -6,7 +6,10 @@ import {
     BigInt,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
-import { DECIMALS, NUM } from '../utils/constants';
+import {
+    NUM,
+    DECIMALS
+} from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
 import { setMasterData } from './masterdata';
 
@@ -70,7 +73,7 @@ export const updateStakerAllocation = (
     staker.alloc_point = allocPoint
     staker.save();
     const totalAlloc = updateTotalAlloc();
-    staker.pool_share = (totalAlloc.equals(NUM.ZERO)) 
+    staker.pool_share = (totalAlloc.equals(NUM.ZERO))
         ? NUM.ZERO
         : allocPoint.div(totalAlloc).truncate(DECIMALS);
     staker.save();

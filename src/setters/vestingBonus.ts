@@ -4,6 +4,7 @@ import { tokenToDecimal } from '../utils/tokens';
 import { initTotals } from './totals';
 import { NUM } from '../utils/constants';
 
+
 export const initVestingBonus = (
     userAddress: string,
     save: boolean,

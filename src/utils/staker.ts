@@ -1,8 +1,7 @@
 import { tokenToDecimal } from '../utils/tokens';
 import {
     NUM,
-    STAKER_V1_ADDRESS,
-    STAKER_V2_ADDRESS
+    ADDR,
 } from '../utils/constants';
 import { Address, BigInt, log, BigDecimal } from '@graphprotocol/graph-ts';
 import { LpTokenStaker as StakerV1 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
@@ -27,7 +26,7 @@ export function getRewardDebt(
     poolId: i32,
 ): BigDecimal {
     let currentRewardDebt = NUM.ZERO;
-    if (contractAddress == STAKER_V1_ADDRESS) {
+    if (contractAddress == ADDR.STAKER_V1) {
         const contract = StakerV1.bind(contractAddress);
         const userInfo = contract.try_userInfo(
             BigInt.fromI32(poolId),
@@ -38,7 +37,7 @@ export function getRewardDebt(
         } else {
             currentRewardDebt = tokenToDecimal(userInfo.value.getRewardDebt(), 18, 7);
         }
-    } else if (contractAddress == STAKER_V2_ADDRESS) {
+    } else if (contractAddress == ADDR.STAKER_V2) {
         const contract = StakerV2.bind(contractAddress);
         const userInfo = contract.try_userInfo(
             BigInt.fromI32(poolId),

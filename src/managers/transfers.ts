@@ -1,4 +1,4 @@
-import { ZERO_ADDR } from '../utils/constants';
+import { ADDR } from '../utils/constants';
 import { setUser } from '../setters/users';
 import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
@@ -48,10 +48,10 @@ export const manageTransfer = (
     // case A -> if from == 0x, deposit (mint)
     // case B -> if to == 0x, withdrawal (burn)
     // case C -> else, transfer between users (transfer_in & transfer_out)
-    if (ev.fromAddress == ZERO_ADDR) {
+    if (ev.fromAddress == ADDR.ZERO) {
         userAddressIn = ev.toAddress.toHexString();
         type = 'core_deposit';
-    } else if (ev.toAddress == ZERO_ADDR) {
+    } else if (ev.toAddress == ADDR.ZERO) {
         userAddressOut = ev.fromAddress.toHexString();
         type = 'core_withdrawal';
     } else {

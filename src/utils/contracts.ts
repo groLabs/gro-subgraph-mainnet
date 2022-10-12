@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
 import {
-    ZERO_ADDR,
+    ADDR,
     STAKER_ADDRESSES
 } from '../utils/constants';
 
@@ -10,7 +10,7 @@ const isDepositOrWithdrawal = (
     from: Address,
     to: Address,
 ): bool => {
-    return (from == ZERO_ADDR || to == ZERO_ADDR)
+    return (from == ADDR.ZERO || to == ADDR.ZERO)
         ? true
         : false;
 }

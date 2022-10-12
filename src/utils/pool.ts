@@ -10,11 +10,8 @@ import {
 } from '@graphprotocol/graph-ts';
 import {
     NUM,
+    ADDR,
     DECIMALS,
-    CURVE_PWRD_3CRV_ADDRESS,
-    UNISWAPV2_GVT_GRO_ADDRESS,
-    UNISWAPV2_GRO_USDC_ADDRESS,
-    UNISWAPV2_USDC_WETH_ADDRESS,
 } from '../utils/constants';
 import { tokenToDecimal } from './tokens';
 import { updatePoolData } from '../setters/poolData';
@@ -26,7 +23,7 @@ export const getUniV2Price = (
     poolAddress: Address,
     update: boolean,
 ): BigDecimal => {
-    // if (poolAddress == UNISWAPV2_GVT_GRO_ADDRESS) {
+    // if (poolAddress == ADDR.UNISWAPV2_GVT_GRO) {
     //     const contract = UniswapV2PairGvtGro.bind(poolAddress);
     //     const reserves = contract.try_getReserves();
     //     const totalSupply = contract.try_totalSupply();
@@ -65,7 +62,7 @@ export const getUniV2Price = (
     //         // return ZERO;
     //     }
     // } else 
-    if (poolAddress == UNISWAPV2_GRO_USDC_ADDRESS) {
+    if (poolAddress == ADDR.UNISWAPV2_GRO_USDC) {
         const contract = UniswapV2PairGroUsdc.bind(poolAddress);
         const reserves = contract.try_getReserves();
         const totalSupply = contract.try_totalSupply();
@@ -93,7 +90,7 @@ export const getUniV2Price = (
             const pps = usdc_reserve.div(gro_reserve).truncate(DECIMALS);
             return pps;
         }
-    } else if (poolAddress == UNISWAPV2_USDC_WETH_ADDRESS) {
+    } else if (poolAddress == ADDR.UNISWAPV2_USDC_WETH) {
         // const contract = UniswapV2Pair.bind(poolAddress);
         // const reserves = contract.try_getReserves();
         // const totalSupply = contract.try_totalSupply();

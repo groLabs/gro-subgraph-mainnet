@@ -4,8 +4,7 @@ import { Pwrd } from '../../generated/Pwrd/Pwrd';
 import { Factor } from '../../generated/schema';
 import {
     NUM,
-    GVT_ADDRESS,
-    PWRD_ADDRESS,
+    ADDR,
 } from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
 
@@ -22,7 +21,7 @@ const initFactor = (): Factor => {
 
 const setGvtFactor = (): void => {
     const factor = initFactor();
-    const contract = Gvt.bind(GVT_ADDRESS);
+    const contract = Gvt.bind(ADDR.GVT);
     const gvtFactor = contract.try_factor();
     if (gvtFactor.reverted) {
         log.error('setGvtFactor() reverted in src/setters/factors.ts', []);
@@ -34,7 +33,7 @@ const setGvtFactor = (): void => {
 
 const setPwrdFactor = (): void => {
     const factor = initFactor();
-    const contract = Pwrd.bind(PWRD_ADDRESS);
+    const contract = Pwrd.bind(ADDR.PWRD);
     const pwrdFactor = contract.try_factor();
     if (pwrdFactor.reverted) {
         log.error('getPwrdFactor() reverted in src/setters/factors.ts', []);
