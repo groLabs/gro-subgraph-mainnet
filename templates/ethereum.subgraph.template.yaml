@@ -499,6 +499,47 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/mappings/balancerGroWeth.ts
+# ****** GROHodler ******************************
+  - kind: ethereum/contract
+    name: GROHodlerV1
+    network: {{network}}
+    source:
+      address: '{{HodlerV1Address}}'
+      abi: GROHodler
+      startBlock: {{HodlerV1StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VestingBonus
+      abis:
+        - name: GROHodler
+          file: ./abis/ethereum/GROHodlerV1.json
+      eventHandlers:
+        - event: LogBonusClaimed(address,uint256)
+          handler: handleBonusClaimedV1
+      file: ./src/mappings/hodler.ts
+  - kind: ethereum/contract
+    name: GROHodlerV2
+    network: {{network}}
+    source:
+      address: '{{HodlerV2Address}}'
+      abi: GROHodler
+      startBlock: {{HodlerV2StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VestingBonus
+      abis:
+        - name: GROHodler
+          file: ./abis/ethereum/GROHodlerV2.json
+      eventHandlers:
+        - event: LogBonusClaimed(indexed address,bool,uint256)
+          handler: handleBonusClaimedV2
+      file: ./src/mappings/hodler.ts
 
 # stablecoins *********************************
   # - kind: ethereum/contract
