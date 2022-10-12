@@ -3,7 +3,7 @@ import { setClaimTx } from '../setters/claims';
 import { setPools } from '../setters/pools';
 import { ClaimEvent } from '../types/claim';
 import { initTotals } from '../setters/totals';
-
+import { initVestingBonus } from '../setters/vestingBonus';
 
 // Claim from Staker
 export const manageClaim = (
@@ -29,4 +29,7 @@ export const manageClaim = (
 
     // Step 4: Create Totals for staker-only users
     initTotals(ev.userAddress, true);
+
+    // Step 5: Create VestingBonus
+    initVestingBonus(ev.userAddress, true);
 }

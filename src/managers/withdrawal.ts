@@ -5,6 +5,7 @@ import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
 import { setPools } from '../setters/pools';
 import { initTotals } from '../setters/totals';
+import { initVestingBonus } from '../setters/vestingBonus';
 
 
 // Manage core withdrawals
@@ -28,6 +29,9 @@ export const manageCoreWithdrawal = (
         tx.usdAmount,
         tx.factor,
     );
+
+    // Step 4: Create VestingBonus
+    initVestingBonus(ev.userAddress, true);
 }
 
 export const manageStakerWithdrawal = (
@@ -50,5 +54,8 @@ export const manageStakerWithdrawal = (
 
     // Step 4: Create Totals for Staker-only users
     initTotals(ev.userAddress, true);
+
+    // Step 5: Create VestingBonus
+    initVestingBonus(ev.userAddress, true);
 
 }

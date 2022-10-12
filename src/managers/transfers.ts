@@ -3,7 +3,7 @@ import { setUser } from '../setters/users';
 import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
 import { TransferEvent } from '../types/transfer';
-
+import { initVestingBonus } from '../setters/vestingBonus';
 
 function buildTransfer(
     ev: TransferEvent,
@@ -31,6 +31,9 @@ function buildTransfer(
         tx.usdAmount,
         tx.factor,
     );
+
+    // Step 4: Create VestingBonus
+    initVestingBonus(userAddress, true);
 }
 
 export const manageTransfer = (

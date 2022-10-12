@@ -50,37 +50,6 @@ type MasterData  @entity {
     total_alloc: BigDecimal!
 }
 
-# user
-type User @entity {
-  id: ID! # userAddress
-  transfers: [TransferTx!] @derivedFrom(field: "userAddress")
-  approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
-  claims: [ClaimTx!] @derivedFrom(field: "userAddress")
-  totals: Totals! @derivedFrom(field: "userAddress")
-  pools: [Pool!] @derivedFrom(field: "userAddress")
-}
-
-# aggregated amounts for personal stats
-type Totals @entity {
-  id: ID! # userAddress
-  userAddress: User! # FK to User
-  amount_added_pwrd: BigDecimal!
-  amount_added_gvt: BigDecimal!
-  amount_removed_pwrd: BigDecimal!
-  amount_removed_gvt: BigDecimal!
-  value_added_pwrd: BigDecimal!
-  value_added_gvt: BigDecimal!
-  value_added_total: BigDecimal!
-  value_removed_pwrd: BigDecimal!
-  value_removed_gvt: BigDecimal!
-  value_removed_total: BigDecimal!
-  net_value_pwrd: BigDecimal!
-  net_value_gvt: BigDecimal!
-  net_value_total: BigDecimal!
-  net_amount_gvt: BigDecimal!
-  net_based_amount_pwrd: BigDecimal!
-}
-
 # latest token price
 type Price @entity {
   id: ID! # 0x
@@ -104,18 +73,6 @@ type Factor @entity {
   gvt: BigDecimal!
 }
 
-# staker pools
-type Pool @entity {
-  id: ID! # userAddress-poolId
-  userAddress: User!  # FK to User
-  poolId: Int!
-  net_reward: BigDecimal!
-  reward_debt: BigDecimal!
-  balance: BigDecimal! # rename to coinBalance
-  claim_now: BigDecimal!
-  vest_all: BigDecimal!
-}
-
 # pool data
 type PoolData @entity {
   # TODO: use pool id as id, and contractAddress as normal field (to be aligned with stakerData)
@@ -135,6 +92,61 @@ type StakerData @entity {
   pool_share: BigDecimal!
   block_number: Int!
   block_timestamp: Int!
+}
+
+# user
+type User @entity {
+  id: ID! # userAddress
+  transfers: [TransferTx!] @derivedFrom(field: "userAddress")
+  approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
+  claims: [ClaimTx!] @derivedFrom(field: "userAddress")
+  totals: Totals! @derivedFrom(field: "userAddress")
+  pools: [Pool!] @derivedFrom(field: "userAddress")
+  vestingBonus: VestingBonus! @derivedFrom(field: "userAddress")
+}
+
+# aggregated amounts for personal stats
+type Totals @entity {
+  id: ID! # userAddress
+  userAddress: User! # FK to User
+  amount_added_pwrd: BigDecimal!
+  amount_added_gvt: BigDecimal!
+  amount_removed_pwrd: BigDecimal!
+  amount_removed_gvt: BigDecimal!
+  value_added_pwrd: BigDecimal!
+  value_added_gvt: BigDecimal!
+  value_added_total: BigDecimal!
+  value_removed_pwrd: BigDecimal!
+  value_removed_gvt: BigDecimal!
+  value_removed_total: BigDecimal!
+  net_value_pwrd: BigDecimal!
+  net_value_gvt: BigDecimal!
+  net_value_total: BigDecimal!
+  net_amount_gvt: BigDecimal!
+  net_based_amount_pwrd: BigDecimal!
+  gro_balance_combined: BigDecimal!
+}
+
+# vesting bonus
+type VestingBonus @entity {
+  id: ID! # userAddress
+  userAddress: User! # FK to User
+  locked_gro: BigDecimal!
+  net_reward: BigDecimal!
+  claim_now: BigDecimal!
+  vest_all: BigDecimal!
+}
+
+# staker pools
+type Pool @entity {
+  id: ID! # userAddress-poolId
+  userAddress: User!  # FK to User
+  poolId: Int!
+  net_reward: BigDecimal!
+  reward_debt: BigDecimal!
+  balance: BigDecimal! # rename to coinBalance
+  claim_now: BigDecimal!
+  vest_all: BigDecimal!
 }
 
 # gro protocol deposits, withdrawals & transfers

@@ -2,6 +2,7 @@ import { setUser } from '../setters/users'
 import { setApprovalTx } from '../setters/approvals';
 import { ApprovalEvent } from '../types/approval';
 import { initTotals } from '../setters/totals';
+import { initVestingBonus } from '../setters/vestingBonus';
 
 
 export const manageApproval = (
@@ -17,4 +18,7 @@ export const manageApproval = (
 
     // Step 3: Create Totals for Approval-only users
     initTotals(ev.ownerAddress, true);
+
+    // Step 4: Create VestingBonus for Approval-only users
+    initVestingBonus(ev.ownerAddress, true);
 }
