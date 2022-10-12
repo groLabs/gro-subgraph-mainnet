@@ -2,6 +2,7 @@ import {
     LogClaim as LogClaimV1,
     LogDeposit as LogDepositV1,
     LogWithdraw as LogWithdrawV1,
+    LogAddPool as LogAddPoolV1,
     LogSetPool as LogSetPoolV1,
     LogUpdatePool as LogUpdatePoolV1,
     LogGroPerBlock as LogGroPerBlockV1,
@@ -11,6 +12,7 @@ import {
     LogMultiClaim as LogMultiClaimV2,
     LogDeposit as LogDepositV2,
     LogWithdraw as LogWithdrawV2,
+    LogAddPool as LogAddPoolV2,
     LogSetPool as LogSetPoolV2,
     LogUpdatePool as LogUpdatePoolV2,
     LogGroPerBlock as LogGroPerBlockV2,
@@ -66,6 +68,20 @@ export function handleWithdrawV1(event: LogWithdrawV1): void {
 export function handleWithdrawV2(event: LogWithdrawV2): void {
     const ev = parseStakerWithdrawalEvent(event);
     manageStakerWithdrawal(ev);
+}
+
+export function handleAddPoolV1(event: LogAddPoolV1): void {
+    updateStakerAllocation(
+        event.params.pid,
+        event.params.allocPoint,
+    );
+}
+
+export function handleAddPoolV2(event: LogAddPoolV2): void {
+    updateStakerAllocation(
+        event.params.pid,
+        event.params.allocPoint,
+    );
 }
 
 export function handleSetPoolV1(event: LogSetPoolV1): void {
