@@ -2,14 +2,14 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-# Chainlink: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
-# event and updating DAI, USDC & USDT based on contract call latestRoundData() on each
-# corresponding aggregator
+  # Chainlink: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
+  # event and updating DAI, USDC & USDT based on contract call latestRoundData() on each
+  # corresponding aggregator
   - kind: ethereum/contract
     name: ChainlinkAggregator
     network: {{network}}
     source:
-      address: '{{ChainlinkAggregatorAddress}}'
+      address: "{{ChainlinkAggregatorAddress}}"
       abi: AccessControlledOffchainAggregator
       startBlock: {{ChainlinkAggregatorStartBlock}}
     mapping:
@@ -30,7 +30,7 @@ dataSources:
     name: DepositHandlerV1
     network: {{network}}
     source:
-      address: '{{DepositHandlerV1Address}}'
+      address: "{{DepositHandlerV1Address}}"
       abi: DepositHandler
       startBlock: {{DepositHandlerV1StartBlock}}
     mapping:
@@ -57,7 +57,7 @@ dataSources:
     name: DepositHandlerV2
     network: {{network}}
     source:
-      address: '{{DepositHandlerV2Address}}'
+      address: "{{DepositHandlerV2Address}}"
       abi: DepositHandler
       startBlock: {{DepositHandlerV2StartBlock}}
     mapping:
@@ -84,7 +84,7 @@ dataSources:
     name: DepositHandlerV3
     network: {{network}}
     source:
-      address: '{{DepositHandlerV3Address}}'
+      address: "{{DepositHandlerV3Address}}"
       abi: DepositHandler
       startBlock: {{DepositHandlerV3StartBlock}}
     mapping:
@@ -107,12 +107,12 @@ dataSources:
           handler: handleDepositV3
           receipt: true
       file: ./src/mappings/depositHandler.ts
-# withdrawal handlers *********************************
+  # withdrawal handlers *********************************
   - kind: ethereum/contract
     name: WithdrawHandlerV1
     network: {{network}}
     source:
-      address: '{{WithdrawHandlerV1Address}}'
+      address: "{{WithdrawHandlerV1Address}}"
       abi: WithdrawHandler
       startBlock: {{WithdrawHandlerV1StartBlock}}
     mapping:
@@ -139,7 +139,7 @@ dataSources:
     name: WithdrawHandlerV2
     network: {{network}}
     source:
-      address: '{{WithdrawHandlerV2Address}}'
+      address: "{{WithdrawHandlerV2Address}}"
       abi: WithdrawHandler
       startBlock: {{WithdrawHandlerV2StartBlock}}
     mapping:
@@ -166,7 +166,7 @@ dataSources:
     name: WithdrawHandlerV3
     network: {{network}}
     source:
-      address: '{{WithdrawHandlerV3Address}}'
+      address: "{{WithdrawHandlerV3Address}}"
       abi: WithdrawHandler
       startBlock: {{WithdrawHandlerV3StartBlock}}
     mapping:
@@ -193,7 +193,7 @@ dataSources:
     name: Gvt
     network: {{network}}
     source:
-      address: '{{GvtAddress}}'
+      address: "{{GvtAddress}}"
       abi: ERC20
       startBlock: {{GvtStartBlock}}
     mapping:
@@ -219,7 +219,7 @@ dataSources:
     name: Pwrd
     network: {{network}}
     source:
-      address: '{{PwrdAddress}}'
+      address: "{{PwrdAddress}}"
       abi: ERC20
       startBlock: {{PwrdStartBlock}}
     mapping:
@@ -245,7 +245,7 @@ dataSources:
     name: Gro
     network: {{network}}
     source:
-      address: '{{GroAddress}}'
+      address: "{{GroAddress}}"
       abi: Gro
       startBlock: {{GroStartBlock}}
     mapping:
@@ -274,7 +274,7 @@ dataSources:
     name: LpTokenStakerV1
     network: {{network}}
     source:
-      address: '{{LpTokenStakerV1Address}}'
+      address: "{{LpTokenStakerV1Address}}"
       abi: LpTokenStaker
       startBlock: {{LpTokenStakerV1StartBlock}}
     mapping:
@@ -312,7 +312,7 @@ dataSources:
     name: LpTokenStakerV2
     network: {{network}}
     source:
-      address: '{{LpTokenStakerV2Address}}'
+      address: "{{LpTokenStakerV2Address}}"
       abi: LpTokenStaker
       startBlock: {{LpTokenStakerV2StartBlock}}
     mapping:
@@ -354,7 +354,7 @@ dataSources:
     name: PnL
     network: {{network}}
     source:
-      address: '{{PnLAddress}}'
+      address: "{{PnLAddress}}"
       abi: PnL
       startBlock: {{PnLStartBlock}}
     mapping:
@@ -375,12 +375,12 @@ dataSources:
         - event: LogPnLExecution(uint256,int256,int256,int256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handlePnLExecution
       file: ./src/mappings/pnl.ts
-  # Pool 1 : UniswapV2 50% GVT - 50% GRO    
+  # Pool 1 : UniswapV2 50% GVT - 50% GRO
   - kind: ethereum/contract
     name: UniswapV2PairGvtGro
     network: {{network}}
     source:
-      address: '{{UniswapV2GvtGroAddress}}'
+      address: "{{UniswapV2GvtGroAddress}}"
       abi: UniswapV2Pair
       startBlock: {{UniswapV2GvtGroStartBlock}}
     mapping:
@@ -397,12 +397,12 @@ dataSources:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwapGvtGro
       file: ./src/mappings/uniswapV2Pair.ts
-  # Pool 2 : UniswapV2 50% GRO - 50% USDC    
+  # Pool 2 : UniswapV2 50% GRO - 50% USDC
   - kind: ethereum/contract
     name: UniswapV2PairGroUsdc
     network: {{network}}
     source:
-      address: '{{UniswapV2GroUsdcAddress}}'
+      address: "{{UniswapV2GroUsdcAddress}}"
       abi: UniswapV2Pair
       startBlock: {{UniswapV2GroUsdcStartBlock}}
     mapping:
@@ -419,12 +419,12 @@ dataSources:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwapGroUsdc
       file: ./src/mappings/uniswapV2Pair.ts
-  # Pool 4 : Curve Metapool 50% 3CRV - 50% PWRD    
+  # Pool 4 : Curve Metapool 50% 3CRV - 50% PWRD
   - kind: ethereum/contract
     name: CurveMetapool3CRV
     network: {{network}}
     source:
-      address: '{{CurveMetapool3CRVAddress}}'
+      address: "{{CurveMetapool3CRVAddress}}"
       abi: Vyper_contract
       startBlock: {{CurveMetapool3CRVStartBlock}}
     mapping:
@@ -448,7 +448,7 @@ dataSources:
     name: BalancerGroWethVault
     network: {{network}}
     source:
-      address: '{{BalancerGroWethVaultAddress}}'
+      address: "{{BalancerGroWethVaultAddress}}"
       abi: Vault
       startBlock: {{BalancerGroWethVaultStartBlock}}
     mapping:
@@ -476,7 +476,7 @@ dataSources:
     name: BalancerGroWethPool
     network: {{network}}
     source:
-      address: '{{BalancerGroWethPoolAddress}}'
+      address: "{{BalancerGroWethPoolAddress}}"
       abi: WeightedPool
       startBlock: {{BalancerGroWethPoolStartBlock}}
     mapping:
@@ -499,12 +499,12 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/mappings/balancerGroWeth.ts
-# ****** GROHodler ******************************
+  # ****** GROHodler ******************************
   - kind: ethereum/contract
     name: GROHodlerV1
     network: {{network}}
     source:
-      address: '{{HodlerV1Address}}'
+      address: "{{HodlerV1Address}}"
       abi: GROHodler
       startBlock: {{HodlerV1StartBlock}}
     mapping:
@@ -524,7 +524,7 @@ dataSources:
     name: GROHodlerV2
     network: {{network}}
     source:
-      address: '{{HodlerV2Address}}'
+      address: "{{HodlerV2Address}}"
       abi: GROHodler
       startBlock: {{HodlerV2StartBlock}}
     mapping:
@@ -540,123 +540,116 @@ dataSources:
         - event: LogBonusClaimed(indexed address,bool,uint256)
           handler: handleBonusClaimedV2
       file: ./src/mappings/hodler.ts
-
+  - kind: ethereum/contract
+    name: GROVestingV1
+    network: {{network}}
+    source:
+      address: "{{VestingV1Address}}"
+      abi: GROVesting
+      startBlock: {{VestingV1StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VestingBonus
+      abis:
+        - name: GROVesting
+          file: ./abis/ethereum/GROVestingV1.json
+      eventHandlers:
+        - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
+          handler: handleVestV1
+        - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleExitV1
+      file: ./src/mappings/vesting.ts
+  - kind: ethereum/contract
+    name: GROVestingV2
+    network: {{network}}
+    source:
+      address: "{{VestingV2Address}}"
+      abi: GROVesting
+      startBlock: {{VestingV2StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VestingBonus
+      abis:
+        - name: GROVesting
+          file: ./abis/ethereum/GROVestingV2.json
+      eventHandlers:
+        - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
+          handler: handleVestV2
+        - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleExitV2
+      file: ./src/mappings/vesting.ts
 # stablecoins *********************************
-  # - kind: ethereum/contract
-  #   name: Dai
-  #   network: {{network}}
-  #   source:
-  #     address: '{{DaiAddress}}'
-  #     abi: Dai
-  #     startBlock: {{DaiStartBlock}}
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.7
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - User
-  #       - CoreTx
-  #     abis:
-  #       - name: Dai
-  #         file: ./abis/ethereum/Dai.json
-  #     eventHandlers:
-  #       - event: Approval(indexed address,indexed address,uint256)
-  #         handler: handleApproval
-  #     file: ./src/mappings/Dai.ts
-  # - kind: ethereum/contract
-  #   name: Usdc
-  #   network: {{network}}
-  #   source:
-  #     address: '{{UsdcAddress}}'
-  #     abi: ERC20
-  #     startBlock: {{UsdcStartBlock}}
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.7
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - User
-  #       - CoreTx
-  #     abis:
-  #       - name: Usdc
-  #         file: ./abis/ethereum/Usdc.json
-  #       - name: ERC20
-  #         file: ./abis/ethereum/ERC20.json
-  #     eventHandlers:
-  #       - event: Approval(indexed address,indexed address,uint256)
-  #         handler: handleApproval
-  #     file: ./src/mappings/Usdc.ts
-  # - kind: ethereum/contract
-  #   name: Usdt
-  #   network: {{network}}
-  #   source:
-  #     address: '{{UsdtAddress}}'
-  #     abi: ERC20
-  #     startBlock: {{UsdtStartBlock}}
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.7
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - User
-  #       - CoreTx
-  #     abis:
-  #       - name: Usdt
-  #         file: ./abis/ethereum/Usdt.json
-  #       - name: ERC20
-  #         file: ./abis/ethereum/ERC20.json
-  #     eventHandlers:
-  #       - event: Approval(indexed address,indexed address,uint256)
-  #         handler: handleApproval
-  #     file: ./src/mappings/Usdt.ts
+# - kind: ethereum/contract
+#   name: Dai
+#   network: {{network}}
+#   source:
+#     address: '{{DaiAddress}}'
+#     abi: Dai
+#     startBlock: {{DaiStartBlock}}
+#   mapping:
+#     kind: ethereum/events
+#     apiVersion: 0.0.7
+#     language: wasm/assemblyscript
+#     entities:
+#       - User
+#       - CoreTx
+#     abis:
+#       - name: Dai
+#         file: ./abis/ethereum/Dai.json
+#     eventHandlers:
+#       - event: Approval(indexed address,indexed address,uint256)
+#         handler: handleApproval
+#     file: ./src/mappings/Dai.ts
+# - kind: ethereum/contract
+#   name: Usdc
+#   network: {{network}}
+#   source:
+#     address: '{{UsdcAddress}}'
+#     abi: ERC20
+#     startBlock: {{UsdcStartBlock}}
+#   mapping:
+#     kind: ethereum/events
+#     apiVersion: 0.0.7
+#     language: wasm/assemblyscript
+#     entities:
+#       - User
+#       - CoreTx
+#     abis:
+#       - name: Usdc
+#         file: ./abis/ethereum/Usdc.json
+#       - name: ERC20
+#         file: ./abis/ethereum/ERC20.json
+#     eventHandlers:
+#       - event: Approval(indexed address,indexed address,uint256)
+#         handler: handleApproval
+#     file: ./src/mappings/Usdc.ts
+# - kind: ethereum/contract
+#   name: Usdt
+#   network: {{network}}
+#   source:
+#     address: '{{UsdtAddress}}'
+#     abi: ERC20
+#     startBlock: {{UsdtStartBlock}}
+#   mapping:
+#     kind: ethereum/events
+#     apiVersion: 0.0.7
+#     language: wasm/assemblyscript
+#     entities:
+#       - User
+#       - CoreTx
+#     abis:
+#       - name: Usdt
+#         file: ./abis/ethereum/Usdt.json
+#       - name: ERC20
+#         file: ./abis/ethereum/ERC20.json
+#     eventHandlers:
+#       - event: Approval(indexed address,indexed address,uint256)
+#         handler: handleApproval
+#     file: ./src/mappings/Usdt.ts
 
-  
-  # - kind: ethereum
-  #   name: GROVestingV1
-  #   network: mainnet
-  #   source:
-  #     address: "0xA28693bf01Dc261887b238646Bb9636cB3a3730B"
-  #     abi: GROVesting
-  #     # startBlock: 13405101
-  #     startBlock: 14900000
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.5
-  #     language: wasm/assemblyscript
-  #     entities:
-  #       - User
-  #       - CoreTx
-  #     abis:
-  #       - name: GROVesting
-  #         file: ./abis/GROVestingV1.json
-  #     eventHandlers:
-  #       - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
-  #         handler: handleVestV1
-  #       - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
-  #         handler: handleExitV1
-  #     file: ./src/mappings/gro-vesting.ts
-  # - kind: ethereum
-    # name: GROVestingV2
-    # network: mainnet
-    # source:
-    #   address: "0x748218256AfE0A19a88EBEB2E0C5Ce86d2178360"
-    #   abi: GROVesting
-    #   # startBlock: 13405101
-    #   startBlock: 14900000
-    # mapping:
-    #   kind: ethereum/events
-    #   apiVersion: 0.0.5
-    #   language: wasm/assemblyscript
-    #   entities:
-    #     - User
-    #     - CoreTx
-    #   abis:
-    #     - name: GROVesting
-    #       file: ./abis/GROVestingV2.json
-    #   eventHandlers:
-    #     - event: LogVest(indexed address,uint256,uint256,(uint256,uint256))
-    #       handler: handleVestV2
-    #     - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
-    #       handler: handleExitV2
-    #   file: ./src/mappings/gro-vesting.ts
-  # - kind: ethereum
