@@ -7,8 +7,7 @@ import {
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
-    ZERO,
-    ONE,
+    NUM,
     DECIMALS,
     GVT_ADDRESS,
     PWRD_ADDRESS,
@@ -25,14 +24,14 @@ export const initPrice = (): Price => {
     let price = Price.load('0x');
     if (!price) {
         price = new Price('0x');
-        price.pwrd = ONE;
-        price.gvt = ZERO;
-        price.gro = ZERO;
-        price.weth = ZERO;
-        price.balancer_gro_weth = ZERO;
-        price.uniswap_gvt_gro = ZERO;
-        price.uniswap_gro_usdc = ZERO;
-        price.curve_pwrd3crv = ZERO;
+        price.pwrd = NUM.ONE;
+        price.gvt = NUM.ZERO;
+        price.gro = NUM.ZERO;
+        price.weth = NUM.ZERO;
+        price.balancer_gro_weth = NUM.ZERO;
+        price.uniswap_gvt_gro = NUM.ZERO;
+        price.uniswap_gro_usdc = NUM.ZERO;
+        price.curve_pwrd3crv = NUM.ZERO;
     }
     return price;
 }
@@ -49,7 +48,7 @@ export const getGvtPrice = (): BigDecimal => {
     const pricePerShare = contract.try_getPricePerShare();
     if (pricePerShare.reverted) {
         log.error('getGvtPrice() reverted in src/utils/tokens.ts', []);
-        return ZERO;
+        return NUM.ZERO;
     } else {
         return tokenToDecimal(pricePerShare.value, 18, 7);
     }
@@ -57,7 +56,7 @@ export const getGvtPrice = (): BigDecimal => {
 
 // Retrieves price per share for a given token
 export const getPricePerShare = (token: string): BigDecimal => {
-    let price: BigDecimal = ZERO;
+    let price: BigDecimal = NUM.ZERO;
     if (token === 'gvt') {
         price = getGvtPrice();
     } else if (token === 'gro') {
@@ -71,7 +70,7 @@ export const getPricePerShare = (token: string): BigDecimal => {
         || token === 'usdc'
         || token === 'usdt'
     ) {
-        price = ONE;
+        price = NUM.ONE;
     } else {
         // TODO: show log
     }
@@ -122,7 +121,7 @@ export const getFactor = (token: string): BigDecimal => {
         const gvtFactor = contract.try_factor();
         if (gvtFactor.reverted) {
             log.error('getFactor() on gvt reverted in src/utils/tokens.ts', []);
-            return ZERO;
+            return NUM.ZERO;
         } else {
             return tokenToDecimal(gvtFactor.value, 18, 12);
         }
@@ -131,11 +130,11 @@ export const getFactor = (token: string): BigDecimal => {
         const pwrdFactor = contract.try_factor();
         if (pwrdFactor.reverted) {
             log.error('getFactor() on pwrd reverted in src/utils/tokens.ts', []);
-            return ZERO;
+            return NUM.ZERO;
         } else {
             return tokenToDecimal(pwrdFactor.value, 18, 12);
         }
     } else {
-        return ZERO;
+        return NUM.ZERO;
     }
 }

@@ -1,6 +1,6 @@
 import { tokenToDecimal } from '../utils/tokens';
 import {
-    ZERO,
+    NUM,
     STAKER_V1_ADDRESS,
     STAKER_V2_ADDRESS
 } from '../utils/constants';
@@ -26,7 +26,7 @@ export function getRewardDebt(
     userAddress: string,
     poolId: i32,
 ): BigDecimal {
-    let currentRewardDebt = ZERO;
+    let currentRewardDebt = NUM.ZERO;
     if (contractAddress == STAKER_V1_ADDRESS) {
         const contract = StakerV1.bind(contractAddress);
         const userInfo = contract.try_userInfo(

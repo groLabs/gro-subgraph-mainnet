@@ -1,7 +1,7 @@
 
 import { PoolData } from '../../generated/schema';
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { ZERO } from '../utils/constants';
+import { NUM } from '../utils/constants';
 
 
 const initPoolData = (
@@ -12,9 +12,9 @@ const initPoolData = (
     if (!poolData) {
         poolData = new PoolData(contractAddress);
         poolData.poolId = poolId;
-        poolData.reserve0 = ZERO;
-        poolData.reserve1 = ZERO;
-        poolData.total_supply = ZERO;
+        poolData.reserve0 = NUM.ZERO;
+        poolData.reserve1 = NUM.ZERO;
+        poolData.total_supply = NUM.ZERO;
     }
     return poolData;
 }

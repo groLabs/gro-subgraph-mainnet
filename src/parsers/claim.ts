@@ -2,6 +2,7 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { ClaimEvent } from '../types/claim';
 
+
 // @dev: parsing functions must be different per event type; otherwise, AssemblyScript
 //       will complain on non-existing functions from an event
 

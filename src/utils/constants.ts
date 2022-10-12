@@ -3,6 +3,7 @@ import {
     Address,
     BigDecimal,
 } from "@graphprotocol/graph-ts";
+import { Num } from '../types/constants';
 
 // BLOCKS
 export const GENESIS_POOL_GRO_WETH = 13355180;  // Oct-04-2021 10:03:33 PM
@@ -11,16 +12,30 @@ export const GENESIS_POOL_GRO_WETH = 13355180;  // Oct-04-2021 10:03:33 PM
 export const LAUNCH_TIMESTAMP = 1622204347; // Friday 28 May 2021 12:19:07
 
 // Numbers
+// TODO: const NUM {...}
 export const DECIMALS = 7;
-export const ZERO = BigDecimal.fromString('0');
-export const ONE = BigDecimal.fromString('1');
+// export const ZERO = BigDecimal.fromString('0');
+// export const ONE = BigDecimal.fromString('1');
+// export const MINUS_ONE = BigDecimal.fromString('-1');
+// export const THIRTY_PERCENT = BigDecimal.fromString('0.3');
 export const NO_POOL = -1;
+
+
+
+export const NUM: Num = {
+    ZERO: BigDecimal.fromString('0'),
+    ONE: BigDecimal.fromString('1'),
+    MINUS_ONE: BigDecimal.fromString('-1'),
+    THIRTY_PERCENT: BigDecimal.fromString('0.3'),
+}
+
 
 // Addresses
 export const NO_ADDR = Bytes.empty();
 export const ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000');
 
 // Contract addresses
+// TODO: const ADDR {GVT:x, PWRD:y}
 export const GVT_ADDRESS = Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c');
 export const PWRD_ADDRESS = Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b');
 export const UNISWAPV2_GVT_GRO_ADDRESS = Address.fromString('0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB');

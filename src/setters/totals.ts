@@ -1,6 +1,6 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { Totals } from '../../generated/schema';
-import { ZERO } from '../utils/constants';
+import { NUM } from '../utils/constants';
 
 
 //@dev: <save> used to initialised totals for only-staker users, etc
@@ -12,22 +12,22 @@ export const initTotals = (
     if (!total) {
         total = new Totals(userAddress);
         total.userAddress = userAddress;
-        total.amount_added_gvt = ZERO;
-        total.amount_added_pwrd = ZERO;
-        total.amount_removed_gvt = ZERO;
-        total.amount_removed_pwrd = ZERO;
-        total.value_added_gvt = ZERO;
-        total.value_added_pwrd = ZERO;
-        total.value_added_total = ZERO;
-        total.value_removed_gvt = ZERO;
-        total.value_removed_pwrd = ZERO;
-        total.value_removed_total = ZERO;
-        total.net_value_gvt = ZERO;
-        total.net_value_pwrd = ZERO;
-        total.net_value_total = ZERO;
-        total.net_amount_gvt = ZERO;
-        total.net_based_amount_pwrd = ZERO;
-        total.gro_balance_combined = ZERO;
+        total.amount_added_gvt = NUM.ZERO;
+        total.amount_added_pwrd = NUM.ZERO;
+        total.amount_removed_gvt = NUM.ZERO;
+        total.amount_removed_pwrd = NUM.ZERO;
+        total.value_added_gvt = NUM.ZERO;
+        total.value_added_pwrd = NUM.ZERO;
+        total.value_added_total = NUM.ZERO;
+        total.value_removed_gvt = NUM.ZERO;
+        total.value_removed_pwrd = NUM.ZERO;
+        total.value_removed_total = NUM.ZERO;
+        total.net_value_gvt = NUM.ZERO;
+        total.net_value_pwrd = NUM.ZERO;
+        total.net_value_total = NUM.ZERO;
+        total.net_amount_gvt = NUM.ZERO;
+        total.net_based_amount_pwrd = NUM.ZERO;
+        total.gro_balance_combined = NUM.ZERO;
         if (save)
             total.save();
     }

@@ -1,5 +1,5 @@
 import { MasterData } from '../../generated/schema';
-import { ZERO } from '../utils/constants';
+import { NUM } from '../utils/constants';
 import { LAUNCH_TIMESTAMP } from '../utils/constants';
 
 
@@ -11,8 +11,8 @@ export const setMasterData = (): MasterData => {
       md.networkId = i32(1);
       md.networkName = 'mainnet';
       md.launchTimestamp = i32(LAUNCH_TIMESTAMP);
-      md.gro_per_block = ZERO;
-      md.total_alloc = ZERO;
+      md.gro_per_block = NUM.ZERO;
+      md.total_alloc = NUM.ZERO;
       md.save();
     }
     return md;

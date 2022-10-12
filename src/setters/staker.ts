@@ -6,7 +6,7 @@ import {
     BigInt,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
-import { DECIMALS, ZERO, ONE } from '../utils/constants';
+import { DECIMALS, NUM } from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
 import { setMasterData } from './masterdata';
 
@@ -18,10 +18,10 @@ const initStakerData = (
     let staker = StakerData.load(id);
     if (!staker) {
         staker = new StakerData(id);
-        staker.lp_supply = ZERO;
-        staker.acc_gro_per_share = ZERO;
-        staker.alloc_point = ZERO;
-        staker.pool_share = ZERO;
+        staker.lp_supply = NUM.ZERO;
+        staker.acc_gro_per_share = NUM.ZERO;
+        staker.alloc_point = NUM.ZERO;
+        staker.pool_share = NUM.ZERO;
         staker.block_number = 0;
         staker.block_timestamp = 0;
     }
@@ -31,7 +31,7 @@ const initStakerData = (
 const updateTotalAlloc = (): BigDecimal => {
     let md = MasterData.load('0x');
     if (md) {
-        md.total_alloc = ZERO
+        md.total_alloc = NUM.ZERO
         for (let i = 0; i <= 6; i++) {
             let staker = StakerData.load(i.toString());
             if (staker) {
@@ -41,7 +41,7 @@ const updateTotalAlloc = (): BigDecimal => {
         md.save();
         return md.total_alloc;
     }
-    return ZERO;
+    return NUM.ZERO;
 }
 
 // @dev: from staker->LogUpdatePool()
@@ -70,8 +70,8 @@ export const updateStakerAllocation = (
     staker.alloc_point = allocPoint
     staker.save();
     const totalAlloc = updateTotalAlloc();
-    staker.pool_share = (totalAlloc.equals(ZERO)) 
-        ? ZERO
+    staker.pool_share = (totalAlloc.equals(NUM.ZERO)) 
+        ? NUM.ZERO
         : allocPoint.div(totalAlloc).truncate(DECIMALS);
     staker.save();
 }

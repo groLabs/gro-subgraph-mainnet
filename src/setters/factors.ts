@@ -3,7 +3,7 @@ import { Gvt } from '../../generated/Gvt/Gvt';
 import { Pwrd } from '../../generated/Pwrd/Pwrd';
 import { Factor } from '../../generated/schema';
 import {
-    ZERO,
+    NUM,
     GVT_ADDRESS,
     PWRD_ADDRESS,
 } from '../utils/constants';
@@ -14,8 +14,8 @@ const initFactor = (): Factor => {
     let factor = Factor.load('0x');
     if (!factor) {
         factor = new Factor('0x');
-        factor.pwrd = ZERO;
-        factor.gvt = ZERO;
+        factor.pwrd = NUM.ZERO;
+        factor.gvt = NUM.ZERO;
     }
     return factor;
 }

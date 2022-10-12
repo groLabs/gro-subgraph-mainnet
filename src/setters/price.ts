@@ -6,8 +6,7 @@ import {
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
-    ONE,
-    ZERO,
+    NUM,
     DECIMALS,
     GENESIS_POOL_GRO_WETH,
     CURVE_PWRD_3CRV_ADDRESS,
@@ -40,17 +39,17 @@ export const initPrice = (): Price => {
     let price = Price.load('0x');
     if (!price) {
         price = new Price('0x');
-        price.pwrd = ONE;
-        price.gvt = ZERO;
-        price.gro = ZERO;
-        price.weth = ZERO;
-        price.dai = ZERO;
-        price.usdc = ZERO;
-        price.usdt = ZERO;
-        price.balancer_gro_weth = ZERO;
-        price.uniswap_gvt_gro = ZERO;
-        price.uniswap_gro_usdc = ZERO;
-        price.curve_pwrd3crv = ZERO;
+        price.pwrd = NUM.ONE;
+        price.gvt = NUM.ZERO;
+        price.gro = NUM.ZERO;
+        price.weth = NUM.ZERO;
+        price.dai = NUM.ZERO;
+        price.usdc = NUM.ZERO;
+        price.usdt = NUM.ZERO;
+        price.balancer_gro_weth = NUM.ZERO;
+        price.uniswap_gvt_gro = NUM.ZERO;
+        price.uniswap_gro_usdc = NUM.ZERO;
+        price.curve_pwrd3crv = NUM.ZERO;
     }
     return price;
 }
@@ -90,8 +89,8 @@ export const setUniswapGvtGroPrice = (): void => {
 
         // update lpToken price
         const price = initPrice();
-        const oneGvt = (ONE.div(totalSupply)).times(gvtReserve);
-        const oneGro = (ONE.div(totalSupply)).times(groReserve);
+        const oneGvt = (NUM.ONE.div(totalSupply)).times(gvtReserve);
+        const oneGro = (NUM.ONE.div(totalSupply)).times(groReserve);
         const oneGvtValue = oneGvt.times(price.gvt);
         const oneGroValue = oneGro.times(price.gro);
         const oneLpValue = oneGvtValue.plus(oneGroValue);
@@ -129,8 +128,8 @@ export const setUniswapGroUsdcPrice = (): void => {
         price.gro = groPricePerShare;
 
         // update lpToken price
-        const oneGroAmount = (ONE.div(totalSupply)).times(groReserve);
-        const oneUsdcAmount = (ONE.div(totalSupply)).times(usdcReserve);
+        const oneGroAmount = (NUM.ONE.div(totalSupply)).times(groReserve);
+        const oneUsdcAmount = (NUM.ONE.div(totalSupply)).times(usdcReserve);
         const oneGroValue = oneGroAmount.times(price.gro);
         const oneUsdcValue = oneUsdcAmount.times(price.usdc);
         const lpPricePerShare = oneGroValue.plus(oneUsdcValue);
@@ -214,8 +213,8 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
 
             // update lpToken price
             const price = initPrice();
-            const oneGro = (ONE.div(totalSupply)).times(groReserve);
-            const oneWeth = (ONE.div(totalSupply)).times(wethReserve);
+            const oneGro = (NUM.ONE.div(totalSupply)).times(groReserve);
+            const oneWeth = (NUM.ONE.div(totalSupply)).times(wethReserve);
             const oneGroValue = oneGro.times(price.gro);
             const oneWethValue = oneWeth.times(price.weth);
             const lpPricePerShare = oneGroValue.plus(oneWethValue);

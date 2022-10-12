@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Log } from '../types/log';
-import { BigDecimal, BigInt, Bytes, log, ethereum } from '@graphprotocol/graph-ts';
+
 
 function parseLogEvent<T>(ev: T[]): Log[] {
 //function parseLogEvent (ev: ethereum.Log[]) {

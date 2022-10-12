@@ -3,7 +3,7 @@ import {
     BigInt, 
     Address, 
 } from '@graphprotocol/graph-ts';
-import { ZERO } from '../utils/constants';
+import { NUM } from '../utils/constants';
 import { getRewardDebt } from '../utils/staker';
 import { tokenToDecimal } from '../utils/tokens';
 
@@ -18,11 +18,11 @@ const initPool = (
         pool = new Pool(id);
         pool.userAddress = userAddress;
         pool.poolId = poolId;
-        pool.net_reward = ZERO;
-        pool.reward_debt = ZERO;
-        pool.balance = ZERO;
-        pool.claim_now = ZERO;
-        pool.vest_all = ZERO;
+        pool.net_reward = NUM.ZERO;
+        pool.reward_debt = NUM.ZERO;
+        pool.balance = NUM.ZERO;
+        pool.claim_now = NUM.ZERO;
+        pool.vest_all = NUM.ZERO;
     }
     return pool;
 }

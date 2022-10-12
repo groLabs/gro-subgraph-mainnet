@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { TransferEvent } from '../types/transfer';
 
+
 function parseTransferEvent<T>(ev: T): TransferEvent {
     const event = new TransferEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),

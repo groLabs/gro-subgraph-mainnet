@@ -9,8 +9,7 @@ import {
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
-    ONE,
-    ZERO,
+    NUM,
     DECIMALS,
     CURVE_PWRD_3CRV_ADDRESS,
     UNISWAPV2_GVT_GRO_ADDRESS,
@@ -72,10 +71,10 @@ export const getUniV2Price = (
         const totalSupply = contract.try_totalSupply();
         if (reserves.reverted) {
             log.error('getUniV2Price() reverted in src/utils/pools.ts -> try_getReserves on GroUsdc pool', []);
-            return ZERO;
+            return NUM.ZERO;
         } else if (totalSupply.reverted) {
             log.error('getUniV2Price() reverted in src/utils/pools.ts -> try_totalSupply on GroUsdc pool', []);
-            return ZERO;
+            return NUM.ZERO;
         } else {
             const total_supply = tokenToDecimal(totalSupply.value, 18, 12);
             const gro_reserve = tokenToDecimal(reserves.value.get_reserve0(), 18, 7);
@@ -104,53 +103,10 @@ export const getUniV2Price = (
         // // TODO: chainlink to calc the USD price of USDC
         // const pps = usdc_reserve.div(weth_reserve).truncate(DECIMALS);
         // return pps;
-        return ZERO;
+        return NUM.ZERO;
     } else {
         // TODO: log
-        return ZERO;
+        return NUM.ZERO;
     }
     // }
 }
-
-// export const getCurvePwrd3crvPrice = (
-//     update: boolean
-// ): BigDecimal => {
-//     const contract = CurveMetapool3CRV.bind(CURVE_PWRD_3CRV_ADDRESS);
-//     const reserves = contract.try_get_balances();
-//     const totalSupply = contract.try_totalSupply();
-//     const virtualPrice = contract.try_get_virtual_price();
-//     if (reserves.reverted) {
-//         log.error('getCurvePwrd3crvPrice() reverted in src/utils/pools.ts -> try_get_balances on Curve3Crv pool', []);
-//         return ZERO;
-//     } else if (totalSupply.reverted) {
-//         log.error('getCurvePwrd3crvPrice() reverted in src/utils/pools.ts -> try_totalSupply on Curve3Crv pool', []);
-//         return ZERO;
-//     } else if (virtualPrice.reverted) {
-//         log.error('getCurvePwrd3crvPrice() reverted in src/utils/pools.ts -> try_get_virtual_price on Curve3Crv pool', []);
-//         return ZERO;
-//     } else {
-//         const total_supply = tokenToDecimal(totalSupply.value, 18, 12);
-//         const crv_reserve = tokenToDecimal(reserves.value[0], 18, 7);
-//         const pwrd_reserve = tokenToDecimal(reserves.value[1], 18, 7);
-//         // update Pool data
-//         if (update)
-//             updatePoolData(
-//                 4,
-//                 CURVE_PWRD_3CRV_ADDRESS.toHexString(),
-//                 crv_reserve,
-//                 pwrd_reserve,
-//                 total_supply,
-//             );
-//     }
-//     return tokenToDecimal(virtualPrice.value, 18, 7);
-// }
-
-
-// log.error(
-//     'oneGvt {} oneGro {} oneGvtValue {} oneGroValue {} oneLpValue {}', [
-//     oneGvt.toString(),
-//     oneGro.toString(),
-//     oneGvtValue.toString(),
-//     oneGroValue.toString(),
-//     oneLpValue.toString(),
-// ]);

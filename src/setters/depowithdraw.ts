@@ -13,7 +13,7 @@ import {
     getTokenByPoolId,
 } from '../utils/tokens';
 import {
-    ZERO,
+    NUM,
     DECIMALS,
     ZERO_ADDR,
     GVT_ADDRESS,
@@ -96,5 +96,5 @@ export function getCoinAmount(
         tx.token,
         tx.hash.toHexString()
     ]);
-    return ZERO;
+    return NUM.ZERO;
 }

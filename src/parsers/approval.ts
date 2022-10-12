@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { ApprovalEvent } from '../types/approval';
 
+
 //TODO: Careful, DAI has different fields!
 function parseApprovalEvent<T>(ev: T): ApprovalEvent {
     const event = new ApprovalEvent(
