@@ -6,7 +6,7 @@ import { parseApprovalEvent } from '../parsers/approval';
 import { manageApproval } from '../managers/approvals';
 import { parseTransferEvent } from '../parsers/transfer';
 import { manageTransfer } from '../managers/transfers';
-
+import { isStakerTransfer } from '../utils/contracts';
 
 export function handleApproval(event: Approval): void {
   const ev = parseApprovalEvent(event);
@@ -14,6 +14,12 @@ export function handleApproval(event: Approval): void {
 }
 
 export function handleTransfer(event: Transfer): void {
-  const ev = parseTransferEvent(event);
-  manageTransfer(ev, 'gro');
+  if (!isStakerTransfer(
+    event.params.from,
+    event.params.to
+  )) {
+    const ev = parseTransferEvent(event);
+    manageTransfer(ev, 'gro');
+  }
+
 }

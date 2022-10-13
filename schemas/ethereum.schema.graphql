@@ -113,6 +113,9 @@ type Totals @entity {
   amount_added_gvt: BigDecimal!
   amount_removed_pwrd: BigDecimal!
   amount_removed_gvt: BigDecimal!
+  amount_added_gro: BigDecimal!
+  amount_removed_gro: BigDecimal!
+  amount_total_gro: BigDecimal!
   value_added_pwrd: BigDecimal!
   value_added_gvt: BigDecimal!
   value_added_total: BigDecimal!

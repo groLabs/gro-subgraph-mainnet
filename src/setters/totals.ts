@@ -16,6 +16,9 @@ export const initTotals = (
         total.amount_added_pwrd = NUM.ZERO;
         total.amount_removed_gvt = NUM.ZERO;
         total.amount_removed_pwrd = NUM.ZERO;
+        total.amount_added_gro = NUM.ZERO;
+        total.amount_removed_gro = NUM.ZERO;
+        total.amount_total_gro = NUM.ZERO;
         total.value_added_gvt = NUM.ZERO;
         total.value_added_pwrd = NUM.ZERO;
         total.value_added_total = NUM.ZERO;
@@ -42,9 +45,14 @@ export const setTotals = (
     factor: BigDecimal,
 ): void => {
     let total = initTotals(userAddress, false);
-
     if (coin === 'gro') {
-        // do nothing for now (required to initialise non-null amounts to 0)
+        if (type === 'core_deposit' || type === 'transfer_in') {
+            total.amount_added_gro = total.amount_added_gro.plus(coinAmount);
+            total.amount_total_gro = total.amount_total_gro.plus(coinAmount);
+        } else {
+            total.amount_removed_gro = total.amount_removed_gro.plus(coinAmount);
+            total.amount_total_gro = total.amount_total_gro.minus(coinAmount);
+        }
     } else if (type === 'core_deposit' || type === 'transfer_in') {
         if (coin === 'gvt') {
             total.amount_added_gvt = total.amount_added_gvt.plus(coinAmount);
@@ -74,6 +82,5 @@ export const setTotals = (
         total.value_removed_total = total.value_removed_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.minus(usdAmount);
     }
-
     total.save();
 }
