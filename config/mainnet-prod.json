@@ -18,6 +18,8 @@
     "VestingV1StartBlock": 13405101,
     "VestingV2Address": "0x748218256AfE0A19a88EBEB2E0C5Ce86d2178360",
     "VestingV2StartBlock": 14268701,
+    "VestingTeamAddress": "0xF43c6bDD2F9158B5A78DCcf732D190C490e28644",
+    "VestingTeamStartBlock": 14462100,
     "PnLAddress": "0xF67A426e110c74c566174a37C9269780fB48096d",
     "PnLStartBlock": 12522446,
     "UniswapV2GvtGroAddress": "0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB",
