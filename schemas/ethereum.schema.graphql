@@ -124,7 +124,6 @@ type Totals @entity {
   net_value_total: BigDecimal!
   net_amount_gvt: BigDecimal!
   net_based_amount_pwrd: BigDecimal!
-  gro_balance_combined: BigDecimal!
 }
 
 # vesting bonus
@@ -135,6 +134,7 @@ type VestingBonus @entity {
   net_reward: BigDecimal!
   claim_now: BigDecimal!
   vest_all: BigDecimal!
+  vesting_gro: BigDecimal!
 }
 
 # staker pools

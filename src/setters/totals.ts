@@ -27,7 +27,6 @@ export const initTotals = (
         total.net_value_total = NUM.ZERO;
         total.net_amount_gvt = NUM.ZERO;
         total.net_based_amount_pwrd = NUM.ZERO;
-        total.gro_balance_combined = NUM.ZERO;
         if (save)
             total.save();
     }

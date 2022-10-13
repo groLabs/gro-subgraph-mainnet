@@ -18,6 +18,7 @@ export const initVestingBonus = (
         vestingBonus.net_reward = NUM.ZERO;
         vestingBonus.claim_now = NUM.ZERO;
         vestingBonus.vest_all = NUM.ZERO;
+        vestingBonus.vesting_gro = NUM.ZERO;
         if (save)
             vestingBonus.save();
     }
@@ -37,14 +38,13 @@ export const updateNetReward = (
     vestingBonus.save();
 }
 
-// GROVesting.totalBalance - GROVesting.vestedBalance OR GROVesting.vestingBalance
-export const updateCombinedGro = (
+export const updateVestingGro = (
     userAddress: string,
     amount: BigDecimal
 ): void => {
-    const totals = initTotals(userAddress, false);
-    totals.gro_balance_combined = totals.gro_balance_combined.plus(amount);
-    totals.save();
+    const vestingBonus = initVestingBonus(userAddress, false);
+    vestingBonus.vesting_gro = vestingBonus.vesting_gro.plus(amount);
+    vestingBonus.save();
 }
 
 /*
