@@ -584,6 +584,30 @@ dataSources:
         - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
           handler: handleExitV2
       file: ./src/mappings/vesting.ts
+  - kind: ethereum/contract
+    name: GROTeamVesting
+    network: {{network}}
+    source:
+      address: "{{VestingTeamAddress}}"
+      abi: GROTeamVesting
+      startBlock: {{VestingTeamStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Totals
+      abis:
+        - name: GROTeamVesting
+          file: ./abis/ethereum/GROTeamVesting.json
+      eventHandlers:
+        - event: LogClaimed(indexed address,indexed uint256,uint256,uint256,uint256)
+          handler: handleClaimed
+        - event: LogNewVest(indexed address,indexed uint256,uint256)
+          handler: handleNewVest
+        - event: LogStoppedVesting(indexed address,indexed uint256,uint256,uint256)
+          handler: StoppedVesting
+      file: ./src/mappings/vestingTeam.ts
 # stablecoins *********************************
 # - kind: ethereum/contract
 #   name: Dai

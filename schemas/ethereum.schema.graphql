@@ -40,14 +40,14 @@ enum NetworkName {
 # Entities
 
 # master data
-type MasterData  @entity {
-    id: ID! # 0x
-    status: Status!
-    networkId: Int!
-    networkName: NetworkName!
-    launchTimestamp: Int!
-    gro_per_block: BigDecimal!
-    total_alloc: BigDecimal!
+type MasterData @entity {
+  id: ID! # 0x
+  status: Status!
+  networkId: Int!
+  networkName: NetworkName!
+  launchTimestamp: Int!
+  gro_per_block: BigDecimal!
+  total_alloc: BigDecimal!
 }
 
 # latest token price
@@ -116,6 +116,9 @@ type Totals @entity {
   amount_added_gro: BigDecimal!
   amount_removed_gro: BigDecimal!
   amount_total_gro: BigDecimal!
+  amount_added_gro_team: BigDecimal!
+  amount_removed_gro_team: BigDecimal!
+  amount_total_gro_team: BigDecimal!
   value_added_pwrd: BigDecimal!
   value_added_gvt: BigDecimal!
   value_added_total: BigDecimal!
@@ -143,7 +146,7 @@ type VestingBonus @entity {
 # staker pools
 type Pool @entity {
   id: ID! # userAddress-poolId
-  userAddress: User!  # FK to User
+  userAddress: User! # FK to User
   poolId: Int!
   net_reward: BigDecimal!
   reward_debt: BigDecimal!
@@ -157,12 +160,12 @@ type Pool @entity {
 type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
   contractAddress: Bytes!
-  block: Int! 
+  block: Int!
   timestamp: Int!
   hash: Bytes!
   type: TxType!
   token: Token!
-  userAddress: User!  # FK to User
+  userAddress: User! # FK to User
   fromAddress: Bytes!
   toAddress: Bytes!
   coinAmount: BigDecimal!
@@ -175,12 +178,12 @@ type TransferTx @entity {
 type ApprovalTx @entity {
   id: ID! # hash-logIndex
   contractAddress: Bytes!
-  block: Int! 
+  block: Int!
   timestamp: Int!
   hash: Bytes!
   type: TxType!
   token: Token!
-  ownerAddress: User!  # FK to User
+  ownerAddress: User! # FK to User
   spenderAddress: Bytes
   coinAmount: BigDecimal!
   usdAmount: BigDecimal!
@@ -190,13 +193,12 @@ type ApprovalTx @entity {
 type ClaimTx @entity {
   id: ID! # hash-logIndex
   contractAddress: Bytes!
-  block: Int! 
+  block: Int!
   timestamp: Int!
   hash: Bytes!
   type: TxType!
-  userAddress: User!  # FK to User
+  userAddress: User! # FK to User
   poolId: [Int!]!
-  vest: Boolean,
+  vest: Boolean
   amount: BigDecimal!
 }
-
