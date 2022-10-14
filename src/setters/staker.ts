@@ -2,10 +2,7 @@ import {
     MasterData,
     StakerData,
 } from '../../generated/schema';
-import {
-    BigInt,
-    BigDecimal,
-} from '@graphprotocol/graph-ts';
+import { BigInt } from '@graphprotocol/graph-ts';
 import {
     NUM,
     DECIMALS
@@ -31,22 +28,6 @@ const initStakerData = (
     return staker;
 }
 
-const updateTotalAlloc = (): BigDecimal => {
-    let md = MasterData.load('0x');
-    if (md) {
-        md.total_alloc = NUM.ZERO
-        for (let i = 0; i <= 6; i++) {
-            let staker = StakerData.load(i.toString());
-            if (staker) {
-                md.total_alloc = md.total_alloc.plus(staker.alloc_point)
-            }
-        }
-        md.save();
-        return md.total_alloc;
-    }
-    return NUM.ZERO;
-}
-
 // @dev: from staker->LogUpdatePool()
 export const updateStakerSupply = (
     poolId: BigInt,
@@ -63,20 +44,40 @@ export const updateStakerSupply = (
     staker.save();
 }
 
-// @dev: from staker->LogSetPool()
 export const updateStakerAllocation = (
-    poolId: BigInt,
+    _poolId: BigInt,
     alloc_point: BigInt,
 ): void => {
-    const staker = initStakerData(poolId.toI32());
-    const allocPoint = alloc_point.toBigDecimal();
-    staker.alloc_point = allocPoint
-    staker.save();
-    const totalAlloc = updateTotalAlloc();
-    staker.pool_share = (totalAlloc.equals(NUM.ZERO))
-        ? NUM.ZERO
-        : allocPoint.div(totalAlloc).truncate(DECIMALS);
-    staker.save();
+    let poolId = _poolId.toI32();
+    let allocPoint = alloc_point.toBigDecimal();
+    let totalAlloc = NUM.ZERO;
+    let staker: StakerData[] = [];
+
+    // update alloc_point on target pool & calc the totalAlloc
+    for (let i = 0; i <= 6; i++) {
+        staker[i] = initStakerData(i);
+        if (i === poolId) {
+            staker[i].alloc_point = allocPoint;
+            totalAlloc = totalAlloc.plus(allocPoint);
+        } else {
+            totalAlloc = totalAlloc.plus(staker[i].alloc_point);
+        }
+    }
+
+    // update total_alloc in MD
+    let md = MasterData.load('0x');
+    if (md) {
+        md.total_alloc = totalAlloc;
+        md.save();
+    }
+
+    // update pool_share on each pool
+    for (let i = 0; i <= 6; i++) {
+        staker[i].pool_share = (totalAlloc.equals(NUM.ZERO))
+            ? NUM.ZERO
+            : staker[i].alloc_point.div(totalAlloc).truncate(DECIMALS);
+        staker[i].save();
+    }
 }
 
 export const updateStakerGroPerBlock = (
