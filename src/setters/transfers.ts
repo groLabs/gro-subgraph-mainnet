@@ -6,7 +6,7 @@ import {
     getFactor,
 } from '../utils/tokens';
 import { TransferEvent } from '../types/transfer';
-import { NO_POOL } from '../utils/constants';
+import { DECIMALS, NO_POOL } from '../utils/constants';
 
 
 export const setTransferTx = (
@@ -24,7 +24,7 @@ export const setTransferTx = (
         ev.id + transfer_tag
     );
 
-    const coinAmount = tokenToDecimal(ev.value, 18, 7);
+    const coinAmount = tokenToDecimal(ev.value, 18, DECIMALS);
     const pricePerShare = getPricePerShare(token);
 
     tx.contractAddress = ev.contractAddress;
@@ -37,7 +37,7 @@ export const setTransferTx = (
     tx.fromAddress = ev.fromAddress;
     tx.toAddress = ev.toAddress;
     tx.coinAmount = coinAmount;
-    tx.usdAmount = coinAmount.times(pricePerShare);
+    tx.usdAmount = (coinAmount.times(pricePerShare)).truncate(DECIMALS);
     tx.factor = getFactor(token);
     tx.poolId = NO_POOL;
     tx.save();
