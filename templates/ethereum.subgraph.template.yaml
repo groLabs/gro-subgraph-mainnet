@@ -552,6 +552,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - MasterData
         - VestingBonus
       abis:
         - name: GROVesting
@@ -576,6 +577,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - MasterData
         - VestingBonus
       abis:
         - name: GROVesting
@@ -588,7 +590,9 @@ dataSources:
         - event: LogInstantExit(indexed address,uint256,uint256)
           handler: handleInstantExitV2
         - event: LogExtend(indexed address,uint256,(uint256,uint256))
-          handler: handleExtendV2     
+          handler: handleExtendV2
+        - event: LogNewInitUnlockedPercent(uint256)
+          handler: handleLogNewInitUnlockedPercentV2     
       file: ./src/mappings/vesting.ts
   - kind: ethereum/contract
     name: GROTeamVesting

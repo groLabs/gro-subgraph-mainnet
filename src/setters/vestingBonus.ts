@@ -64,7 +64,7 @@ export const updateVest = (
     vestingBonus.save();
 }
 
-// Event <LogVest> from GROVesting
+// Event <LogVest> & <LogExit> from GROVesting
 export const updateTotalLockedAmount = (
     md: MasterData,
     amount: BigDecimal,
@@ -167,4 +167,12 @@ export const updateExit = (
     // Step 5: Save changes to entities
     md.save();
     vestingBonus.save();
+}
+
+export const updateInitUnlockedPercent = (
+    amount: BigDecimal
+): void => {
+    let md = initMD();
+    md.init_unlocked_percent = amount.div(BigDecimal.fromString('10000'));
+    md.save();
 }

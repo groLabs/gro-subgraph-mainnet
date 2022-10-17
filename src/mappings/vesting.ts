@@ -1,19 +1,21 @@
-import { 
+import {
     LogVest as LogVestV1,
     LogExit as LogExitV1,
     LogExtend as LogExtendV1,
 } from '../../generated/GROVestingV1/GROVesting';
-import { 
+import {
     LogVest as LogVestV2,
     LogExit as LogExitV2,
     LogInstantExit as LogInstantExitV2,
     LogExtend as LogExtendV2,
+    LogNewInitUnlockedPercent as LogNewInitUnlockedPercentV2
 } from '../../generated/GROVestingV2/GROVesting';
 import {
     updateVest,
     updateExit,
     updateGlobalTimeStamp,
     updateTotalLockedAmount,
+    updateInitUnlockedPercent,
 } from '../setters/vestingBonus';
 import { tokenToDecimal } from '../utils/tokens';
 import {
@@ -111,5 +113,13 @@ export function handleExtendV2(event: LogExtendV2): void {
         md,
         event.address,
         true,
+    );
+}
+
+export function handleLogNewInitUnlockedPercentV2(
+    event: LogNewInitUnlockedPercentV2
+): void {
+    updateInitUnlockedPercent(
+        event.params.initUnlockedPercent.toBigDecimal(),
     );
 }
