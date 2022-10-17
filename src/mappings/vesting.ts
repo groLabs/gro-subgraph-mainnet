@@ -20,7 +20,7 @@ import {
     NUM,
     DECIMALS,
 } from '../utils/constants';
-import { setMasterData } from '../setters/masterdata';
+import { initMD } from '../setters/masterdata';
 
 
 export function handleVestV1(event: LogVestV1): void {
@@ -30,7 +30,7 @@ export function handleVestV1(event: LogVestV1): void {
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         event.params.vesting.startTime
     );
-    let md = setMasterData();
+    let md = initMD();
     md = updateTotalLockedAmount(
         md,
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
@@ -49,7 +49,7 @@ export function handleVestV2(event: LogVestV2): void {
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         event.params.vesting.startTime
     );
-    let md = setMasterData();
+    let md = initMD();
     md = updateTotalLockedAmount(
         md,
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
@@ -97,7 +97,7 @@ export function handleInstantExitV2(event: LogInstantExitV2): void {
 }
 
 export function handleExtendV1(event: LogExtendV1): void {
-    let md = setMasterData();
+    let md = initMD();
     updateGlobalTimeStamp(
         md,
         event.address,
@@ -106,7 +106,7 @@ export function handleExtendV1(event: LogExtendV1): void {
 }
 
 export function handleExtendV2(event: LogExtendV2): void {
-    let md = setMasterData();
+    let md = initMD();
     updateGlobalTimeStamp(
         md,
         event.address,

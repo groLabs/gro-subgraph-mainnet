@@ -8,7 +8,7 @@ import {
     DECIMALS
 } from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
-import { setMasterData } from './masterdata';
+import { initMD } from './masterdata';
 
 
 const initStakerData = (
@@ -65,12 +65,9 @@ export const updateStakerAllocation = (
     }
 
     // update total_alloc in MD 
-    // TODO: initMD
-    let md = MasterData.load('0x');
-    if (md) {
-        md.total_alloc = totalAlloc;
-        md.save();
-    }
+    let md = initMD();
+    md.total_alloc = totalAlloc;
+    md.save();
 
     // update pool_share on each pool
     for (let i = 0; i <= 6; i++) {
@@ -84,7 +81,7 @@ export const updateStakerAllocation = (
 export const updateStakerGroPerBlock = (
     gro_per_block: BigInt,
 ): void => {
-    const md = setMasterData();
+    const md = initMD();
     const groPerBlock = tokenToDecimal(gro_per_block, 18, 7);
     md.gro_per_block = groPerBlock
     md.save();

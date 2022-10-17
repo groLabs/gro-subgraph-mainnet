@@ -3,7 +3,7 @@ import { NUM } from '../utils/constants';
 import { LAUNCH_TIMESTAMP } from '../utils/constants';
 
 
-export const setMasterData = (): MasterData => {
+export const initMD = (): MasterData => {
     let md = MasterData.load('0x');
     if (!md) {
       md = new MasterData('0x');

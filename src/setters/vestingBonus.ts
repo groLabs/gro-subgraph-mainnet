@@ -12,7 +12,7 @@ import {
     NUM,
     ADDR,
 } from '../utils/constants';
-import { setMasterData } from './masterdata';
+import { initMD } from './masterdata';
 import { GROVesting as GROVestingV1 } from '../../generated/GROVestingV1/GROVesting';
 import { GROVesting as GROVestingV2 } from '../../generated/GROVestingV2/GROVesting';
 
@@ -137,7 +137,7 @@ export const updateExit = (
     isInstantExit: boolean,
 ): void => {
     // Step 0: load entities
-    let md = setMasterData();
+    let md = initMD();
     let vestingBonus = initVestingBonus(userAddress, false);
 
     // Step 1: update total_bonus

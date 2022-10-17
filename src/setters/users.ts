@@ -1,11 +1,11 @@
 import { User } from '../../generated/schema';
-import { setMasterData } from '../setters/masterdata';
+import { initMD } from '../setters/masterdata';
 let isMasterDataInitialised = false;
 
 
 export const setUser = (userAddress: string): User => {
   if (!isMasterDataInitialised) {
-    setMasterData();
+    initMD();
     isMasterDataInitialised = true;
   }
   let user = User.load(userAddress)
