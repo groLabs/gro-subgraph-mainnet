@@ -64,7 +64,8 @@ export const updateStakerAllocation = (
         }
     }
 
-    // update total_alloc in MD
+    // update total_alloc in MD 
+    // TODO: initMD
     let md = MasterData.load('0x');
     if (md) {
         md.total_alloc = totalAlloc;

@@ -48,6 +48,9 @@ type MasterData @entity {
   launchTimestamp: Int!
   gro_per_block: BigDecimal!
   total_alloc: BigDecimal!
+  total_locked_amount: BigDecimal!
+  total_bonus: BigDecimal!
+  global_start_time: Int!
 }
 
 # latest token price
@@ -141,6 +144,7 @@ type VestingBonus @entity {
   claim_now: BigDecimal!
   vest_all: BigDecimal!
   vesting_gro: BigDecimal!
+  latest_start_time: Int!
 }
 
 # staker pools

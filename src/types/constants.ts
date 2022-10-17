@@ -29,4 +29,6 @@ export class Addr {
     public CHAINLINK_DAI_USD: Address;
     public CHAINLINK_USDC_USD: Address;
     public CHAINLINK_USDT_USD: Address;
+    public GRO_VESTING_V1: Address;
+    public GRO_VESTING_V2: Address;
 }
