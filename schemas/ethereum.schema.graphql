@@ -50,6 +50,8 @@ type MasterData @entity {
   total_alloc: BigDecimal!
   total_locked_amount: BigDecimal!
   total_bonus: BigDecimal!
+  total_bonus_in: BigDecimal!   #TODO: temp
+  total_bonus_out: BigDecimal!  #TODO: temp
   global_start_time: Int!
 }
 

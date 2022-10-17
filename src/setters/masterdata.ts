@@ -15,6 +15,8 @@ export const setMasterData = (): MasterData => {
       md.total_alloc = NUM.ZERO;
       md.total_locked_amount = NUM.ZERO;
       md.total_bonus = NUM.ZERO;
+      md.total_bonus_in = NUM.ZERO;
+      md.total_bonus_out = NUM.ZERO;
       md.global_start_time = i32(0);
       md.save();
     }

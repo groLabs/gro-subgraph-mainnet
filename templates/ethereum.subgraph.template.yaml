@@ -561,6 +561,8 @@ dataSources:
           handler: handleVestV1
         - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
           handler: handleExitV1
+        - event: LogExtend(indexed address,uint256,(uint256,uint256))
+          handler: handleExtendV1
       file: ./src/mappings/vesting.ts
   - kind: ethereum/contract
     name: GROVestingV2
@@ -583,6 +585,10 @@ dataSources:
           handler: handleVestV2
         - event: LogExit(indexed address,uint256,uint256,uint256,uint256)
           handler: handleExitV2
+        - event: LogInstantExit(indexed address,uint256,uint256)
+          handler: handleInstantExitV2
+        - event: LogExtend(indexed address,uint256,(uint256,uint256))
+          handler: handleExtendV2     
       file: ./src/mappings/vesting.ts
   - kind: ethereum/contract
     name: GROTeamVesting

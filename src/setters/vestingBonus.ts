@@ -1,4 +1,5 @@
 import {
+    MasterData,
     VestingBonus,
 } from '../../generated/schema';
 import {
@@ -7,8 +8,6 @@ import {
     BigDecimal,
     BigInt
 } from '@graphprotocol/graph-ts';
-import { tokenToDecimal } from '../utils/tokens';
-import { initTotals } from './totals';
 import {
     NUM,
     ADDR,
@@ -39,6 +38,7 @@ export const initVestingBonus = (
     return vestingBonus;
 }
 
+// Event <BonusClaimed> from GROHodler
 export const updateNetReward = (
     userAddress: string,
     _amount: BigDecimal,
@@ -52,6 +52,7 @@ export const updateNetReward = (
     vestingBonus.save();
 }
 
+// Event <LogVest> from GROVesting
 export const updateVest = (
     userAddress: string,
     amount: BigDecimal,
@@ -63,22 +64,43 @@ export const updateVest = (
     vestingBonus.save();
 }
 
-export const updateExit = (
-    userAddress: string,
-    amount: BigDecimal
-): void => {
-    const vestingBonus = initVestingBonus(userAddress, false);
-    vestingBonus.vesting_gro = vestingBonus.vesting_gro.minus(amount);
-    vestingBonus.save();
+// Event <LogVest> from GROVesting
+export const updateTotalLockedAmount = (
+    md: MasterData,
+    amount: BigDecimal,
+    save: boolean,
+): MasterData => {
+    if (amount.ge(NUM.ZERO))
+        md.total_locked_amount = amount;
+    if (save)
+        md.save();
+    return md;
 }
 
-export const updateTotalGroove = (
-    totalLockedAmount: BigDecimal,
+// Event <LogExit>, <LogInstantExit> from GROVesting
+// Event <LogBonusClaimed> from GROHodler
+export const updateTotalBonus = (
+    md: MasterData,
+    bonusAmount: BigDecimal,
+    save: boolean,
+): MasterData => {
+    md.total_bonus = md.total_bonus.plus(bonusAmount);
+    if (bonusAmount.ge(NUM.ZERO)) {
+        md.total_bonus_in = md.total_bonus_in.plus(bonusAmount);
+    } else {
+        md.total_bonus_out = md.total_bonus_out.plus(bonusAmount);
+    }
+    if (save)
+        md.save();
+    return md;
+}
+
+// Event <LogVest>, <LogExit>, <LogInstantExit> & <LogExtend> from GROVesting
+export const updateGlobalTimeStamp = (
+    md: MasterData,
     vestingAddress: Address,
-): void => {
-    let md = setMasterData();
-    if (totalLockedAmount.ge(NUM.ZERO))
-        md.total_locked_amount = totalLockedAmount;
+    save: boolean,
+): MasterData => {
     if (vestingAddress == ADDR.GRO_VESTING_V1) {
         const contract = GROVestingV1.bind(vestingAddress);
         const globalStartTime = contract.try_globalStartTime();
@@ -98,13 +120,51 @@ export const updateTotalGroove = (
     } else {
         log.error('TBC***********', []);
     }
-    md.save();
+    if (save)
+        md.save();
+    return md;
 }
 
-export const updateTotalBonus = (
-    amount: BigDecimal
+
+// Events <LogExit> & <LogInstantExit> from GROVesting
+// TODO: perhaps do it through managers?
+export const updateExit = (
+    userAddress: string,
+    vestingAddress: Address,
+    vestingAmount: BigDecimal,
+    totalLockedAmount: BigDecimal,
+    penaltyAmount: BigDecimal,
+    isInstantExit: boolean,
 ): void => {
+    // Step 0: load entities
     let md = setMasterData();
-    md.total_bonus = md.total_bonus.plus(amount);
+    let vestingBonus = initVestingBonus(userAddress, false);
+
+    // Step 1: update total_bonus
+    // call function
+    md = updateTotalBonus(
+        md,
+        penaltyAmount,
+        false,
+    );
+
+    // Step 2: update total_locked_amount
+    if (!isInstantExit && totalLockedAmount.ge(NUM.ZERO))
+        md.total_locked_amount = totalLockedAmount;
+
+    // Step 3: update global_start_time (Groove)
+    md = updateGlobalTimeStamp(
+        md,
+        vestingAddress,
+        false
+    );
+
+    // Step 4: update vesting_gro
+    // TODO: rename by total_gro?
+    if (!isInstantExit)
+        vestingBonus.vesting_gro = vestingBonus.vesting_gro.plus(vestingAmount);
+
+    // Step 5: Save changes to entities
     md.save();
+    vestingBonus.save();
 }

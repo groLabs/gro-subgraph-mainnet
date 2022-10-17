@@ -6,6 +6,7 @@ import {
 } from '../setters/vestingBonus';
 import { tokenToDecimal } from '../utils/tokens';
 import { NUM } from '../utils/constants';
+import { setMasterData } from '../setters/masterdata';
 
 
 export function handleBonusClaimedV1(event: LogBonusClaimedV1): void {
@@ -14,10 +15,12 @@ export function handleBonusClaimedV1(event: LogBonusClaimedV1): void {
         tokenToDecimal(event.params.amount, 18, 7),
         true,
     );
+    let md = setMasterData();
     updateTotalBonus(
+        md,
         tokenToDecimal(event.params.amount, 18, 7).times(NUM.MINUS_ONE),
+        true,
     );
-
 }
 
 export function handleBonusClaimedV2(event: LogBonusClaimedV2): void {
@@ -26,7 +29,10 @@ export function handleBonusClaimedV2(event: LogBonusClaimedV2): void {
         tokenToDecimal(event.params.amount, 18, 7),
         event.params.vest,
     );
+    let md = setMasterData();
     updateTotalBonus(
+        md,
         tokenToDecimal(event.params.amount, 18, 7).times(NUM.MINUS_ONE),
+        true,
     );
 }

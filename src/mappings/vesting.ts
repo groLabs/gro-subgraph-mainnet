@@ -1,21 +1,26 @@
-import { LogVest as LogVestV1 } from '../../generated/GROVestingV1/GROVesting';
-import { LogVest as LogVestV2 } from '../../generated/GROVestingV2/GROVesting';
-import { LogExit as LogExitV1 } from '../../generated/GROVestingV1/GROVesting';
-import { LogExit as LogExitV2 } from '../../generated/GROVestingV2/GROVesting';
-import { LogInstantExit as LogInstantExitV2 } from '../../generated/GROVestingV2/GROVesting';
-import { LogExtend as LogExtendV1 } from '../../generated/GROVestingV1/GROVesting';
-import { LogExtend as LogExtendV2 } from '../../generated/GROVestingV2/GROVesting';
+import { 
+    LogVest as LogVestV1,
+    LogExit as LogExitV1,
+    LogExtend as LogExtendV1,
+} from '../../generated/GROVestingV1/GROVesting';
+import { 
+    LogVest as LogVestV2,
+    LogExit as LogExitV2,
+    LogInstantExit as LogInstantExitV2,
+    LogExtend as LogExtendV2,
+} from '../../generated/GROVestingV2/GROVesting';
 import {
     updateVest,
     updateExit,
-    updateTotalBonus,
-    updateTotalGroove,
+    updateGlobalTimeStamp,
+    updateTotalLockedAmount,
 } from '../setters/vestingBonus';
 import { tokenToDecimal } from '../utils/tokens';
 import {
     NUM,
-    DECIMALS
+    DECIMALS,
 } from '../utils/constants';
+import { setMasterData } from '../setters/masterdata';
 
 
 export function handleVestV1(event: LogVestV1): void {
@@ -25,10 +30,17 @@ export function handleVestV1(event: LogVestV1): void {
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         event.params.vesting.startTime
     );
-    updateTotalGroove(
+    let md = setMasterData();
+    md = updateTotalLockedAmount(
+        md,
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
+        false,
+    );
+    updateGlobalTimeStamp(
+        md,
         event.address,
-    )
+        true,
+    );
 }
 
 export function handleVestV2(event: LogVestV2): void {
@@ -37,56 +49,67 @@ export function handleVestV2(event: LogVestV2): void {
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         event.params.vesting.startTime
     );
-    updateTotalGroove(
+    let md = setMasterData();
+    md = updateTotalLockedAmount(
+        md,
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
+        false,
+    );
+    updateGlobalTimeStamp(
+        md,
         event.address,
+        true,
     );
 }
 
 export function handleExitV1(event: LogExitV1): void {
     updateExit(
         event.params.user.toHexString(),
-        tokenToDecimal(event.params.vesting, 18, DECIMALS),
-    );
-    updateTotalGroove(
-        tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
         event.address,
-    );
-    updateTotalBonus(
+        tokenToDecimal(event.params.vesting, 18, DECIMALS),
+        tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
         tokenToDecimal(event.params.penalty, 18, DECIMALS),
+        false,
     );
 }
 
 export function handleExitV2(event: LogExitV2): void {
     updateExit(
         event.params.user.toHexString(),
-        tokenToDecimal(event.params.amount, 18, DECIMALS),
-    );
-    updateTotalGroove(
-        tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
         event.address,
-    );
-    updateTotalBonus(
+        tokenToDecimal(event.params.amount, 18, DECIMALS),
+        tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
         tokenToDecimal(event.params.penalty, 18, DECIMALS),
+        false,
     );
 }
 
+// @dev: no amount & totalLockedAmount in LogInstantExit
 export function handleInstantExitV2(event: LogInstantExitV2): void {
-    updateTotalBonus(
+    updateExit(
+        event.params.user.toHexString(),
+        event.address,
+        NUM.ZERO,
+        NUM.ZERO,
         tokenToDecimal(event.params.penalty, 18, DECIMALS),
+        true,
     );
 }
 
 export function handleExtendV1(event: LogExtendV1): void {
-    updateTotalGroove(
-        NUM.ZERO,
+    let md = setMasterData();
+    updateGlobalTimeStamp(
+        md,
         event.address,
-    )
+        true,
+    );
 }
 
 export function handleExtendV2(event: LogExtendV2): void {
-    updateTotalGroove(
-        NUM.ZERO,
+    let md = setMasterData();
+    updateGlobalTimeStamp(
+        md,
         event.address,
-    )
+        true,
+    );
 }
