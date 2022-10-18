@@ -64,6 +64,15 @@ export const updateVest = (
     vestingBonus.save();
 }
 
+export const updateStartTime = (
+    userAddress: string,
+    latestStartTime: BigInt,
+): void => {
+    const vestingBonus = initVestingBonus(userAddress, false);
+    vestingBonus.latest_start_time = latestStartTime.toI32();
+    vestingBonus.save();
+}
+
 // Event <LogVest> & <LogExit> from GROVesting
 export const updateTotalLockedAmount = (
     md: MasterData,

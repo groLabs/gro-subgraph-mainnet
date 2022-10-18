@@ -13,6 +13,7 @@ import {
 import {
     updateVest,
     updateExit,
+    updateStartTime,
     updateGlobalTimeStamp,
     updateTotalLockedAmount,
     updateInitUnlockedPercent,
@@ -105,6 +106,10 @@ export function handleExtendV1(event: LogExtendV1): void {
         event.address,
         true,
     );
+    updateStartTime(
+        event.params.user.toHexString(),
+        event.params.newPeriod,
+    );
 }
 
 export function handleExtendV2(event: LogExtendV2): void {
@@ -113,6 +118,10 @@ export function handleExtendV2(event: LogExtendV2): void {
         md,
         event.address,
         true,
+    );
+    updateStartTime(
+        event.params.user.toHexString(),
+        event.params.newPeriod,
     );
 }
 
