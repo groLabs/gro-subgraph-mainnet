@@ -6,6 +6,9 @@ import { manageCoreDeposit } from '../managers/deposit';
 import { getGroToken } from '../utils/tokens';
 import { parseLogEvent } from '../parsers/log';
 
+// @dev: totalSupply can't be deduced from deposits only, as there are other transactions that
+//       mint GVT or PWRD not related to deposits
+//       e.g.: 0x2f38030991c7e657afe3f69fad665474a234886c560e04bf488ebed1fa846363
 
 export function handleDepositV1(event: LogNewDepositV1): void {
     //setLatestPrice('groDAI_e_vault_v1_0');

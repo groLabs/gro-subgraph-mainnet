@@ -4,6 +4,8 @@ import { setPools } from '../setters/pools';
 import { ClaimEvent } from '../types/claim';
 import { initTotals } from '../setters/totals';
 import { initVestingBonus } from '../setters/vestingBonus';
+import { initCoreData } from '../setters/coreData';
+
 
 // Claim from Staker
 export const manageClaim = (
@@ -32,4 +34,6 @@ export const manageClaim = (
 
     // Step 5: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
+
+    initCoreData();
 }

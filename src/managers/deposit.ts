@@ -6,6 +6,7 @@ import { setTotals } from '../setters/totals';
 import { setPools } from '../setters/pools';
 import { initTotals } from '../setters/totals';
 import { initVestingBonus } from '../setters/vestingBonus';
+import { initCoreData } from '../setters/coreData';
 
 
 // Manage core deposit
@@ -32,6 +33,8 @@ export const manageCoreDeposit = (
 
     // Step 4: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
+
+    initCoreData();
 }
 
 export const manageStakerDeposit = (
@@ -57,4 +60,6 @@ export const manageStakerDeposit = (
 
     // Step 5: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
+
+    initCoreData();
 }

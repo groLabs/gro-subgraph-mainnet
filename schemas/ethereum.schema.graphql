@@ -100,6 +100,15 @@ type StakerData @entity {
   block_timestamp: Int!
 }
 
+# core protocol data
+type CoreData @entity {
+  id: ID! # 0x
+  total_supply_gvt: BigDecimal!
+  total_supply_pwrd: BigDecimal!
+  total_supply_pwrd_based: BigDecimal! # TEMP
+
+}
+
 # user
 type User @entity {
   id: ID! # userAddress

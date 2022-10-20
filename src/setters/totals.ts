@@ -1,13 +1,14 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { Totals } from '../../generated/schema';
 import { NUM } from '../utils/constants';
+import { updateTotalSupply } from './coreData';
 
 
 //@dev: <save> used to initialised totals for only-staker users, etc
 export const initTotals = (
     userAddress: string,
     save: boolean,
-    ): Totals => {
+): Totals => {
     let total = Totals.load(userAddress);
     if (!total) {
         total = new Totals(userAddress);
@@ -62,11 +63,17 @@ export const setTotals = (
             total.value_added_gvt = total.value_added_gvt.plus(usdAmount);
             total.net_amount_gvt = total.net_amount_gvt.plus(coinAmount);
             total.net_value_gvt = total.net_value_gvt.plus(usdAmount);
+            // if (type === 'core_deposit')
+            //     updateTotalSupply(coinAmount, NUM.ZERO, 'gvt', 'in');
         } else if (coin === 'pwrd') {
+            const based_amount_pwrd = coinAmount.times(factor);
             total.amount_added_pwrd = total.amount_added_pwrd.plus(coinAmount);
             total.value_added_pwrd = total.value_added_pwrd.plus(usdAmount);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus((coinAmount).times(factor)); // based pwrd amount
+            // total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus((coinAmount).times(factor)); // based pwrd amount
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus(based_amount_pwrd); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.plus(usdAmount);
+            // if (type === 'core_deposit')
+            //     updateTotalSupply(coinAmount, based_amount_pwrd, 'pwrd', 'in');
         }
         total.value_added_total = total.value_added_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.plus(usdAmount);
@@ -76,11 +83,17 @@ export const setTotals = (
             total.value_removed_gvt = total.value_removed_gvt.plus(usdAmount);
             total.net_amount_gvt = total.net_amount_gvt.minus(coinAmount);
             total.net_value_gvt = total.net_value_gvt.minus(usdAmount);
+            // if (type === 'core_withdrawal')
+            //     updateTotalSupply(coinAmount, NUM.ZERO, 'gvt', 'out');
         } else if (coin === 'pwrd') {
             total.amount_removed_pwrd = total.amount_removed_pwrd.plus(coinAmount);
             total.value_removed_pwrd = total.value_removed_pwrd.plus(usdAmount);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus((coinAmount).times(factor)); // based pwrd amount
+            const based_amount_pwrd = coinAmount.times(factor);
+            // total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus((coinAmount).times(factor)); // based pwrd amount
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus(based_amount_pwrd); // based pwrd amount
             total.net_value_pwrd = total.net_value_pwrd.minus(usdAmount);
+            // if (type === 'core_withdrawal')
+            //     updateTotalSupply(coinAmount, based_amount_pwrd, 'pwrd', 'out');
         }
         total.value_removed_total = total.value_removed_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.minus(usdAmount);

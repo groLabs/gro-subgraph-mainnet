@@ -4,6 +4,8 @@ import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
 import { TransferEvent } from '../types/transfer';
 import { initVestingBonus } from '../setters/vestingBonus';
+import { initCoreData } from '../setters/coreData';
+
 
 function buildTransfer(
     ev: TransferEvent,
@@ -34,6 +36,8 @@ function buildTransfer(
 
     // Step 4: Create VestingBonus
     initVestingBonus(userAddress, true);
+
+    initCoreData();
 }
 
 export const manageTransfer = (
