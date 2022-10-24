@@ -51,6 +51,12 @@
     "UsdtAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     "UsdtStartBlock": 15000000,
     "ChainlinkAggregatorAddress": "0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82",
-    "ChainlinkAggregatorStartBlock": 15000000
+    "ChainlinkAggregatorStartBlock": 15000000,
+    "VaultDAIAddress": "0x6a01bC748d71489372BD8fB743b23F63d99aac85",
+    "VaultDAIStartBlock": 15000000,
+    "VaultUSDCAddress": "0x03b298D27b0426758cb70c4ADd6523927bD7cC8e",
+    "VaultUSDCStartBlock": 15000000,
+    "VaultUSDTAddress": "0x9CD696A225d7a3c9Ce1ed71f5bDB031234a86D79",
+    "VaultUSDTStartBlock": 15000000
   }
   

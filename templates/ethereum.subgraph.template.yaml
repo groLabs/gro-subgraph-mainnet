@@ -40,6 +40,8 @@ dataSources:
       entities:
         - User
         - Totals
+        - Factor
+        - CoreData
         - TransferTx
       abis:
         - name: DepositHandler
@@ -67,6 +69,8 @@ dataSources:
       entities:
         - User
         - Totals
+        - Factor
+        - CoreData
         - TransferTx
       abis:
         - name: DepositHandler
@@ -94,6 +98,8 @@ dataSources:
       entities:
         - User
         - Totals
+        - Factor
+        - CoreData
         - TransferTx
       abis:
         - name: DepositHandler
@@ -122,6 +128,8 @@ dataSources:
       entities:
         - User
         - Totals
+        - Factor
+        - CoreData
         - TransferTx
       abis:
         - name: WithdrawHandler
@@ -149,6 +157,8 @@ dataSources:
       entities:
         - User
         - Totals
+        - Factor
+        - CoreData
         - TransferTx
       abis:
         - name: WithdrawHandler
@@ -176,6 +186,8 @@ dataSources:
       entities:
         - User
         - Totals
+        - Factor
+        - CoreData
         - TransferTx
       abis:
         - name: WithdrawHandler
@@ -203,7 +215,9 @@ dataSources:
       entities:
         - User
         - CoreTx
+        - Factor
         - Totals
+        - CoreData
       abis:
         - name: Gvt
           file: ./abis/ethereum/Gvt.json
@@ -229,7 +243,9 @@ dataSources:
       entities:
         - User
         - CoreTx
+        - Factor
         - Totals
+        - CoreData
       abis:
         - name: Pwrd
           file: ./abis/ethereum/Pwrd.json
@@ -618,6 +634,84 @@ dataSources:
         - event: LogStoppedVesting(indexed address,indexed uint256,uint256,uint256)
           handler: StoppedVesting
       file: ./src/mappings/vestingTeam.ts
+  # ****** V A U L T S ******************************
+  - kind: ethereum/contract
+    name: VaultDAI
+    network: {{network}}
+    source:
+      address: "{{VaultDAIAddress}}"
+      abi: Vyper_contract
+      startBlock: {{VaultDAIStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Totals
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultDAI.json
+      eventHandlers:
+        - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleStrategyReportedDAI
+      file: ./src/mappings/vaults.ts
+  - kind: ethereum/contract
+    name: VaultUSDC
+    network: {{network}}
+    source:
+      address: "{{VaultUSDCAddress}}"
+      abi: Vyper_contract
+      startBlock: {{VaultUSDCStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Totals
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultUSDC.json
+      eventHandlers:
+        - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleStrategyReportedUSDC
+      file: ./src/mappings/vaults.ts
+  - kind: ethereum/contract
+    name: VaultUSDT
+    network: {{network}}
+    source:
+      address: "{{VaultUSDTAddress}}"
+      abi: Vyper_contract
+      startBlock: {{VaultUSDTStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Totals
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultUSDT.json
+      eventHandlers:
+        - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleStrategyReportedUSDT
+      file: ./src/mappings/vaults.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # stablecoins *********************************
 # - kind: ethereum/contract
 #   name: Dai
