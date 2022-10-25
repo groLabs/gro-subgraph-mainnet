@@ -44,6 +44,8 @@
     "WithdrawHandlerV2StartBlock": 15000000,
     "WithdrawHandlerV3Address": "0x641bEFA4dB601578A64F0Fc1f4E89E9869268Fe7",
     "WithdrawHandlerV3StartBlock": 15000000,
+    "EmergencyHandlerV3Address": "0xc535CFE245D8F969E647B3dD8Be1255EC076EE76",
+    "EmergencyHandlerV3StartBlock": 15000000,
     "DaiAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     "DaiStartBlock": 15000000,
     "UsdcAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
