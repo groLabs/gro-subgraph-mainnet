@@ -202,6 +202,36 @@ dataSources:
           receipt: true
       file: ./src/mappings/withdrawHandler.ts
   - kind: ethereum/contract
+  # Only V3 of EmergencyHandler had some withdrawal events, so no need to add versions 1 & 2
+    name: EmergencyHandlerV3
+    network: {{network}}
+    source:
+      address: "{{EmergencyHandlerV3Address}}"
+      abi: EmergencyHandler
+      startBlock: {{EmergencyHandlerV3StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - Factor
+        - CoreData
+        - TransferTx
+      abis:
+        - name: EmergencyHandler
+          file: ./abis/ethereum/EmergencyHandlerV3.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogEmergencyWithdrawal()
+          handler: handleEmergencyWithdrawalV3
+          receipt: true
+      file: ./src/mappings/emergencyHandler.ts
+  - kind: ethereum/contract
     name: Gvt
     network: {{network}}
     source:
@@ -226,6 +256,7 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+          receipt: true
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/gvt.ts

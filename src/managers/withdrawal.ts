@@ -1,12 +1,19 @@
-import { setUser } from '../setters/users'
-import { setDepoWithdrawTx, setStakerDepoWithdrawTx } from '../setters/depowithdraw';
-import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
-import { setTotals } from '../setters/totals';
+import { setUser } from '../setters/users'
 import { setPools } from '../setters/pools';
+import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
+import { DepoWithdraw } from '../types/depowithdraw';
+import { updateTotalSupply } from '../setters/coreData';
 import { initVestingBonus } from '../setters/vestingBonus';
-import { initCoreData } from '../setters/coreData';
+import {
+    setGvtFactor,
+    setPwrdFactor
+} from '../setters/factors';
+import { 
+    setDepoWithdrawTx,
+    setStakerDepoWithdrawTx
+} from '../setters/depowithdraw';
 
 
 // Manage core withdrawals
@@ -34,7 +41,21 @@ export const manageCoreWithdrawal = (
     // Step 4: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
 
-    initCoreData();
+    // initCoreData(true);
+
+    // Update total supply
+    updateTotalSupply(
+        'withdrawal',
+        tx.coinAmount,
+        token,
+    );
+
+    // Update factor
+    if (token === 'pwrd') {
+        setPwrdFactor();
+    } else if (token === 'gvt') {
+        setGvtFactor();
+    }
 }
 
 export const manageStakerWithdrawal = (
@@ -60,5 +81,4 @@ export const manageStakerWithdrawal = (
 
     // Step 5: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
-
 }

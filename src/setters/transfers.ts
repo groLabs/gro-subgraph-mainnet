@@ -1,12 +1,15 @@
+import { getFactor } from '../setters/factors';
 import { Bytes } from '@graphprotocol/graph-ts';
+import { TransferEvent } from '../types/transfer';
 import { TransferTx } from '../../generated/schema';
+import {
+    NO_POOL,
+    DECIMALS,
+} from '../utils/constants';
 import {
     tokenToDecimal,
     getPricePerShare,
-    getFactor,
 } from '../utils/tokens';
-import { TransferEvent } from '../types/transfer';
-import { DECIMALS, NO_POOL } from '../utils/constants';
 
 
 export const setTransferTx = (

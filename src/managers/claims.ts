@@ -35,5 +35,5 @@ export const manageClaim = (
     // Step 5: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
 
-    initCoreData();
+    initCoreData(true);
 }

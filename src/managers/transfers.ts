@@ -1,10 +1,10 @@
 import { ADDR } from '../utils/constants';
 import { setUser } from '../setters/users';
-import { setTransferTx } from '../setters/transfers';
 import { setTotals } from '../setters/totals';
 import { TransferEvent } from '../types/transfer';
-import { initVestingBonus } from '../setters/vestingBonus';
 import { initCoreData } from '../setters/coreData';
+import { setTransferTx } from '../setters/transfers';
+import { initVestingBonus } from '../setters/vestingBonus';
 
 
 function buildTransfer(
@@ -37,7 +37,7 @@ function buildTransfer(
     // Step 4: Create VestingBonus
     initVestingBonus(userAddress, true);
 
-    initCoreData();
+    initCoreData(true);
 }
 
 export const manageTransfer = (

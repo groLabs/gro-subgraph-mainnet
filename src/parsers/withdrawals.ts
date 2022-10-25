@@ -25,6 +25,24 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
+// parse core withdrawal events
+function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
+    const event = new DepoWithdrawEvent(
+        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.block.number.toI32(),
+        ev.block.timestamp.toI32(),
+        ev.address,
+        'core_withdrawal',
+        '',
+        ADDR.ZERO,
+        ADDR.ZERO,
+        BigInt.fromString('0'),         // coinAmount
+        BigInt.fromString('0'),         // usdAmount
+        NO_POOL,                        // poolId
+    )
+    return event;
+}
+
 // parse staker withdrawal events
 function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     const poolId = (ev.params.pid)
@@ -49,4 +67,5 @@ function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
 export {
     parseCoreWithdrawalEvent,
     parseStakerWithdrawalEvent,
+    parseCoreEmergencyWithdrawalEvent
 }

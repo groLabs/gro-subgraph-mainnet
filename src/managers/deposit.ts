@@ -1,12 +1,18 @@
 import { setUser } from '../setters/users'
-import { setDepoWithdrawTx, setStakerDepoWithdrawTx } from '../setters/depowithdraw';
+import {
+    setDepoWithdrawTx,
+    setStakerDepoWithdrawTx,
+} from '../setters/depowithdraw';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
 import { setPools } from '../setters/pools';
 import { initTotals } from '../setters/totals';
 import { initVestingBonus } from '../setters/vestingBonus';
-import { initCoreData } from '../setters/coreData';
+import {
+    initCoreData,
+    updateTotalSupply,
+} from '../setters/coreData';
 
 
 // Manage core deposit
@@ -34,7 +40,14 @@ export const manageCoreDeposit = (
     // Step 4: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
 
-    initCoreData();
+    // initCoreData(true);
+
+    // Step 5: Update total supply
+    updateTotalSupply(
+        'deposit',
+        tx.coinAmount,
+        token,
+    );
 }
 
 export const manageStakerDeposit = (
@@ -61,5 +74,5 @@ export const manageStakerDeposit = (
     // Step 5: Create VestingBonus
     initVestingBonus(ev.userAddress, true);
 
-    initCoreData();
+    initCoreData(true);
 }

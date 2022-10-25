@@ -9,6 +9,8 @@ export class Num {
     public ONE: BigDecimal;
     public MINUS_ONE: BigDecimal;
     public THIRTY_PERCENT: BigDecimal;
+    public PWRD_START_FACTOR: BigDecimal;
+    public GVT_START_FACTOR: BigDecimal;
 }
 
 export class Addr {
@@ -26,6 +28,9 @@ export class Addr {
     public DEPOSIT_HANDLER_V1: Address;
     public DEPOSIT_HANDLER_V2: Address;
     public DEPOSIT_HANDLER_V3: Address;
+    public WITHDRAWAL_HANDLER_V1: Address;
+    public WITHDRAWAL_HANDLER_V2: Address;
+    public WITHDRAWAL_HANDLER_V3: Address;
     public CHAINLINK_DAI_USD: Address;
     public CHAINLINK_USDC_USD: Address;
     public CHAINLINK_USDT_USD: Address;

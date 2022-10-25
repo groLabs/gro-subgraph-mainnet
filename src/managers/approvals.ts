@@ -23,5 +23,5 @@ export const manageApproval = (
     // Step 4: Create VestingBonus for Approval-only users
     initVestingBonus(ev.ownerAddress, true);
 
-    initCoreData();
+    initCoreData(true);
 }

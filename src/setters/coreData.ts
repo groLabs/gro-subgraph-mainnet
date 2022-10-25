@@ -1,63 +1,53 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+
+import { NUM } from '../utils/constants';
 import { CoreData } from '../../generated/schema';
+import { getStoredFactor } from '../setters/factors';
 import {
-	getFactor,
-	tokenToDecimal,
-} from '../utils/tokens';
-import {
-	NUM,
-	ADDR,
-	DECIMALS,
-} from '../utils/constants';
+	BigDecimal,
+	log as showLog,
+} from '@graphprotocol/graph-ts';
 
 
-export const initCoreData = (): CoreData => {
+export const initCoreData = (save: boolean): CoreData => {
 	let core = CoreData.load('0x');
 	if (!core) {
 		core = new CoreData('0x');
 		core.total_supply_gvt = NUM.ZERO;
-		core.total_supply_pwrd = NUM.ZERO;
 		core.total_supply_pwrd_based = NUM.ZERO;
-		core.save();
+		if (save)
+			core.save();
 	}
 	return core;
 }
 
 export const updateTotalSupply = (
-	from: Address,
-	_amount: BigInt,
+	side: string,
+	amount: BigDecimal,
 	coin: string,
 ): void => {
-	let core = initCoreData();
-
-	const side = (from == ADDR.ZERO) ? 'in' : 'out';
-	const amount = tokenToDecimal(_amount, 18, DECIMALS);
+	let core = initCoreData(false);
 	const basedAmount = (coin === 'pwrd')
-		? amount.times(getFactor('pwrd'))
+		? amount.times(getStoredFactor('pwrd'))
 		: NUM.ZERO;
 
-	if (side === 'in') {
+	if (side === 'deposit') {
 		if (coin === 'gvt') {
 			core.total_supply_gvt = core.total_supply_gvt.plus(amount);
 		} else if (coin === 'pwrd') {
-			core.total_supply_pwrd = core.total_supply_pwrd.plus(amount);
-			core.total_supply_pwrd_based = core.total_supply_pwrd_based
-				.plus(basedAmount).truncate(DECIMALS);
+			core.total_supply_pwrd_based = core.total_supply_pwrd_based.plus(basedAmount);
 		} else {
-			// show error
+			showLog.error(`coreData.ts->updateTotalSupply(): can't update for {} {}`, [coin, side]);
 		}
-	} else if (side === 'out') {
+	} else if (side === 'withdrawal') {
 		if (coin === 'gvt') {
 			core.total_supply_gvt = core.total_supply_gvt.minus(amount);
 		} else if (coin === 'pwrd') {
-			core.total_supply_pwrd = core.total_supply_pwrd.minus(amount);
-			core.total_supply_pwrd_based = core.total_supply_pwrd_based
-				.minus(basedAmount).truncate(DECIMALS);;
+			core.total_supply_pwrd_based = core.total_supply_pwrd_based.minus(basedAmount);
 		} else {
-			// show error
+			showLog.error(`coreData.ts->updateTotalSupply(): can't update for {} {}`, [coin, side]);
 		}
 	} else {
-		// show error
+		showLog.error(`coreData.ts->updateTotalSupply(): can't update for {}`, [side]);
 	}
 	core.save();
 }

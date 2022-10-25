@@ -1,5 +1,4 @@
 import { Gvt } from '../../generated/Gvt/Gvt';
-import { Pwrd } from '../../generated/Pwrd/Pwrd';
 import {
     log,
     BigInt,
@@ -28,7 +27,6 @@ export const initPrice = (): Price => {
     }
     return price;
 }
-
 
 export const getGroToken = (isPwrd: bool): string => {
     return (isPwrd)
@@ -107,27 +105,3 @@ export function tokenToDecimal(
         .truncate(decimals);
 }
 
-// Retrieves gvt or pwrd factor at the time of a transfer
-export const getFactor = (token: string): BigDecimal => {
-    if (token === 'gvt') {
-        const contract = Gvt.bind(ADDR.GVT);
-        const gvtFactor = contract.try_factor();
-        if (gvtFactor.reverted) {
-            log.error('getFactor() on gvt reverted in src/utils/tokens.ts', []);
-            return NUM.ZERO;
-        } else {
-            return tokenToDecimal(gvtFactor.value, 18, 12);
-        }
-    } else if (token === 'pwrd') {
-        const contract = Pwrd.bind(ADDR.PWRD);
-        const pwrdFactor = contract.try_factor();
-        if (pwrdFactor.reverted) {
-            log.error('getFactor() on pwrd reverted in src/utils/tokens.ts', []);
-            return NUM.ZERO;
-        } else {
-            return tokenToDecimal(pwrdFactor.value, 18, 12);
-        }
-    } else {
-        return NUM.ZERO;
-    }
-}

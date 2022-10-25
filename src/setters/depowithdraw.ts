@@ -1,23 +1,32 @@
+import { Log } from '../types/log';
+import { TransferTx } from '../../generated/schema';
+import { DepoWithdraw } from '../types/depowithdraw';
 import {
-    Bytes, 
+    Bytes,
     ethereum,
     BigDecimal,
     log as showLog,
 } from '@graphprotocol/graph-ts';
-import { TransferTx } from '../../generated/schema';
-import { DepoWithdraw } from '../types/depowithdraw';
-import { Log } from '../types/log';
 import {
-    getFactor,
     tokenToDecimal,
     getTokenByPoolId,
+    getPricePerShare,
 } from '../utils/tokens';
+import {
+    getFactor,
+    getStoredFactor
+} from '../setters/factors';
 import {
     NUM,
     ADDR,
     DECIMALS,
     ERC20_TRANSFER_SIG,
 } from '../utils/constants';
+
+// global vars to manage emergency <token> and <from>
+let emergencyToken = '';
+let emergencyFrom = ADDR.ZERO;
+
 
 // core deposits & withdrawals
 export const setDepoWithdrawTx = (
@@ -35,9 +44,37 @@ export const setDepoWithdrawTx = (
     tx.userAddress = ev.userAddress;
     tx.fromAddress = ev.fromAddress;
     tx.toAddress = ev.toAddress;
-    tx.coinAmount = getCoinAmount(logs, tx);
+    tx.coinAmount = getCoinAmount(logs, tx, false);
     tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
-    tx.factor = getFactor(token);
+    tx.factor = (token === 'pwrd')
+        ? getStoredFactor(token)
+        : getFactor(token);
+    tx.poolId = ev.poolId;
+    tx.save();
+    return tx;
+}
+
+// core emergency withdrawals
+export const setEmergencyWithdrawTx = (
+    ev: DepoWithdraw,
+    logs: Log[],
+): TransferTx => {
+    let tx = new TransferTx(ev.id);
+    tx.contractAddress = ev.contractAddress;
+    tx.block = ev.block;
+    tx.timestamp = ev.timestamp;
+    tx.type = ev.type;
+    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.coinAmount = getCoinAmount(logs, tx, true);
+    tx.userAddress = emergencyFrom.toHexString();
+    tx.fromAddress = emergencyFrom;
+    tx.toAddress = ADDR.ZERO;
+    tx.token = emergencyToken;
+    const pricePerShare = getPricePerShare(emergencyToken);
+    tx.usdAmount = (tx.coinAmount.times(pricePerShare)).truncate(DECIMALS);
+    tx.factor = (emergencyToken === 'pwrd')
+        ? getStoredFactor(emergencyToken)
+        : getFactor(emergencyToken);
     tx.poolId = ev.poolId;
     tx.save();
     return tx;
@@ -60,13 +97,56 @@ export const setStakerDepoWithdrawTx = (
     tx.toAddress = ev.toAddress;
     tx.coinAmount = tokenToDecimal(ev.coinAmount, 18, DECIMALS);
     tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
-    tx.factor = getFactor(token);
+    tx.factor = getFactor(token); //TODO: needed?
     tx.poolId = ev.poolId;
     tx.save();
     return tx;
 }
 
-// Given a deposit or withdrawal event, search the Transfer event 
+export function getCoinAmount(
+    logs: Log[],
+    tx: TransferTx,
+    isEmergency: boolean
+): BigDecimal {
+    for (let i = 0; i < logs.length; i++) {
+        const log = logs[i];
+        if (
+            (log.address == ADDR.GVT
+                || log.address == ADDR.PWRD)
+            && log.topics[0].toHexString() == ERC20_TRANSFER_SIG
+            && log.topics.length === 3
+        ) {
+            const from = ethereum.decode('address', log.topics[1])!.toAddress();
+            const to = ethereum.decode('address', log.topics[2])!.toAddress();
+            if ((tx.type === 'core_deposit' && from == ADDR.ZERO)
+                || (tx.type === 'core_withdrawal' && to == ADDR.ZERO)) {
+                    if (isEmergency) {
+                        emergencyToken = (log.address == ADDR.GVT) ? 'gvt' : 'pwrd';
+                        emergencyFrom = from;
+                    }
+                const value = ethereum.decode('uin256', log.data)!.toBigInt();
+                return tokenToDecimal(value, 18, 7);
+            }
+        }
+    }
+    showLog.error(
+        '{} coin amount not found from Transfer event through tx {}', [
+        tx.token,
+        tx.hash.toHexString()
+    ]);
+    return NUM.ZERO;
+}
+
+
+
+
+
+
+
+
+
+/*
+// Given a deposit or withdrawal event, search the GVT or PWRD Transfer event 
 // via transaction receipt to get the coin amount
 export function getCoinAmount(
     logs: Log[],
@@ -96,3 +176,37 @@ export function getCoinAmount(
     ]);
     return NUM.ZERO;
 }
+
+// Given an emergency withdrawal event, search the PWRD Transfer event 
+// via transaction receipt to get the coin amount
+export function getCoinAmountEmergency(
+    logs: Log[],
+    tx: TransferTx
+): BigDecimal {
+    for (let i = 0; i < logs.length; i++) {
+        const log = logs[i];
+        if (
+            (log.address == ADDR.GVT
+                || log.address == ADDR.PWRD)
+            && log.topics[0].toHexString() == ERC20_TRANSFER_SIG
+            && log.topics.length === 3
+        ) {
+            const from = ethereum.decode('address', log.topics[1])!.toAddress();
+            const to = ethereum.decode('address', log.topics[2])!.toAddress();
+            if ((tx.type === 'core_deposit' && from == ADDR.ZERO)
+                || (tx.type === 'core_withdrawal' && to == ADDR.ZERO)) {
+                emergencyToken = (log.address == ADDR.GVT) ? 'gvt' : 'pwrd';
+                emergencyFrom = from;
+                const value = ethereum.decode('uin256', log.data)!.toBigInt();
+                return tokenToDecimal(value, 18, 7);
+            }
+        }
+    }
+    showLog.error(
+        '{} coin amount not found from Transfer event through tx {}', [
+        tx.token,
+        tx.hash.toHexString()
+    ]);
+    return NUM.ZERO;
+}
+*/
