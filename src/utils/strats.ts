@@ -1,0 +1,102 @@
+import {
+    // Vault,
+    Strategy,
+    // Vault_Adapter,
+} from '../types/strats'
+
+
+export const getStrategies = (): Strategy[] => {
+    const strats = [
+        new Strategy(
+            '0xdea436e15b40e7b707a7002a749f416dfe5b383f',
+            '0x6a01bc748d71489372bd8fb743b23f63d99aac85',
+            '0x277947d84a2ec370a636683799351acef97fec60',
+            'Convex XPool DAI primary',
+            'Convex-FRAX-3CRV',
+            true,
+        ),
+        new Strategy(
+            '0x4d5b5376cbcc001bb4f8930208828ab87d121da8',
+            '0x6a01bc748d71489372bd8fb743b23f63d99aac85',
+            '0x277947d84a2ec370a636683799351acef97fec60',
+            'Convex XPool DAI secondary',
+            'Convex-mUSD-3CRV',
+            true,
+        ),
+        new Strategy(
+            '0xd370998b2e7941151e7bb9f6e337a12f337d0682',
+            '0x03b298d27b0426758cb70c4add6523927bd7cc8e',
+            '0x9b2688da7d80641f6e46a76889ea7f8b59771724',
+            'Convex XPool USDC primary',
+            'Convex-GUSD-3CRV',
+            true,
+        ),
+        new Strategy(
+            '0x8b335d3e266389ae08a2f22b01d33813d40ed8fd',
+            '0x03b298d27b0426758cb70c4add6523927bd7cc8e',
+            '0x9b2688da7d80641f6e46a76889ea7f8b59771724',
+            'Convex XPool USDC secondary',
+            'Convex-ALUSD-3CRV',
+            true,
+        ),
+        new Strategy(
+            '0xde5a25415c637b52d59ef980b29a5fda8dc3c70b',
+            '0x9cd696a225d7a3c9ce1ed71f5bdb031234a86d79',
+            '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',
+            'Convex XPool USDT',
+            'Convex-TUSD-3CRV',
+            true,
+        ),
+    ];
+    return strats;
+}
+
+// export const getVaults = (): Vault[] => {
+//     const vaults = [
+//         // DAI
+//         new Vault(
+//             '0x6a01bc748d71489372bd8fb743b23f63d99aac85',
+//             '0x277947d84a2ec370a636683799351acef97fec60',
+//             true,
+//         ),
+//         // USDC
+//         new Vault(
+//             '0x03b298d27b0426758cb70c4add6523927bd7cc8e',
+//             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',
+//             true,
+//         ),
+//         // USDT
+//         new Vault(
+//             '0x9cd696a225d7a3c9ce1ed71f5bdb031234a86d79',
+//             '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',
+//             true,
+//         ),
+//     ];
+//     return vaults;
+// }
+
+// export const getVaultAdapters = (): Vault_Adapter[] => {
+//     const adapters = [
+//         // DAI
+//         new Vault_Adapter(
+//             '0x277947d84a2ec370a636683799351acef97fec60',
+//             true,
+//             'dai'
+//         ),
+//         // USDC
+//         new Vault_Adapter(
+//             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',
+//             true,
+//             'usdc'
+//         ),
+//         // USDT
+//         new Vault_Adapter(
+//             '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',
+//             true,
+//             'usdt'
+//         ),
+//     ];
+//     return adapters;
+// }
+
+

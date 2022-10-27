@@ -2,7 +2,6 @@ import { MasterData } from '../../generated/schema';
 import { NUM } from '../utils/constants';
 import { LAUNCH_TIMESTAMP } from '../utils/constants';
 
-
 export const initMD = (): MasterData => {
     let md = MasterData.load('0x');
     if (!md) {
@@ -19,7 +18,7 @@ export const initMD = (): MasterData => {
       md.total_bonus_out = NUM.ZERO;
       md.global_start_time = i32(0);
       md.init_unlocked_percent = NUM.ZERO;
-      md.save();
+      // md.save();
     }
     return md;
 }

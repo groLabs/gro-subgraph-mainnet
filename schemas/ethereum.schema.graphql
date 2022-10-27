@@ -79,6 +79,18 @@ type Factor @entity {
   gvt: BigDecimal!
 }
 
+# strategy
+type Strategy @entity {
+  id: ID! #strategy address
+  name: String!
+  display_name: String!
+  vault_address: Bytes!
+  vault_adapter_address: Bytes
+  vault_total_assets: BigDecimal!
+  strategy_debt: BigDecimal!
+  block: Int!
+}
+
 # pool data
 type PoolData @entity {
   # TODO: use pool id as id, and contractAddress as normal field (to be aligned with stakerData)

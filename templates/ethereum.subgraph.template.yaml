@@ -1,10 +1,13 @@
-specVersion: 0.0.4
+specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
-  # Chainlink: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
-  # event and updating DAI, USDC & USDT based on contract call latestRoundData() on each
-  # corresponding aggregator
+# *******************************************************************************************
+# ***********   C H A I N L I N K   *********************************************************
+# *******************************************************************************************
+# @dev: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
+# event to update DAI, USDC & USDT based on contract call latestRoundData() on each
+# corresponding aggregator
   - kind: ethereum/contract
     name: ChainlinkAggregator
     network: {{network}}
@@ -25,7 +28,37 @@ dataSources:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
       file: ./src/mappings/chainlink.ts
-  # deposit handlers *********************************************
+# *******************************************************************************************
+# ***********   P N L   *********************************************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: PnL
+    network: {{network}}
+    source:
+      address: "{{PnLAddress}}"
+      abi: PnL
+      startBlock: {{PnLStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Price
+        - Factors
+      abis:
+        - name: PnL
+          file: ./abis/ethereum/PnL.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogPnLExecution(uint256,int256,int256,int256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handlePnLExecution
+      file: ./src/mappings/pnl.ts
+# *******************************************************************************************
+# ***********   D E P O S I T   H A N D L E R S   *******************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: DepositHandlerV1
     network: {{network}}
@@ -113,7 +146,9 @@ dataSources:
           handler: handleDepositV3
           receipt: true
       file: ./src/mappings/depositHandler.ts
-  # withdrawal handlers *********************************
+# *******************************************************************************************
+# ***********   W I T H D R A W A L   H A N D L E R S   *************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: WithdrawHandlerV1
     network: {{network}}
@@ -202,7 +237,10 @@ dataSources:
           receipt: true
       file: ./src/mappings/withdrawHandler.ts
   - kind: ethereum/contract
-  # Only V3 of EmergencyHandler had some withdrawal events, so no need to add versions 1 & 2
+# *******************************************************************************************
+# ***********   E M E R G E N C Y   H A N D L E R S   ***************************************
+# *******************************************************************************************
+# @dev: only V3 of EmergencyHandler had some withdrawal events, so no need to add versions 1 & 2
     name: EmergencyHandlerV3
     network: {{network}}
     source:
@@ -231,6 +269,9 @@ dataSources:
           handler: handleEmergencyWithdrawalV3
           receipt: true
       file: ./src/mappings/emergencyHandler.ts
+# *******************************************************************************************
+# ***********   G V T   *********************************************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: Gvt
     network: {{network}}
@@ -260,6 +301,9 @@ dataSources:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/gvt.ts
+# *******************************************************************************************
+# ***********   P W R D   *******************************************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: Pwrd
     network: {{network}}
@@ -288,6 +332,9 @@ dataSources:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/pwrd.ts
+# *******************************************************************************************
+# ***********   G R O   *********************************************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: Gro
     network: {{network}}
@@ -317,6 +364,9 @@ dataSources:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
       file: ./src/mappings/gro.ts
+# *******************************************************************************************
+# ***********   S T A K E R   ***************************************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: LpTokenStakerV1
     network: {{network}}
@@ -397,31 +447,9 @@ dataSources:
         - event: LogGroPerBlock(uint256)
           handler: handleGroPerBlockV2
       file: ./src/mappings/staker.ts
-  - kind: ethereum/contract
-    name: PnL
-    network: {{network}}
-    source:
-      address: "{{PnLAddress}}"
-      abi: PnL
-      startBlock: {{PnLStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Price
-        - Factors
-      abis:
-        - name: PnL
-          file: ./abis/ethereum/PnL.json
-        - name: Gvt
-          file: ./abis/ethereum/Gvt.json
-        - name: Pwrd
-          file: ./abis/ethereum/Pwrd.json
-      eventHandlers:
-        - event: LogPnLExecution(uint256,int256,int256,int256,uint256,uint256,uint256,uint256,uint256,uint256)
-          handler: handlePnLExecution
-      file: ./src/mappings/pnl.ts
+# *******************************************************************************************
+# ***********   P O O L S  ******************************************************************
+# *******************************************************************************************
   # Pool 1 : UniswapV2 50% GVT - 50% GRO
   - kind: ethereum/contract
     name: UniswapV2PairGvtGro
@@ -546,7 +574,9 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/mappings/balancerGroWeth.ts
-  # ****** GROHodler ******************************
+# *******************************************************************************************
+# ***********   G R O   H O D L E R   *******************************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: GROHodlerV1
     network: {{network}}
@@ -587,6 +617,9 @@ dataSources:
         - event: LogBonusClaimed(indexed address,bool,uint256)
           handler: handleBonusClaimedV2
       file: ./src/mappings/hodler.ts
+# *******************************************************************************************
+# ***********   G R O   V E S T I N G   *****************************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: GROVestingV1
     network: {{network}}
@@ -665,7 +698,9 @@ dataSources:
         - event: LogStoppedVesting(indexed address,indexed uint256,uint256,uint256)
           handler: StoppedVesting
       file: ./src/mappings/vestingTeam.ts
-  # ****** V A U L T S ******************************
+# *******************************************************************************************
+# ***********   V A U L T S   ***************************************************************
+# *******************************************************************************************
   - kind: ethereum/contract
     name: VaultDAI
     network: {{network}}
@@ -678,14 +713,14 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Totals
+        - Strategy
       abis:
         - name: Vyper_contract
           file: ./abis/ethereum/VaultDAI.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedDAI
-      file: ./src/mappings/vaults.ts
+      file: ./src/mappings/strats.ts
   - kind: ethereum/contract
     name: VaultUSDC
     network: {{network}}
@@ -698,14 +733,14 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Totals
+        - Strategy
       abis:
         - name: Vyper_contract
           file: ./abis/ethereum/VaultUSDC.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedUSDC
-      file: ./src/mappings/vaults.ts
+      file: ./src/mappings/strats.ts
   - kind: ethereum/contract
     name: VaultUSDT
     network: {{network}}
@@ -718,14 +753,14 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Totals
+        - Strategy
       abis:
         - name: Vyper_contract
           file: ./abis/ethereum/VaultUSDT.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedUSDT
-      file: ./src/mappings/vaults.ts
+      file: ./src/mappings/strats.ts
 
 
 
