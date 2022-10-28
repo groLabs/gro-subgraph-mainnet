@@ -88,6 +88,8 @@ type Strategy @entity {
   vault_adapter_address: Bytes
   vault_total_assets: BigDecimal!
   strategy_debt: BigDecimal!
+  adapter_swaps: BigDecimal!
+  strategy_swaps: BigDecimal!
   block: Int!
 }
 

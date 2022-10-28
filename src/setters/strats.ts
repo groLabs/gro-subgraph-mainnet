@@ -26,6 +26,8 @@ const noStrategy = (): Strategy => {
     strat.vault_adapter_address = ADDR.ZERO;
     strat.vault_total_assets = NUM.ZERO;
     strat.strategy_debt = NUM.ZERO;
+    strat.adapter_swaps = NUM.ZERO;
+    strat.strategy_swaps = NUM.ZERO;
     strat.block = 0;
     return strat;
 }
@@ -43,6 +45,8 @@ export const initAllStrategies = (): void => {
             strat.vault_adapter_address = Address.fromString(str.adapter);
             strat.vault_total_assets = NUM.ZERO;
             strat.strategy_debt = NUM.ZERO;
+            strat.adapter_swaps = NUM.ZERO;
+            strat.strategy_swaps = NUM.ZERO;
             strat.block = 0;
             strat.save();
         }
@@ -63,6 +67,8 @@ export const initStrategy = (stratAddress: string): Strategy => {
                 strat.vault_adapter_address = Address.fromString(str.adapter);
                 strat.vault_total_assets = NUM.ZERO;
                 strat.strategy_debt = NUM.ZERO;
+                strat.adapter_swaps = NUM.ZERO;
+                strat.strategy_swaps = NUM.ZERO;
                 strat.block = 0;
                 return strat;
             }
@@ -73,7 +79,6 @@ export const initStrategy = (stratAddress: string): Strategy => {
 }
 
 //TODO;: merge setStrategyReported functions somehow
-
 export const setStrategyReportedDAI = (
     vaultAddress: Address,
     strategyAddress: Address,

@@ -716,11 +716,11 @@ dataSources:
         - Strategy
       abis:
         - name: Vyper_contract
-          file: ./abis/ethereum/VaultDAI.json
+          file: ./abis/ethereum/Vault.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedDAI
-      file: ./src/mappings/strats.ts
+      file: ./src/mappings/vaults.ts
   - kind: ethereum/contract
     name: VaultUSDC
     network: {{network}}
@@ -736,11 +736,11 @@ dataSources:
         - Strategy
       abis:
         - name: Vyper_contract
-          file: ./abis/ethereum/VaultUSDC.json
+          file: ./abis/ethereum/Vault.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedUSDC
-      file: ./src/mappings/strats.ts
+      file: ./src/mappings/vaults.ts
   - kind: ethereum/contract
     name: VaultUSDT
     network: {{network}}
@@ -756,12 +756,74 @@ dataSources:
         - Strategy
       abis:
         - name: Vyper_contract
-          file: ./abis/ethereum/VaultUSDT.json
+          file: ./abis/ethereum/Vault.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedUSDT
-      file: ./src/mappings/strats.ts
-
+      file: ./src/mappings/vaults.ts
+# *******************************************************************************************
+# ***********   V A U L T   A D A P T E R S   ***********************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: VaultAdapterDAI
+    network: {{network}}
+    source:
+      address: "{{VaultAdapterDAIAddress}}"
+      abi: Vyper_contract
+      startBlock: {{VaultAdapterDAIStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferDAI
+      file: ./src/mappings/vaultAdapters.ts
+  - kind: ethereum/contract
+    name: VaultAdapterUSDC
+    network: {{network}}
+    source:
+      address: "{{VaultAdapterUSDCAddress}}"
+      abi: Vyper_contract
+      startBlock: {{VaultAdapterUSDCStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferUSDC
+      file: ./src/mappings/vaultAdapters.ts
+  - kind: ethereum/contract
+    name: VaultAdapterUSDT
+    network: {{network}}
+    source:
+      address: "{{VaultAdapterUSDTAddress}}"
+      abi: Vyper_contract
+      startBlock: {{VaultAdapterUSDTStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferUSDT
+      file: ./src/mappings/vaultAdapters.ts
 
 
 
