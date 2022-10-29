@@ -1,19 +1,20 @@
 
 import { tokenToDecimal } from '../utils/tokens';
 import { Strategy } from '../../generated/schema';
-import { Vyper_contract as vaultDAI } from '../../generated/VaultDAI/Vyper_contract';
-import { Vyper_contract as vaultUSDC } from '../../generated/VaultUSDC/Vyper_contract';
-import { Vyper_contract as vaultUSDT } from '../../generated/VaultUSDT/Vyper_contract';
+import { Vyper_contract as vaultAdapter } from '../../generated/VaultAdapter/Vyper_contract';
+import { StableConvexXPool as convexStrategy } from '../../generated/ConvexStrategy/StableConvexXPool';
 import {
     NUM,
     ADDR,
     DECIMALS,
 } from '../utils/constants';
-import { getStrategies } from '../utils/strats';
+import {
+    getStrategies,
+    getAdapterAddressByStrategy,
+} from '../utils/strats';
 import {
     log,
     Address,
-    BigDecimal,
     BigInt
 } from '@graphprotocol/graph-ts';
 
@@ -24,17 +25,16 @@ const noStrategy = (): Strategy => {
     strat.display_name = 'N/A'
     strat.vault_address = ADDR.ZERO;
     strat.vault_adapter_address = ADDR.ZERO;
-    strat.vault_total_assets = NUM.ZERO;
+    strat.total_assets_adapter = NUM.ZERO;
+    strat.total_assets_strategy = NUM.ZERO;
     strat.strategy_debt = NUM.ZERO;
-    strat.adapter_swaps = NUM.ZERO;
-    strat.strategy_swaps = NUM.ZERO;
-    strat.block = 0;
+    strat.block_strategy_reported = 0;
+    strat.block_hourly_update = 0;
     return strat;
 }
 
 export const initAllStrategies = (): void => {
     const strats = getStrategies();
-
     for (let i = 0; i < strats.length; i++) {
         const str = strats[i];
         if (str.active) {
@@ -43,11 +43,11 @@ export const initAllStrategies = (): void => {
             strat.display_name = str.displayName
             strat.vault_address = Address.fromString(str.vault);
             strat.vault_adapter_address = Address.fromString(str.adapter);
-            strat.vault_total_assets = NUM.ZERO;
+            strat.total_assets_adapter = NUM.ZERO;
+            strat.total_assets_strategy = NUM.ZERO;
             strat.strategy_debt = NUM.ZERO;
-            strat.adapter_swaps = NUM.ZERO;
-            strat.strategy_swaps = NUM.ZERO;
-            strat.block = 0;
+            strat.block_strategy_reported = 0;
+            strat.block_hourly_update = 0;
             strat.save();
         }
     }
@@ -65,11 +65,11 @@ export const initStrategy = (stratAddress: string): Strategy => {
                 strat.display_name = str.displayName
                 strat.vault_address = Address.fromString(str.vault);
                 strat.vault_adapter_address = Address.fromString(str.adapter);
-                strat.vault_total_assets = NUM.ZERO;
+                strat.total_assets_adapter = NUM.ZERO;
+                strat.total_assets_strategy = NUM.ZERO;
                 strat.strategy_debt = NUM.ZERO;
-                strat.adapter_swaps = NUM.ZERO;
-                strat.strategy_swaps = NUM.ZERO;
-                strat.block = 0;
+                strat.block_strategy_reported = 0;
+                strat.block_hourly_update = 0;
                 return strat;
             }
         }
@@ -77,24 +77,41 @@ export const initStrategy = (stratAddress: string): Strategy => {
     }
     return strat;
 }
-
-//TODO;: merge setStrategyReported functions somehow
-export const setStrategyReportedDAI = (
-    vaultAddress: Address,
+export const setStrategyReported = (
     strategyAddress: Address,
     totalDebt: BigInt,
     block: BigInt,
+    coin: string,
+    isStrategyReportedEvent: boolean,
 ): void => {
-    let strat = initStrategy(strategyAddress.toHexString());
-    if (strat.vault_address != ADDR.ZERO) {
-        const contract = vaultDAI.bind(vaultAddress);
-        const totalAssets = contract.try_totalAssets();
+    const base = (coin === 'dai') ? 18 : 6;
+    const id = strategyAddress.toHexString();
+    let strat = initStrategy(id);
+    const adapterAddress = getAdapterAddressByStrategy(id);
+    if (adapterAddress != ADDR.ZERO) {
+        const contractAdapter = vaultAdapter.bind(adapterAddress);
+        const totalAssets = contractAdapter.try_totalAssets();
+        const contractStrategy = convexStrategy.bind(strategyAddress);
+        const totalEstimatedAssets = contractStrategy.try_estimatedTotalAssets();
         if (totalAssets.reverted) {
-            log.error(`strats.ts->setStrategyReportedDAI: totalAssets reverted`, []);
+            log.error(
+                `strats.ts->setStrategyReported: totalAssets reverted for adapter {}`,
+                [adapterAddress.toHexString()]
+            );
+        } else if (totalEstimatedAssets.reverted) {
+            log.error(
+                `strats.ts->setStrategyReported: totalEstimatedAssets reverted for strategy {}`,
+                [id]
+            );
         } else {
-            strat.vault_total_assets = tokenToDecimal(totalAssets.value, 18, DECIMALS);
-            strat.strategy_debt = tokenToDecimal(totalDebt, 18, DECIMALS);
-            strat.block = block.toI32();
+            strat.total_assets_adapter = tokenToDecimal(totalAssets.value, base, DECIMALS);
+            strat.total_assets_strategy = tokenToDecimal(totalEstimatedAssets.value, base, DECIMALS);
+            if (isStrategyReportedEvent) {
+                strat.strategy_debt = tokenToDecimal(totalDebt, base, DECIMALS);
+                strat.block_strategy_reported = block.toI32();
+            } else {
+                strat.block_hourly_update = block.toI32();
+            }
             strat.save();
         }
     } else {
@@ -104,52 +121,15 @@ export const setStrategyReportedDAI = (
     }
 }
 
-export const setStrategyReportedUSDC = (
-    vaultAddress: Address,
-    strategyAddress: Address,
-    totalDebt: BigInt,
-    block: BigInt,
-): void => {
-    let strat = initStrategy(strategyAddress.toHexString());
-    if (strat.vault_address != ADDR.ZERO) {
-        const contract = vaultUSDC.bind(vaultAddress);
-        const totalAssets = contract.try_totalAssets();
-        if (totalAssets.reverted) {
-            log.error(`strats.ts->setStrategyReportedUSDC: totalAssets reverted`, []);
-        } else {
-            strat.vault_total_assets = tokenToDecimal(totalAssets.value, 6, DECIMALS);
-            strat.strategy_debt = tokenToDecimal(totalDebt, 6, DECIMALS);
-            strat.block = block.toI32();
-            strat.save();
-        }
-    } else {
-        log.error(`strats.ts->setStrategyReportedUSDC: strategy {} not found`,
-            [strategyAddress.toHexString()]
-        );
-    }
-}
-
-export const setStrategyReportedUSDT = (
-    vaultAddress: Address,
-    strategyAddress: Address,
-    totalDebt: BigInt,
-    block: BigInt,
-): void => {
-    let strat = initStrategy(strategyAddress.toHexString());
-    if (strat.vault_address != ADDR.ZERO) {
-        const contract = vaultUSDT.bind(vaultAddress);
-        const totalAssets = contract.try_totalAssets();
-        if (totalAssets.reverted) {
-            log.error(`strats.ts->setStrategyReportedUSDT: totalAssets reverted`, []);
-        } else {
-            strat.vault_total_assets = tokenToDecimal(totalAssets.value, 6, DECIMALS);
-            strat.strategy_debt = tokenToDecimal(totalDebt, 6, DECIMALS);
-            strat.block = block.toI32();
-            strat.save();
-        }
-    } else {
-        log.error(`strats.ts->setStrategyReportedUSDT: strategy {} not found`,
-            [strategyAddress.toHexString()]
+export const updateAllStrategies = (block: BigInt): void => {
+    const strats = getStrategies();
+    for (let i = 0; i < strats.length; i++) {
+        setStrategyReported(
+            Address.fromString(strats[i].id),
+            BigInt.fromString('0'),
+            block,
+            strats[i].coin,
+            false,
         );
     }
 }

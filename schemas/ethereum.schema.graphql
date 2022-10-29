@@ -86,11 +86,11 @@ type Strategy @entity {
   display_name: String!
   vault_address: Bytes!
   vault_adapter_address: Bytes
-  vault_total_assets: BigDecimal!
+  total_assets_adapter: BigDecimal!
+  total_assets_strategy: BigDecimal!
   strategy_debt: BigDecimal!
-  adapter_swaps: BigDecimal!
-  strategy_swaps: BigDecimal!
-  block: Int!
+  block_strategy_reported: Int!
+  block_hourly_update: Int!
 }
 
 # pool data

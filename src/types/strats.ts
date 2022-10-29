@@ -19,6 +19,7 @@ export class Strategy {
     adapter: string
     name: string
     displayName: string
+    coin: string
     active: boolean
     constructor(
         id: string,
@@ -26,6 +27,7 @@ export class Strategy {
         adapter: string,
         name: string,
         displayName: string,
+        coin: string,
         active: boolean,
     ) {
         this.id = id
@@ -33,6 +35,7 @@ export class Strategy {
         this.adapter = adapter
         this.name = name
         this.displayName = displayName
+        this.coin = coin
         this.active = active
     }
 }

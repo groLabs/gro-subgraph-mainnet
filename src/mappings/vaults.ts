@@ -1,36 +1,36 @@
+import { setStrategyReported } from '../setters/strats';
 import { StrategyReported as StrategyReportedDAI, } from '../../generated/VaultDAI/Vyper_contract';
 import { StrategyReported as StrategyReportedUSDC, } from '../../generated/VaultUSDC/Vyper_contract';
 import { StrategyReported as StrategyReportedUSDT } from '../../generated/VaultUSDT/Vyper_contract';
-import {
-    setStrategyReportedDAI,
-    setStrategyReportedUSDC,
-    setStrategyReportedUSDT,
-} from '../setters/strats';
+
 
 
 export function handleStrategyReportedDAI(event: StrategyReportedDAI): void {
-    setStrategyReportedDAI(
-        event.address,
+    setStrategyReported(
         event.params.strategy,
         event.params.totalDebt,
         event.block.number,
+        'dai',
+        true,
     );
 }
 
 export function handleStrategyReportedUSDC(event: StrategyReportedUSDC): void {
-    setStrategyReportedUSDC(
-        event.address,
+    setStrategyReported(
         event.params.strategy,
         event.params.totalDebt,
         event.block.number,
+        'usdc',
+        true,
     );
 }
 
 export function handleStrategyReportedUSDT(event: StrategyReportedUSDT): void {
-    setStrategyReportedUSDT(
-        event.address,
+    setStrategyReported(
         event.params.strategy,
         event.params.totalDebt,
         event.block.number,
+        'usdt',
+        true,
     );
 }

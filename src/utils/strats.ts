@@ -1,9 +1,8 @@
-import {
-    // Vault,
-    Strategy as Strat,
-    // Vault_Adapter,
-} from '../types/strats'
+import { ADDR } from './constants';
 import { Strategy } from '../../generated/schema';
+import { Address } from '@graphprotocol/graph-ts';
+import { Strategy as Strat } from '../types/strats'
+
 
 export const getStrategies = (): Strat[] => {
     const strats = [
@@ -13,6 +12,7 @@ export const getStrategies = (): Strat[] => {
             '0x277947d84a2ec370a636683799351acef97fec60',   // adapter
             'Convex XPool DAI primary',
             'Convex-FRAX-3CRV',
+            'dai',
             true,
         ),
         new Strat(
@@ -21,6 +21,7 @@ export const getStrategies = (): Strat[] => {
             '0x277947d84a2ec370a636683799351acef97fec60',   // adapter
             'Convex XPool DAI secondary',
             'Convex-mUSD-3CRV',
+            'dai',
             true,
         ),
         new Strat(
@@ -29,6 +30,7 @@ export const getStrategies = (): Strat[] => {
             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',   // adapter
             'Convex XPool USDC primary',
             'Convex-GUSD-3CRV',
+            'usdc',
             true,
         ),
         new Strat(
@@ -37,6 +39,7 @@ export const getStrategies = (): Strat[] => {
             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',   // adapter
             'Convex XPool USDC secondary',
             'Convex-ALUSD-3CRV',
+            'usdc',
             true,
         ),
         new Strat(
@@ -45,6 +48,7 @@ export const getStrategies = (): Strat[] => {
             '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',   // adapter
             'Convex XPool USDT',
             'Convex-TUSD-3CRV',
+            'usdt',
             true,
         ),
     ];
@@ -60,6 +64,36 @@ export const getStrategiesByAdapter = (adapterAddress: string): Strategy[] => {
             if (str)
                 result.push(str);
         }
+    }
+    return result;
+}
+
+export const getAdapterAddressByStrategy = (strategy: string): Address => {
+    const strats = getStrategies();
+    for (let i = 0; i < strats.length; i++) {
+        if (strats[i].id == strategy) {
+            return Address.fromString(strats[i].adapter);
+        }
+    }
+    return ADDR.ZERO;
+}
+
+export const getAdaptersByCoin = (coin: string): string[] => {
+    let result: string[] = [];
+    const strats = getStrategies();
+    for (let i = 0; i < strats.length; i++) {
+        if (strats[i].coin === coin)
+            result.push(strats[i].adapter);
+    }
+    return result;
+}
+
+export const getStratsByCoin = (coin: string): string[] => {
+    let result: string[] = [];
+    const strats = getStrategies();
+    for (let i = 0; i < strats.length; i++) {
+        if (strats[i].coin === coin)
+            result.push(strats[i].id);
     }
     return result;
 }

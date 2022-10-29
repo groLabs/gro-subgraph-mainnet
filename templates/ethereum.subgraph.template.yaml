@@ -5,9 +5,12 @@ dataSources:
 # *******************************************************************************************
 # ***********   C H A I N L I N K   *********************************************************
 # *******************************************************************************************
-# @dev: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
+# @dev-1: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
 # event to update DAI, USDC & USDT based on contract call latestRoundData() on each
 # corresponding aggregator
+# @dev-2: calcs for vault & strategy data rely on stablecoin events, so handling them would
+# kill the overall performance. Instead, data from vaults & adapters is retrieved every 1h
+# directly through contract calls
   - kind: ethereum/contract
     name: ChainlinkAggregator
     network: {{network}}
@@ -24,6 +27,10 @@ dataSources:
       abis:
         - name: AccessControlledOffchainAggregator
           file: ./abis/ethereum/ChainlinkAggregatorProxy.json
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultAdapter.json
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
@@ -717,6 +724,8 @@ dataSources:
       abis:
         - name: Vyper_contract
           file: ./abis/ethereum/Vault.json
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedDAI
@@ -737,6 +746,8 @@ dataSources:
       abis:
         - name: Vyper_contract
           file: ./abis/ethereum/Vault.json
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedUSDC
@@ -757,6 +768,8 @@ dataSources:
       abis:
         - name: Vyper_contract
           file: ./abis/ethereum/Vault.json
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
       eventHandlers:
         - event: StrategyReported(indexed address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyReportedUSDT
@@ -764,13 +777,14 @@ dataSources:
 # *******************************************************************************************
 # ***********   V A U L T   A D A P T E R S   ***********************************************
 # *******************************************************************************************
+# @dev: nothing to handle. All data will be retrieved by contract calls  
   - kind: ethereum/contract
-    name: VaultAdapterDAI
+    name: VaultAdapter
     network: {{network}}
     source:
-      address: "{{VaultAdapterDAIAddress}}"
+      address: "{{VaultAdapterAddress}}"
       abi: Vyper_contract
-      startBlock: {{VaultAdapterDAIStartBlock}}
+      startBlock: {{VaultAdapterStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -779,18 +793,22 @@ dataSources:
         - Strategy
       abis:
         - name: Vyper_contract
-          file: ./abis/ethereum/Vault.json
+          file: ./abis/ethereum/VaultAdapter.json
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransferDAI
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnership
       file: ./src/mappings/vaultAdapters.ts
+# *******************************************************************************************
+# ***********   C O N V E X   S T R A T E G I E S   *****************************************
+# *******************************************************************************************
+# @dev: nothing to handle. All data will be retrieved by contract calls  
   - kind: ethereum/contract
-    name: VaultAdapterUSDC
+    name: ConvexStrategy
     network: {{network}}
     source:
-      address: "{{VaultAdapterUSDCAddress}}"
-      abi: Vyper_contract
-      startBlock: {{VaultAdapterUSDCStartBlock}}
+      address: "{{ConvexStrategyAddress}}"
+      abi: StableConvexXPool
+      startBlock: {{ConvexStrategyStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -798,114 +816,161 @@ dataSources:
       entities:
         - Strategy
       abis:
-        - name: Vyper_contract
-          file: ./abis/ethereum/Vault.json
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransferUSDC
-      file: ./src/mappings/vaultAdapters.ts
-  - kind: ethereum/contract
-    name: VaultAdapterUSDT
-    network: {{network}}
-    source:
-      address: "{{VaultAdapterUSDTAddress}}"
-      abi: Vyper_contract
-      startBlock: {{VaultAdapterUSDTStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Strategy
-      abis:
-        - name: Vyper_contract
-          file: ./abis/ethereum/Vault.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransferUSDT
-      file: ./src/mappings/vaultAdapters.ts
+        - event: EmergencyExitEnabled()
+          handler: handleEmergencyExitEnabled
+      file: ./src/mappings/convexStrategies.ts
+# *******************************************************************************************
+# ***********   S T A B L E C O I N S   *****************************************************
+# *******************************************************************************************
+  # - kind: ethereum/contract
+  #   name: Dai
+  #   network: {{network}}
+  #   source:
+  #     address: '{{DaiAddress}}'
+  #     abi: Dai
+  #     startBlock: {{DaiStartBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.7
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - User
+  #       - CoreTx
+  #     abis:
+  #       - name: Dai
+  #         file: ./abis/ethereum/Dai.json
+  #       - name: ERC20
+  #         file: ./abis/ethereum/ERC20.json
+  #     eventHandlers:
+  #       # - event: Approval(indexed address,indexed address,uint256)
+  #       #   handler: handleApproval
+  #       - event: Transfer(indexed address,indexed address,uint256)
+  #         handler: handleTransferUSDT
+  #     file: ./src/mappings/Dai.ts
+  # - kind: ethereum/contract
+  #   name: Usdc
+  #   network: {{network}}
+  #   source:
+  #     address: '{{UsdcAddress}}'
+  #     abi: ERC20
+  #     startBlock: {{UsdcStartBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.7
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - User
+  #       - CoreTx
+  #     abis:
+  #       - name: Usdc
+  #         file: ./abis/ethereum/Usdc.json
+  #       - name: ERC20
+  #         file: ./abis/ethereum/ERC20.json
+  #     eventHandlers:
+  #       # - event: Approval(indexed address,indexed address,uint256)
+  #       #   handler: handleApproval
+  #       - event: Transfer(indexed address,indexed address,uint256)
+  #         handler: handleTransferUSDT
+  #     file: ./src/mappings/Usdc.ts
+  # - kind: ethereum/contract
+  #   name: Usdt
+  #   network: {{network}}
+  #   source:
+  #     address: '{{UsdtAddress}}'
+  #     abi: ERC20
+  #     startBlock: {{UsdtStartBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.7
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - User
+  #       - CoreTx
+  #     abis:
+  #       - name: Usdt
+  #         file: ./abis/ethereum/Usdt.json
+  #       - name: ERC20
+  #         file: ./abis/ethereum/ERC20.json
+  #     eventHandlers:
+  #       # - event: Approval(indexed address,indexed address,uint256)
+  #       #   handler: handleApproval
+  #       - event: Transfer(indexed address,indexed address,uint256)
+  #         handler: handleTransferUSDT
+  #     file: ./src/mappings/Usdt.ts
 
 
 
 
+# *******************************************************************************************
+# ***********   V A U L T   A D A P T E R S   ***********************************************
+# *******************************************************************************************
+  # - kind: ethereum/contract
+  #   name: VaultAdapterDAI
+  #   network: {{network}}
+  #   source:
+  #     address: "{{VaultAdapterDAIAddress}}"
+  #     abi: Vyper_contract
+  #     startBlock: {{VaultAdapterDAIStartBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.7
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - Strategy
+  #     abis:
+  #       - name: Vyper_contract
+  #         file: ./abis/ethereum/Vault.json
+  #     eventHandlers:
+  #       - event: Transfer(indexed address,indexed address,uint256)
+  #         handler: handleTransferDAI
+  #     file: ./src/mappings/vaultAdapters.ts
+  # - kind: ethereum/contract
+  #   name: VaultAdapterUSDC
+  #   network: {{network}}
+  #   source:
+  #     address: "{{VaultAdapterUSDCAddress}}"
+  #     abi: Vyper_contract
+  #     startBlock: {{VaultAdapterUSDCStartBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.7
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - Strategy
+  #     abis:
+  #       - name: Vyper_contract
+  #         file: ./abis/ethereum/Vault.json
+  #     eventHandlers:
+  #       - event: Transfer(indexed address,indexed address,uint256)
+  #         handler: handleTransferUSDC
+  #     file: ./src/mappings/vaultAdapters.ts
+  # - kind: ethereum/contract
+  #   name: VaultAdapterUSDT
+  #   network: {{network}}
+  #   source:
+  #     address: "{{VaultAdapterUSDTAddress}}"
+  #     abi: Vyper_contract
+  #     startBlock: {{VaultAdapterUSDTStartBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.7
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - Strategy
+  #     abis:
+  #       - name: Vyper_contract
+  #         file: ./abis/ethereum/Vault.json
+  #     eventHandlers:
+  #       - event: Transfer(indexed address,indexed address,uint256)
+  #         handler: handleTransferUSDT
+  #     file: ./src/mappings/vaultAdapters.ts
 
-
-
-
-
-
-
-
-
-
-
-
-# stablecoins *********************************
-# - kind: ethereum/contract
-#   name: Dai
-#   network: {{network}}
-#   source:
-#     address: '{{DaiAddress}}'
-#     abi: Dai
-#     startBlock: {{DaiStartBlock}}
-#   mapping:
-#     kind: ethereum/events
-#     apiVersion: 0.0.7
-#     language: wasm/assemblyscript
-#     entities:
-#       - User
-#       - CoreTx
-#     abis:
-#       - name: Dai
-#         file: ./abis/ethereum/Dai.json
-#     eventHandlers:
-#       - event: Approval(indexed address,indexed address,uint256)
-#         handler: handleApproval
-#     file: ./src/mappings/Dai.ts
-# - kind: ethereum/contract
-#   name: Usdc
-#   network: {{network}}
-#   source:
-#     address: '{{UsdcAddress}}'
-#     abi: ERC20
-#     startBlock: {{UsdcStartBlock}}
-#   mapping:
-#     kind: ethereum/events
-#     apiVersion: 0.0.7
-#     language: wasm/assemblyscript
-#     entities:
-#       - User
-#       - CoreTx
-#     abis:
-#       - name: Usdc
-#         file: ./abis/ethereum/Usdc.json
-#       - name: ERC20
-#         file: ./abis/ethereum/ERC20.json
-#     eventHandlers:
-#       - event: Approval(indexed address,indexed address,uint256)
-#         handler: handleApproval
-#     file: ./src/mappings/Usdc.ts
-# - kind: ethereum/contract
-#   name: Usdt
-#   network: {{network}}
-#   source:
-#     address: '{{UsdtAddress}}'
-#     abi: ERC20
-#     startBlock: {{UsdtStartBlock}}
-#   mapping:
-#     kind: ethereum/events
-#     apiVersion: 0.0.7
-#     language: wasm/assemblyscript
-#     entities:
-#       - User
-#       - CoreTx
-#     abis:
-#       - name: Usdt
-#         file: ./abis/ethereum/Usdt.json
-#       - name: ERC20
-#         file: ./abis/ethereum/ERC20.json
-#     eventHandlers:
-#       - event: Approval(indexed address,indexed address,uint256)
-#         handler: handleApproval
-#     file: ./src/mappings/Usdt.ts
-
+    # "VaultAdapterDAIAddress": "0x277947d84a2ec370a636683799351acef97fec60",
+    # "VaultAdapterDAIStartBlock": 12831532,
+    # "VaultAdapterUSDCAddress": "0x9b2688da7d80641f6e46a76889ea7f8b59771724",
+    # "VaultAdapterUSDCStartBlock": 12831541,
+    # "VaultAdapterUSDTAddress": "0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa",
+    # "VaultAdapterUSDTStartBlock": 12831547
