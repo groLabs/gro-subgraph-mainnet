@@ -47,11 +47,11 @@
     "EmergencyHandlerV3Address": "0xc535CFE245D8F969E647B3dD8Be1255EC076EE76",
     "EmergencyHandlerV3StartBlock": 12831570,
     "DaiAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-    "DaiStartBlock": 12522788,
+    "DaiStartBlock": 15750000,
     "UsdcAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-    "UsdcStartBlock": 12522788,
+    "UsdcStartBlock": 15750000,
     "UsdtAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-    "UsdtStartBlock": 12522788,
+    "UsdtStartBlock": 15750000,
     "ChainlinkAggregatorAddress": "0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82",
     "ChainlinkAggregatorStartBlock": 13264500,
     "VaultDAIAddress": "0x6a01bC748d71489372BD8fB743b23F63d99aac85",
@@ -59,6 +59,10 @@
     "VaultUSDCAddress": "0x03b298D27b0426758cb70c4ADd6523927bD7cC8e",
     "VaultUSDCStartBlock": 12831537,
     "VaultUSDTAddress": "0x9CD696A225d7a3c9Ce1ed71f5bDB031234a86D79",
-    "VaultUSDTStartBlock": 12831543
+    "VaultUSDTStartBlock": 12831543,
+    "VaultAdapterAddress": "0x277947d84a2ec370a636683799351acef97fec60",
+    "VaultAdapterStartBlock": 15750000,
+    "ConvexStrategyAddress": "0xdea436e15b40e7b707a7002a749f416dfe5b383f",
+    "ConvexStrategyStartBlock": 15750000
   }
   
