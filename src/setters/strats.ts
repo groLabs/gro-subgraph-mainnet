@@ -21,8 +21,11 @@ import {
 
 const noStrategy = (): Strategy => {
     let strat = new Strategy('0x');
-    strat.name = 'N/A';
-    strat.display_name = 'N/A'
+    strat.coin = 'unknown';
+    strat.strat_name = 'unknown';
+    strat.strat_display_name = 'unknown';
+    strat.vault_name = 'unknown';
+    strat.vault_display_name = 'unknown';
     strat.vault_address = ADDR.ZERO;
     strat.vault_adapter_address = ADDR.ZERO;
     strat.total_assets_adapter = NUM.ZERO;
@@ -39,8 +42,11 @@ export const initAllStrategies = (): void => {
         const str = strats[i];
         if (str.active) {
             let strat = new Strategy(str.id);
-            strat.name = str.name;
-            strat.display_name = str.displayName
+            strat.coin = str.coin;
+            strat.strat_name = str.strat_name;
+            strat.strat_display_name = str.strat_display_name;
+            strat.vault_name = str.vault_name;
+            strat.vault_display_name = str.vault_display_name;
             strat.vault_address = Address.fromString(str.vault);
             strat.vault_adapter_address = Address.fromString(str.adapter);
             strat.total_assets_adapter = NUM.ZERO;
@@ -61,8 +67,11 @@ export const initStrategy = (stratAddress: string): Strategy => {
             const str = strats[i];
             if (str.active && str.id == stratAddress) {
                 strat = new Strategy(str.id);
-                strat.name = str.name;
-                strat.display_name = str.displayName
+                strat.coin = str.coin;
+                strat.strat_name = str.strat_name;
+                strat.strat_display_name = str.strat_display_name;
+                strat.vault_name = str.vault_name;
+                strat.vault_display_name = str.vault_display_name;
                 strat.vault_address = Address.fromString(str.vault);
                 strat.vault_adapter_address = Address.fromString(str.adapter);
                 strat.total_assets_adapter = NUM.ZERO;

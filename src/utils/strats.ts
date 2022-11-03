@@ -12,6 +12,8 @@ export const getStrategies = (): Strat[] => {
             '0x277947d84a2ec370a636683799351acef97fec60',   // adapter
             'Convex XPool DAI primary',
             'Convex-FRAX-3CRV',
+            'DAI',
+            'DAI yVault',
             'dai',
             true,
         ),
@@ -21,6 +23,8 @@ export const getStrategies = (): Strat[] => {
             '0x277947d84a2ec370a636683799351acef97fec60',   // adapter
             'Convex XPool DAI secondary',
             'Convex-mUSD-3CRV',
+            'DAI',
+            'DAI yVault',
             'dai',
             true,
         ),
@@ -30,6 +34,8 @@ export const getStrategies = (): Strat[] => {
             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',   // adapter
             'Convex XPool USDC primary',
             'Convex-GUSD-3CRV',
+            'USDC',
+            'USDC yVault',
             'usdc',
             true,
         ),
@@ -39,6 +45,8 @@ export const getStrategies = (): Strat[] => {
             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',   // adapter
             'Convex XPool USDC secondary',
             'Convex-ALUSD-3CRV',
+            'USDC',
+            'USDC yVault',
             'usdc',
             true,
         ),
@@ -48,6 +56,8 @@ export const getStrategies = (): Strat[] => {
             '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',   // adapter
             'Convex XPool USDT',
             'Convex-TUSD-3CRV',
+            'USDT',
+            'USDT yVault',
             'usdt',
             true,
         ),

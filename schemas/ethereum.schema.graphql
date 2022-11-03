@@ -82,8 +82,11 @@ type Factor @entity {
 # strategy
 type Strategy @entity {
   id: ID! #strategy address
-  name: String!
-  display_name: String!
+  coin: String!
+  strat_name: String!
+  strat_display_name: String!
+  vault_name: String!
+  vault_display_name: String!
   vault_address: Bytes!
   vault_adapter_address: Bytes
   total_assets_adapter: BigDecimal!
