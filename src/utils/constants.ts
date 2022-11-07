@@ -8,11 +8,11 @@ import {
     Addr,
 } from '../types/constants';
 
-// BLOCKS
+// Blocks
 export const GENESIS_POOL_GRO_WETH = 13355180;  // Oct-04-2021 10:03:33 PM
 
 // Timestamps
-export const LAUNCH_TIMESTAMP = 1622204347; // Friday 28 May 2021 12:19:07
+export const TS_LAUNCH = 1622204347;    // Friday 28 May 2021 12:19:07
 
 // Numbers
 export const DECIMALS = 7;

@@ -1,8 +1,8 @@
-
 import { tokenToDecimal } from '../utils/tokens';
-import { Strategy } from '../../generated/schema';
-import { Vyper_contract as vaultAdapter } from '../../generated/VaultAdapter/Vyper_contract';
-import { StableConvexXPool as convexStrategy } from '../../generated/ConvexStrategy/StableConvexXPool';
+import {
+    Harvest,
+    Strategy
+} from '../../generated/schema';
 import {
     NUM,
     ADDR,
@@ -10,12 +10,15 @@ import {
 } from '../utils/constants';
 import {
     getStrategies,
+    getTotalAssetsVault,
+    getTotalAssetsStrat,
     getAdapterAddressByStrategy,
 } from '../utils/strats';
 import {
     log,
     Address,
-    BigInt
+    BigInt,
+    BigDecimal
 } from '@graphprotocol/graph-ts';
 
 
@@ -86,6 +89,8 @@ export const initStrategy = (stratAddress: string): Strategy => {
     }
     return strat;
 }
+
+// vault's strategy reported events
 export const setStrategyReported = (
     strategyAddress: Address,
     totalDebt: BigInt,
@@ -98,10 +103,8 @@ export const setStrategyReported = (
     let strat = initStrategy(id);
     const adapterAddress = getAdapterAddressByStrategy(id);
     if (adapterAddress != ADDR.ZERO) {
-        const contractAdapter = vaultAdapter.bind(adapterAddress);
-        const totalAssets = contractAdapter.try_totalAssets();
-        const contractStrategy = convexStrategy.bind(strategyAddress);
-        const totalEstimatedAssets = contractStrategy.try_estimatedTotalAssets();
+        const totalAssets = getTotalAssetsVault(adapterAddress);
+        const totalEstimatedAssets = getTotalAssetsStrat(strategyAddress);
         if (totalAssets.reverted) {
             log.error(
                 `strats.ts->setStrategyReported: totalAssets reverted for adapter {}`,
@@ -141,4 +144,23 @@ export const updateAllStrategies = (block: BigInt): void => {
             false,
         );
     }
+}
+
+// strategies' harvest events
+export const setStrategyHarvest = (
+    id: string,
+    strategyAddress: string,
+    gain: BigDecimal,
+    loss: BigDecimal,
+    timestamp: BigInt,
+): void => {
+    let harvest = Harvest.load(id);
+    if (!harvest) {
+        harvest = new Harvest(id);
+        harvest.strategyAddress = strategyAddress;
+        harvest.gain = gain;
+        harvest.loss =loss;
+        harvest.timestamp = timestamp.toI32();
+    }
+    harvest.save();
 }

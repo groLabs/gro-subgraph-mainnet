@@ -1,6 +1,6 @@
 import { DECIMALS } from '../utils/constants';
-import { setHarvest } from '../setters/strats';
 import { tokenToDecimal } from '../utils/tokens';
+import { setStrategyHarvest } from '../setters/strats';
 import { Harvested as HarvestedPrimaryDAI } from '../../generated/PrimaryStratDAI/StableConvexXPool';
 import { Harvested as HarvestedSecondaryDAI } from '../../generated/SecondaryStratDAI/StableConvexXPool';
 import { Harvested as HarvestedPrimaryUSDC } from '../../generated/PrimaryStratUSDC/StableConvexXPool';
@@ -9,47 +9,52 @@ import { Harvested as HarvestedPrimaryUSDT } from '../../generated/PrimaryStratU
 
 
 export function handleHarvestedPrimaryDAI(event: HarvestedPrimaryDAI): void {
-    setHarvest(
-        event.address,
+    setStrategyHarvest(
+        event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+        event.address.toHexString(),
         tokenToDecimal(event.params.profit, 18, DECIMALS),
         tokenToDecimal(event.params.loss, 18, DECIMALS),
-        event.block.timestamp.toI32(),
+        event.block.timestamp,
     );
 }
 
 export function handleHarvestedSecondaryDAI(event: HarvestedSecondaryDAI): void {
-    setHarvest(
-        event.address,
+    setStrategyHarvest(
+        event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+        event.address.toHexString(),
         tokenToDecimal(event.params.profit, 18, DECIMALS),
         tokenToDecimal(event.params.loss, 18, DECIMALS),
-        event.block.timestamp.toI32(),
+        event.block.timestamp,
     );
 }
 
 export function handleHarvestedPrimaryUSDC(event: HarvestedPrimaryUSDC): void {
-    setHarvest(
-        event.address,
+    setStrategyHarvest(
+        event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+        event.address.toHexString(),
         tokenToDecimal(event.params.profit, 6, DECIMALS),
         tokenToDecimal(event.params.loss, 6, DECIMALS),
-        event.block.timestamp.toI32(),
+        event.block.timestamp,
     );
 }
 
 export function handleHarvestedSecondaryUSDC(event: HarvestedSecondaryUSDC): void {
-    setHarvest(
-        event.address,
+    setStrategyHarvest(
+        event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+        event.address.toHexString(),
         tokenToDecimal(event.params.profit, 6, DECIMALS),
         tokenToDecimal(event.params.loss, 6, DECIMALS),
-        event.block.timestamp.toI32(),
+        event.block.timestamp,
     );
 }
 
 export function handleHarvestedPrimaryUSDT(event: HarvestedPrimaryUSDT): void {
-    setHarvest(
-        event.address,
+    setStrategyHarvest(
+        event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+        event.address.toHexString(),
         tokenToDecimal(event.params.profit, 6, DECIMALS),
         tokenToDecimal(event.params.loss, 6, DECIMALS),
-        event.block.timestamp.toI32(),
+        event.block.timestamp,
     );
 }
 

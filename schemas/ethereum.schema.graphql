@@ -94,6 +94,15 @@ type Strategy @entity {
   strategy_debt: BigDecimal!
   block_strategy_reported: Int!
   block_hourly_update: Int!
+  harvests: [Harvest!] @derivedFrom(field: "strategyAddress")
+}
+
+type Harvest @entity {
+  id: ID! # hash-logIndex
+  strategyAddress: Strategy!
+  gain: BigDecimal!
+  loss: BigDecimal!
+  timestamp: Int!
 }
 
 # pool data

@@ -1,7 +1,13 @@
 import { ADDR } from './constants';
 import { Strategy } from '../../generated/schema';
-import { Address } from '@graphprotocol/graph-ts';
-import { Strategy as Strat } from '../types/strats'
+import { Strategy as Strat } from '../types/strats';
+import { Vyper_contract as vaultAdapter } from '../../generated/VaultAdapter/Vyper_contract';
+import { StableConvexXPool as convexStrategy } from '../../generated/ConvexStrategy/StableConvexXPool';
+import {
+    BigInt,
+    Address,
+    ethereum,
+} from '@graphprotocol/graph-ts';
 
 
 export const getStrategies = (): Strat[] => {
@@ -108,52 +114,18 @@ export const getStratsByCoin = (coin: string): string[] => {
     return result;
 }
 
-// export const getVaults = (): Vault[] => {
-//     const vaults = [
-//         // DAI
-//         new Vault(
-//             '0x6a01bc748d71489372bd8fb743b23f63d99aac85',
-//             '0x277947d84a2ec370a636683799351acef97fec60',
-//             true,
-//         ),
-//         // USDC
-//         new Vault(
-//             '0x03b298d27b0426758cb70c4add6523927bd7cc8e',
-//             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',
-//             true,
-//         ),
-//         // USDT
-//         new Vault(
-//             '0x9cd696a225d7a3c9ce1ed71f5bdb031234a86d79',
-//             '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',
-//             true,
-//         ),
-//     ];
-//     return vaults;
-// }
+export const getTotalAssetsVault = (
+    adapterAddress: Address,
+): ethereum.CallResult<BigInt> => {
+    const contractAdapter = vaultAdapter.bind(adapterAddress);
+    const totalAssets = contractAdapter.try_totalAssets();
+    return totalAssets;
+}
 
-// export const getVaultAdapters = (): Vault_Adapter[] => {
-//     const adapters = [
-//         // DAI
-//         new Vault_Adapter(
-//             '0x277947d84a2ec370a636683799351acef97fec60',
-//             true,
-//             'dai'
-//         ),
-//         // USDC
-//         new Vault_Adapter(
-//             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',
-//             true,
-//             'usdc'
-//         ),
-//         // USDT
-//         new Vault_Adapter(
-//             '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',
-//             true,
-//             'usdt'
-//         ),
-//     ];
-//     return adapters;
-// }
-
-
+export const getTotalAssetsStrat = (
+    strategyAddress: Address
+): ethereum.CallResult<BigInt> => {
+    const contractStrategy = convexStrategy.bind(strategyAddress);
+    const totalEstimatedAssets = contractStrategy.try_estimatedTotalAssets();
+    return totalEstimatedAssets;
+}
