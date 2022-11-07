@@ -801,7 +801,7 @@ dataSources:
 # *******************************************************************************************
 # ***********   C O N V E X   S T R A T E G I E S   *****************************************
 # *******************************************************************************************
-# @dev: nothing to handle. All data will be retrieved by contract calls  
+# @dev: generic strategy to perform contract calls  
   - kind: ethereum/contract
     name: ConvexStrategy
     network: {{network}}
@@ -821,6 +821,106 @@ dataSources:
       eventHandlers:
         - event: EmergencyExitEnabled()
           handler: handleEmergencyExitEnabled
+      file: ./src/mappings/convexStrategies.ts
+  - kind: ethereum/contract
+    name: PrimaryStratDAI
+    network: {{network}}
+    source:
+      address: "{{PrimaryStratDAIAddress}}"
+      abi: StableConvexXPool
+      startBlock: {{PrimaryStratDAIStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvestedPrimaryDAI
+      file: ./src/mappings/convexStrategies.ts
+  - kind: ethereum/contract
+    name: SecondaryStratDAI
+    network: {{network}}
+    source:
+      address: "{{SecondaryStratDAIAddress}}"
+      abi: StableConvexXPool
+      startBlock: {{SecondaryStratDAIStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvestedSecondaryDAI
+      file: ./src/mappings/convexStrategies.ts
+  - kind: ethereum/contract
+    name: PrimaryStratUSDC
+    network: {{network}}
+    source:
+      address: "{{PrimaryStratUSDCAddress}}"
+      abi: StableConvexXPool
+      startBlock: {{PrimaryStratUSDCStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvestedPrimaryUSDC
+      file: ./src/mappings/convexStrategies.ts
+  - kind: ethereum/contract
+    name: SecondaryStratUSDC
+    network: {{network}}
+    source:
+      address: "{{SecondaryStratUSDCAddress}}"
+      abi: StableConvexXPool
+      startBlock: {{SecondaryStratUSDCStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvestedSecondaryUSDC
+      file: ./src/mappings/convexStrategies.ts
+  - kind: ethereum/contract
+    name: PrimaryStratUSDT
+    network: {{network}}
+    source:
+      address: "{{PrimaryStratUSDTAddress}}"
+      abi: StableConvexXPool
+      startBlock: {{PrimaryStratUSDTStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: StableConvexXPool
+          file: ./abis/ethereum/ConvexStrategy.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvestedPrimaryUSDT
       file: ./src/mappings/convexStrategies.ts
 # *******************************************************************************************
 # ***********   S T A B L E C O I N S   *****************************************************

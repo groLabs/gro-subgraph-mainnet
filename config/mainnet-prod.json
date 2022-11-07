@@ -63,6 +63,16 @@
     "VaultAdapterAddress": "0x277947d84a2ec370a636683799351acef97fec60",
     "VaultAdapterStartBlock": 15750000,
     "ConvexStrategyAddress": "0xdea436e15b40e7b707a7002a749f416dfe5b383f",
-    "ConvexStrategyStartBlock": 15750000
+    "ConvexStrategyStartBlock": 15750000,
+    "PrimaryStratDAIAddress": "0xdea436e15b40e7b707a7002a749f416dfe5b383f",
+    "PrimaryStratDAIStartBlock": 15700000,
+    "SecondaryStratDAIAddress": "0x4d5b5376cbcc001bb4f8930208828ab87d121da8",
+    "SecondaryStratDAIStartBlock": 15700000,
+    "PrimaryStratUSDCAddress": "0x8b335d3e266389ae08a2f22b01d33813d40ed8fd",
+    "PrimaryStratUSDCStartBlock": 15700000,
+    "SecondaryStratUSDCAddress": "0xd370998b2e7941151e7bb9f6e337a12f337d0682",
+    "SecondaryStratUSDCStartBlock": 15700000,
+    "PrimaryStratUSDTAddress": "0xde5a25415c637b52d59ef980b29a5fda8dc3c70b",
+    "PrimaryStratUSDTStartBlock": 15700000
   }
   
