@@ -28,29 +28,29 @@ export const getStrategies = (): Strat[] => {
             '0x6a01bc748d71489372bd8fb743b23f63d99aac85',   // vault
             '0x277947d84a2ec370a636683799351acef97fec60',   // adapter
             'Convex XPool DAI secondary',
-            'Convex-mUSD-3CRV',
+            'Convex-TUSD-3CRV',
             'DAI',
             'DAI yVault',
             'dai',
             true,
         ),
         new Strat(
-            '0xd370998b2e7941151e7bb9f6e337a12f337d0682',   // strategy
+            '0x8b335d3e266389ae08a2f22b01d33813d40ed8fd',   // strategy
             '0x03b298d27b0426758cb70c4add6523927bd7cc8e',   // vault
             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',   // adapter
             'Convex XPool USDC primary',
-            'Convex-GUSD-3CRV',
+            'Convex-ALUSD-3CRV',
             'USDC',
             'USDC yVault',
             'usdc',
             true,
         ),
         new Strat(
-            '0x8b335d3e266389ae08a2f22b01d33813d40ed8fd',   // strategy
+            '0xd370998b2e7941151e7bb9f6e337a12f337d0682',   // strategy
             '0x03b298d27b0426758cb70c4add6523927bd7cc8e',   // vault
             '0x9b2688da7d80641f6e46a76889ea7f8b59771724',   // adapter
             'Convex XPool USDC secondary',
-            'Convex-ALUSD-3CRV',
+            'Convex-GUSD-3CRV',
             'USDC',
             'USDC yVault',
             'usdc',
