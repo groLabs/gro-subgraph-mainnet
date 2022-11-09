@@ -26,6 +26,7 @@ const noStrategy = (): Strategy => {
     let strat = new Strategy('0x');
     strat.coin = 'unknown';
     strat.metacoin = 'unknown';
+    strat.protocol = 'unknown';
     strat.strat_name = 'unknown';
     strat.strat_display_name = 'unknown';
     strat.vault_name = 'unknown';
@@ -48,6 +49,7 @@ export const initAllStrategies = (): void => {
             let strat = new Strategy(str.id);
             strat.coin = str.coin;
             strat.metacoin = str.metacoin;
+            strat.protocol = str.protocol;
             strat.strat_name = str.strat_name;
             strat.strat_display_name = str.strat_display_name;
             strat.vault_name = str.vault_name;
@@ -74,6 +76,7 @@ export const initStrategy = (stratAddress: string): Strategy => {
                 strat = new Strategy(str.id);
                 strat.coin = str.coin;
                 strat.metacoin = str.metacoin;
+                strat.protocol = str.protocol;
                 strat.strat_name = str.strat_name;
                 strat.strat_display_name = str.strat_display_name;
                 strat.vault_name = str.vault_name;

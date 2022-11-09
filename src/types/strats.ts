@@ -22,6 +22,7 @@ export class Strategy {
     vault_name: string
     vault_display_name: string
     coin: string
+    protocol: string
     metacoin: string
     active: boolean
     constructor(
@@ -34,6 +35,7 @@ export class Strategy {
         vault_display_name: string,
         coin: string,
         metacoin: string,
+        protocol: string,
         active: boolean,
     ) {
         this.id = id
@@ -45,6 +47,7 @@ export class Strategy {
         this.vault_display_name = vault_display_name
         this.coin = coin
         this.metacoin = metacoin
+        this.protocol = protocol
         this.active = active
     }
 }

@@ -84,6 +84,7 @@ type Strategy @entity {
   id: ID! #strategy address
   coin: String!
   metacoin: String!
+  protocol: String!
   strat_name: String!
   strat_display_name: String!
   vault_name: String!
