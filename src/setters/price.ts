@@ -26,7 +26,6 @@ import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapo
 import { AccessControlledOffchainAggregator as ChainlinkAggregator } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 
 
-// export function initPrice(): Price {
 export const initPrice = (): Price => {
     let price = Price.load('0x');
     if (!price) {

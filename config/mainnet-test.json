@@ -54,6 +54,8 @@
     "UsdtStartBlock": 15750000,
     "ChainlinkAggregatorAddress": "0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82",
     "ChainlinkAggregatorStartBlock": 15750000,
+    "VaultAddress": "0x6a01bC748d71489372BD8fB743b23F63d99aac85",
+    "VaultStartBlock": 15750000,
     "VaultDAIAddress": "0x6a01bC748d71489372BD8fB743b23F63d99aac85",
     "VaultDAIStartBlock": 15750000,
     "VaultUSDCAddress": "0x03b298D27b0426758cb70c4ADd6523927bD7cC8e",

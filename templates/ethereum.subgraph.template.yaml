@@ -28,6 +28,8 @@ dataSources:
         - name: AccessControlledOffchainAggregator
           file: ./abis/ethereum/ChainlinkAggregatorProxy.json
         - name: Vyper_contract
+          file: ./abis/ethereum/Vault.json
+        - name: Vyper_contract
           file: ./abis/ethereum/VaultAdapter.json
         - name: StableConvexXPool
           file: ./abis/ethereum/ConvexStrategy.json
@@ -775,6 +777,30 @@ dataSources:
           handler: handleStrategyReportedUSDT
       file: ./src/mappings/vaults.ts
 # *******************************************************************************************
+# ***********   V A U L T   *****************************************************************
+# *******************************************************************************************
+# @dev: nothing to handle. All data will be retrieved by contract calls  
+  - kind: ethereum/contract
+    name: Vault
+    network: {{network}}
+    source:
+      address: "{{VaultAddress}}"
+      abi: Vyper_contract
+      startBlock: {{VaultStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Strategy
+      abis:
+        - name: Vyper_contract
+          file: ./abis/ethereum/Vault.json
+      eventHandlers:
+        - event: EmergencyShutdown(bool)
+          handler: handleEmergencyShutdown
+      file: ./src/mappings/vaults.ts
+# *******************************************************************************************
 # ***********   V A U L T   A D A P T E R S   ***********************************************
 # *******************************************************************************************
 # @dev: nothing to handle. All data will be retrieved by contract calls  
@@ -818,6 +844,8 @@ dataSources:
       abis:
         - name: StableConvexXPool
           file: ./abis/ethereum/ConvexStrategy.json
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultAdapter.json
       eventHandlers:
         - event: EmergencyExitEnabled()
           handler: handleEmergencyExitEnabled
@@ -838,6 +866,8 @@ dataSources:
       abis:
         - name: StableConvexXPool
           file: ./abis/ethereum/ConvexStrategy.json
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultAdapter.json
       eventHandlers:
         - event: Harvested(uint256,uint256,uint256,uint256)
           handler: handleHarvestedPrimaryDAI
@@ -858,6 +888,8 @@ dataSources:
       abis:
         - name: StableConvexXPool
           file: ./abis/ethereum/ConvexStrategy.json
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultAdapter.json
       eventHandlers:
         - event: Harvested(uint256,uint256,uint256,uint256)
           handler: handleHarvestedSecondaryDAI
@@ -878,6 +910,8 @@ dataSources:
       abis:
         - name: StableConvexXPool
           file: ./abis/ethereum/ConvexStrategy.json
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultAdapter.json
       eventHandlers:
         - event: Harvested(uint256,uint256,uint256,uint256)
           handler: handleHarvestedPrimaryUSDC
@@ -898,6 +932,8 @@ dataSources:
       abis:
         - name: StableConvexXPool
           file: ./abis/ethereum/ConvexStrategy.json
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultAdapter.json
       eventHandlers:
         - event: Harvested(uint256,uint256,uint256,uint256)
           handler: handleHarvestedSecondaryUSDC
@@ -918,6 +954,8 @@ dataSources:
       abis:
         - name: StableConvexXPool
           file: ./abis/ethereum/ConvexStrategy.json
+        - name: Vyper_contract
+          file: ./abis/ethereum/VaultAdapter.json
       eventHandlers:
         - event: Harvested(uint256,uint256,uint256,uint256)
           handler: handleHarvestedPrimaryUSDT

@@ -7,6 +7,7 @@ import {
 import {
     NUM,
     ADDR,
+    DECIMALS,
 } from '../utils/constants';
 
 
@@ -51,8 +52,6 @@ export const getPricePerShare = (token: string): BigDecimal => {
     if (token === 'gvt') {
         price = getGvtPrice();
     } else if (token === 'gro') {
-        // TODO: retrieve it from latest prices.gro
-        // price = getUniV2Price(UNISWAPV2_GRO_USDC_ADDRESS, false);
         const _price = initPrice();
         price = _price.gro;
     } else if (
@@ -105,3 +104,17 @@ export function tokenToDecimal(
         .truncate(decimals);
 }
 
+export const amountToUsd = (
+    coin: string,
+    amount: BigDecimal
+): BigDecimal => {
+    const _price = initPrice();
+    const price = (coin == 'dai')
+        ? _price.dai
+        : (coin == 'usdc')
+            ? _price.usdc
+            : (coin == 'usdt')
+                ? _price.usdt
+                : NUM.ZERO;
+   return amount.times(price).truncate(DECIMALS);
+}

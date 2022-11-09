@@ -1,4 +1,7 @@
-import { tokenToDecimal } from '../utils/tokens';
+import {
+    amountToUsd,
+    tokenToDecimal
+} from '../utils/tokens';
 import {
     Harvest,
     Strategy
@@ -97,7 +100,10 @@ export const initStrategy = (stratAddress: string): Strategy => {
 }
 
 // vault's strategy reported events
+// @dev: updates vault amount & strategy amount
+//       only if this function is triggered by an event, updates strategy debt
 export const setStrategyReported = (
+    vaultAddress: Address,
     strategyAddress: Address,
     totalDebt: BigInt,
     block: BigInt,
@@ -109,21 +115,24 @@ export const setStrategyReported = (
     let strat = initStrategy(id);
     const adapterAddress = getAdapterAddressByStrategy(id);
     if (adapterAddress != ADDR.ZERO) {
-        const totalAssets = getTotalAssetsVault(adapterAddress);
-        const totalEstimatedAssets = getTotalAssetsStrat(strategyAddress);
-        if (totalAssets.reverted) {
+        const totalAssetsVault = getTotalAssetsVault(adapterAddress);
+        const totalAssetsStrat = getTotalAssetsStrat(vaultAddress, strategyAddress);
+        if (totalAssetsVault.reverted) {
             log.error(
                 `strats.ts->setStrategyReported: totalAssets reverted for adapter {}`,
                 [adapterAddress.toHexString()]
             );
-        } else if (totalEstimatedAssets.reverted) {
+        } else if (totalAssetsStrat.reverted) {
             log.error(
                 `strats.ts->setStrategyReported: totalEstimatedAssets reverted for strategy {}`,
                 [id]
             );
         } else {
-            strat.total_assets_adapter = tokenToDecimal(totalAssets.value, base, DECIMALS);
-            strat.total_assets_strategy = tokenToDecimal(totalEstimatedAssets.value, base, DECIMALS);
+            strat.total_assets_adapter = tokenToDecimal(totalAssetsVault.value, base, DECIMALS);
+            strat.total_assets_strategy = amountToUsd(
+                coin,
+                tokenToDecimal(totalAssetsStrat.value.getTotalDebt(), base, DECIMALS)
+            );
             if (isStrategyReportedEvent) {
                 strat.strategy_debt = tokenToDecimal(totalDebt, base, DECIMALS);
                 strat.block_strategy_reported = block.toI32();
@@ -143,6 +152,7 @@ export const updateAllStrategies = (block: BigInt): void => {
     const strats = getStrategies();
     for (let i = 0; i < strats.length; i++) {
         setStrategyReported(
+            Address.fromString(strats[i].vault),
             Address.fromString(strats[i].id),
             BigInt.fromString('0'),
             block,
@@ -165,7 +175,7 @@ export const setStrategyHarvest = (
         harvest = new Harvest(id);
         harvest.strategyAddress = strategyAddress;
         harvest.gain = gain;
-        harvest.loss =loss;
+        harvest.loss = loss;
         harvest.timestamp = timestamp.toI32();
     }
     harvest.save();
