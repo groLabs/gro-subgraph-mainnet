@@ -21,6 +21,7 @@ export const getStrategies = (): Strat[] => {
             'DAI',
             'DAI yVault',
             'dai',
+            'frax',
             true,
         ),
         new Strat(
@@ -32,6 +33,7 @@ export const getStrategies = (): Strat[] => {
             'DAI',
             'DAI yVault',
             'dai',
+            'tusd',
             true,
         ),
         new Strat(
@@ -43,6 +45,7 @@ export const getStrategies = (): Strat[] => {
             'USDC',
             'USDC yVault',
             'usdc',
+            'alusd',
             true,
         ),
         new Strat(
@@ -54,6 +57,7 @@ export const getStrategies = (): Strat[] => {
             'USDC',
             'USDC yVault',
             'usdc',
+            'gusd',
             true,
         ),
         new Strat(
@@ -65,6 +69,7 @@ export const getStrategies = (): Strat[] => {
             'USDT',
             'USDT yVault',
             'usdt',
+            'tusd',
             true,
         ),
     ];
