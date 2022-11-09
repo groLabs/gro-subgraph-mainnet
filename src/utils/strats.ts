@@ -65,11 +65,11 @@ export const getStrategies = (): Strat[] => {
             '0x9cd696a225d7a3c9ce1ed71f5bdb031234a86d79',   // vault
             '0x6419cb544878e8c4faa5eaf22d59d4a96e5f12fa',   // adapter
             'Convex XPool USDT',
-            'Convex-TUSD-3CRV',
+            'Convex-OUSD-3CRV',
             'USDT',
             'USDT yVault',
             'usdt',
-            'tusd',
+            'ousd',
             true,
         ),
     ];
