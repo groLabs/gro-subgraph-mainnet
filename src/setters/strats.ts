@@ -128,7 +128,12 @@ export const setStrategyReported = (
                 [id]
             );
         } else {
-            strat.total_assets_adapter = tokenToDecimal(totalAssetsVault.value, base, DECIMALS);
+            // strat.total_assets_adapter = tokenToDecimal(totalAssetsVault.value, base, DECIMALS);
+            strat.total_assets_adapter = amountToUsd(
+                coin,
+                tokenToDecimal(totalAssetsVault.value, base, DECIMALS)
+            );
+            // strat.total_assets_strategy =  tokenToDecimal(totalAssetsStrat.value.getTotalDebt(), base, DECIMALS);
             strat.total_assets_strategy = amountToUsd(
                 coin,
                 tokenToDecimal(totalAssetsStrat.value.getTotalDebt(), base, DECIMALS)

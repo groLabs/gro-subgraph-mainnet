@@ -2,6 +2,7 @@ import { ADDR } from './constants';
 import { Strategy } from '../../generated/schema';
 import { Strategy as Strat } from '../types/strats';
 import { Vyper_contract as vaultAdapter } from '../../generated/VaultAdapter/Vyper_contract';
+import { StableConvexXPool as convexStrategy } from '../../generated/ConvexStrategy/StableConvexXPool';
 import {
     Vyper_contract as vault,
     Vyper_contract__strategiesResult
@@ -143,3 +144,12 @@ export const getTotalAssetsStrat = (
     const assets = contractAdapter.try_strategies(strategyAddress);
     return assets;
 }
+
+// export const getTotalAssetsStrat = (
+//     vaultAddress: Address,
+//     strategyAddress: Address,
+// ): ethereum.CallResult<BigInt> => {
+//     const contractStrategy = convexStrategy.bind(strategyAddress);
+//     const totalEstimatedAssets = contractStrategy.try_estimatedTotalAssets();
+//     return totalEstimatedAssets;
+// }
