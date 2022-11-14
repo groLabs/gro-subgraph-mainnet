@@ -109,9 +109,8 @@ type Harvest @entity {
 
 # pool data
 type PoolData @entity {
-  # TODO: use pool id as id, and contractAddress as normal field (to be aligned with stakerData)
-  id: ID! # pool address
-  poolId: Int!
+  id: ID! # pool id
+  poolAddress: Bytes!
   reserve0: BigDecimal!
   reserve1: BigDecimal!
   total_supply: BigDecimal!
@@ -126,6 +125,20 @@ type StakerData @entity {
   pool_share: BigDecimal!
   block_number: Int!
   block_timestamp: Int!
+}
+
+# pool swaps
+type PoolSwap @entity {
+  id: ID! # timestamp-poolId
+  poolId: Int!
+  block_timestamp: Int!
+  fromAddress: Bytes!
+  amount0_in: BigDecimal!
+  amount1_in: BigDecimal!
+  amount0_out: BigDecimal!
+  amount1_out: BigDecimal!
+  toAddress: Bytes!
+  virtual_price: BigDecimal!
 }
 
 # core protocol data

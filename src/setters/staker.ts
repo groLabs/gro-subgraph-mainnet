@@ -1,14 +1,11 @@
-import {
-    MasterData,
-    StakerData,
-} from '../../generated/schema';
+import { initMD } from './masterdata';
 import { BigInt } from '@graphprotocol/graph-ts';
+import { tokenToDecimal } from '../utils/tokens';
+import { StakerData } from '../../generated/schema';
 import {
     NUM,
     DECIMALS
 } from '../utils/constants';
-import { tokenToDecimal } from '../utils/tokens';
-import { initMD } from './masterdata';
 
 
 const initStakerData = (
@@ -37,7 +34,8 @@ export const updateStakerSupply = (
     blockTimestamp: BigInt,
 ): void => {
     const staker = initStakerData(poolId.toI32());
-    staker.lp_supply = tokenToDecimal(lpSupply, 18, 7);
+    // staker.lp_supply = tokenToDecimal(lpSupply, 18, 7);
+    staker.lp_supply = lpSupply.toBigDecimal();
     staker.acc_gro_per_share = tokenToDecimal(accGroPerShare, 12, 12);
     staker.block_number = blockNumber.toI32();
     staker.block_timestamp = blockTimestamp.toI32();

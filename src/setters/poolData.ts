@@ -1,17 +1,17 @@
-
-import { PoolData } from '../../generated/schema';
-import { BigDecimal } from '@graphprotocol/graph-ts';
 import { NUM } from '../utils/constants';
+import { PoolData } from '../../generated/schema';
+import { BigDecimal, Address } from '@graphprotocol/graph-ts';
 
 
 const initPoolData = (
-    contractAddress: string,
+    contractAddress: Address,
     poolId: i32
 ): PoolData => {
-    let poolData = PoolData.load(contractAddress);
+    const id = poolId.toString();
+    let poolData = PoolData.load(id);
     if (!poolData) {
-        poolData = new PoolData(contractAddress);
-        poolData.poolId = poolId;
+        poolData = new PoolData(id);
+        poolData.poolAddress = contractAddress;
         poolData.reserve0 = NUM.ZERO;
         poolData.reserve1 = NUM.ZERO;
         poolData.total_supply = NUM.ZERO;
@@ -21,7 +21,7 @@ const initPoolData = (
 
 export const updatePoolData = (
     poolId: i32,
-    contractAddress: string,
+    contractAddress: Address,
     reserve0: BigDecimal,
     reserve1: BigDecimal,
     totalSupply: BigDecimal,

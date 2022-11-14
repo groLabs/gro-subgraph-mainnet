@@ -1,4 +1,10 @@
+import { Tx } from '../types/tx';
+import { updatePoolData } from './poolData';
 import { Price } from '../../generated/schema';
+import {
+    getPricePerShare,
+    tokenToDecimal
+} from '../utils/tokens';
 import {
     log,
     BigInt,
@@ -12,12 +18,6 @@ import {
     GENESIS_POOL_GRO_WETH,
     BALANCER_GRO_WETH_POOLID,
 } from '../utils/constants';
-import { updatePoolData } from './poolData';
-import {
-    getPricePerShare,
-    tokenToDecimal
-} from '../utils/tokens';
-import { Tx } from '../types/tx';
 // contracts
 import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
 import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVault/Vault';
@@ -69,7 +69,7 @@ export const setUniswapGvtGroPrice = (): void => {
         // update Pool data
         updatePoolData(
             1,
-            ADDR.UNISWAPV2_GVT_GRO.toHexString(),
+            ADDR.UNISWAPV2_GVT_GRO,
             gvtReserve,
             groReserve,
             totalSupply,
@@ -106,7 +106,7 @@ export const setUniswapGroUsdcPrice = (): void => {
         // update Pool data
         updatePoolData(
             2,
-            ADDR.UNISWAPV2_GRO_USDC.toHexString(),
+            ADDR.UNISWAPV2_GRO_USDC,
             groReserve,
             usdcReserve,
             totalSupply,
@@ -148,7 +148,7 @@ export const setCurvePwrd3crvPrice = (): void => {
         // update Pool data
         updatePoolData(
             4,
-            ADDR.CURVE_PWRD_3CRV.toHexString(),
+            ADDR.CURVE_PWRD_3CRV,
             crv_reserve,
             pwrd_reserve,
             total_supply,
@@ -196,7 +196,7 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
             // update Pool data
             updatePoolData(
                 5,
-                ADDR.BALANCER_GRO_WETH_POOL.toHexString(),
+                ADDR.BALANCER_GRO_WETH_POOL,
                 groReserve,
                 wethReserve,
                 totalSupply,

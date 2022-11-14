@@ -1,8 +1,9 @@
 import { Swap as SwapEventGvtGro } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
 import { Swap as SwapEventGroUsdc } from '../../generated/UniswapV2PairGroUsdc/UniswapV2Pair';
-// import { Swap as SwapEvent } from '../../generated/UniswapV2Pair/UniswapV2Pair';
+import { setPoolSwap } from '../setters/poolSwaps';
+import { NUM, DECIMALS } from '../utils/constants';
+import { tokenToDecimal } from '../utils/tokens';
 import {
-    // setGroPrice,
     setWethPrice,
     setUniswapGvtGroPrice,
     setUniswapGroUsdcPrice,
@@ -17,9 +18,32 @@ export function handleSwapGvtGro(event: SwapEventGvtGro): void {
     // setGroPrice(event.address);
     setUniswapGvtGroPrice();
     setWethPrice(); // to be moved
+    setPoolSwap(
+        event.block.timestamp.toString() + '-1',
+        1,
+        event.block.timestamp.toI32(),
+        event.params.sender,
+        tokenToDecimal(event.params.amount0In, 18, DECIMALS),
+        tokenToDecimal(event.params.amount1In, 18, DECIMALS),
+        tokenToDecimal(event.params.amount0Out, 18, DECIMALS),
+        tokenToDecimal(event.params.amount1Out, 18, DECIMALS),
+        event.params.to,
+        NUM.ZERO,
+    );
 }
 
 export function handleSwapGroUsdc(event: SwapEventGroUsdc): void {
-    // setGroPrice(event.address);
     setUniswapGroUsdcPrice(); // This is updating GRO price
+    setPoolSwap(
+        event.block.timestamp.toString() + '-2',
+        2,
+        event.block.timestamp.toI32(),
+        event.params.sender,
+        tokenToDecimal(event.params.amount0In, 18, DECIMALS),
+        tokenToDecimal(event.params.amount1In, 6, DECIMALS),
+        tokenToDecimal(event.params.amount0Out, 18, DECIMALS),
+        tokenToDecimal(event.params.amount1Out, 6, DECIMALS),
+        event.params.to,
+        NUM.ZERO,
+    );
 }
