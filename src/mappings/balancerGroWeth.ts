@@ -1,6 +1,7 @@
 import { getTxData } from '../utils/tx';
 import { tokenToDecimal } from '../utils/tokens';
 import { setPoolSwap } from '../setters/poolSwaps';
+import { setTotalSupply } from '../setters/coreData';
 import { Transfer } from '../../generated/BalancerGroWethPool/ERC20';
 import { PoolBalanceChanged } from '../../generated/BalancerGroWethVault/Vault';
 import { WeightedPool as BalancerPool } from '../../generated/BalancerGroWethPool/WeightedPool';
@@ -27,6 +28,12 @@ export function handlePoolBalanceChanged(event: PoolBalanceChanged): void {
 export function handleTransfer(event: Transfer): void {
     setWethPrice();
     setBalancerGroWethPrice(getTxData(event));
+    setTotalSupply(
+        event.params.from,
+        event.params.to,
+        event.params.value,
+        'balancer_gro_weth',
+    );
 }
 
 export function handleBalancerSwap(

@@ -148,6 +148,10 @@ type CoreData @entity {
   total_supply_gvt: BigDecimal!
   total_supply_pwrd_based: BigDecimal!
   total_supply_gro: BigDecimal!
+  total_supply_uniswap_gvt_gro: BigDecimal!
+  total_supply_uniswap_gro_usdc: BigDecimal!
+  total_supply_curve_pwrd3crv: BigDecimal!
+  total_supply_balancer_gro_weth: BigDecimal!
 }
 
 # user

@@ -1,13 +1,23 @@
-import { Swap as SwapEventGvtGro } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
-import { Swap as SwapEventGroUsdc } from '../../generated/UniswapV2PairGroUsdc/UniswapV2Pair';
-import { setPoolSwap } from '../setters/poolSwaps';
-import { NUM, DECIMALS } from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
+import { setPoolSwap } from '../setters/poolSwaps';
+import { setTotalSupply } from '../setters/coreData';
+import {
+    NUM,
+    DECIMALS,
+} from '../utils/constants';
 import {
     setWethPrice,
     setUniswapGvtGroPrice,
     setUniswapGroUsdcPrice,
 } from '../setters/price';
+import {
+    Swap as SwapEventGvtGro,
+    Transfer as TransferGvtGro,
+} from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
+import {
+    Swap as SwapEventGroUsdc,
+    Transfer as TransferGroUsdc,
+} from '../../generated/UniswapV2PairGroUsdc/UniswapV2Pair';
 
 
 export function handleSwapGvtGro(event: SwapEventGvtGro): void {
@@ -47,5 +57,23 @@ export function handleSwapGroUsdc(event: SwapEventGroUsdc): void {
         tokenToDecimal(event.params.amount1Out, 6, DECIMALS),
         event.params.to,
         NUM.ZERO,
+    );
+}
+
+export function handleTransferGvtGro(event: TransferGvtGro): void {
+    setTotalSupply(
+        event.params.from,
+        event.params.to,
+        event.params.value,
+        'uniswap_gvt_gro',
+    );
+}
+
+export function handleTransferGroUsdc(event: TransferGroUsdc): void {
+    setTotalSupply(
+        event.params.from,
+        event.params.to,
+        event.params.value,
+        'uniswap_gro_usdc',
     );
 }

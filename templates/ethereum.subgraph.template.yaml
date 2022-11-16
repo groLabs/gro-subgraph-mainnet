@@ -482,6 +482,8 @@ dataSources:
       eventHandlers:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwapGvtGro
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferGvtGro
       file: ./src/mappings/uniswapV2Pair.ts
   # Pool 2 : UniswapV2 50% GRO - 50% USDC
   - kind: ethereum/contract
@@ -504,6 +506,8 @@ dataSources:
       eventHandlers:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwapGroUsdc
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferGroUsdc
       file: ./src/mappings/uniswapV2Pair.ts
   # Pool 4 : Curve Metapool 50% 3CRV - 50% PWRD
   - kind: ethereum/contract
@@ -528,6 +532,8 @@ dataSources:
           handler: handleTokenExchange
         - event: TokenExchangeUnderlying(indexed address,int128,uint256,int128,uint256)
           handler: handleTokenExchangeUnderlying
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
       file: ./src/mappings/curveMetapool3CRV.ts
   # Pool 5 : Balancer Vault 80% GRO - 20% WETH [VAULT]
   - kind: ethereum/contract

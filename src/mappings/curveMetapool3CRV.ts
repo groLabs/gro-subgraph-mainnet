@@ -1,6 +1,7 @@
 
 import { tokenToDecimal } from '../utils/tokens';
 import { setPoolSwap } from '../setters/poolSwaps';
+import { setTotalSupply } from '../setters/coreData';
 import { setCurvePwrd3crvPrice } from '../setters/price';
 import { Vyper_contract as MetaPool } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import {
@@ -8,6 +9,7 @@ import {
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
+    Transfer,
     TokenExchange,
     TokenExchangeUnderlying,
 } from '../../generated/CurveMetapool3CRV/Vyper_contract';
@@ -61,4 +63,13 @@ const getVirtualPrice = (): BigDecimal => {
         return tokenToDecimal(virtualPrice.value, 18, DECIMALS);
     }
     return NUM.ZERO;
+}
+
+export function handleTransfer(event: Transfer): void {
+    setTotalSupply(
+        event.params.sender,
+        event.params.receiver,
+        event.params.value,
+        'curve_pwrd3crv',
+    );
 }
