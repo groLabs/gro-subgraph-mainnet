@@ -13,5 +13,8 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     // minimize the subgraph synch time
     if (event.block.number.toI32() > CURRENT_BLOCK - 30000)
         updateAllStrategies(event.block.number);
-    handleBalancerSwap(event.block.timestamp.toI32());
+    handleBalancerSwap(
+        event.block.timestamp.toI32(),
+        event.block.number.toI32(),
+        );
 }

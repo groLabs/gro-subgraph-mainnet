@@ -132,6 +132,7 @@ type PoolSwap @entity {
   id: ID! # timestamp-poolId
   poolId: Int!
   block_timestamp: Int!
+  block_number: Int!
   fromAddress: Bytes!
   amount0_in: BigDecimal!
   amount1_in: BigDecimal!

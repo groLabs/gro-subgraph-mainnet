@@ -31,14 +31,15 @@ export function handleTransfer(event: Transfer): void {
 
 export function handleBalancerSwap(
     _now: i32,
+    blockNumber: i32,
 ): void {
     const now = new Date(_now * 1000);
     if (now.getUTCHours() === 0) {
-        log.error('update!!!', []);
         setPoolSwap(
             _now.toString() + '-5',
             5,
             _now,
+            blockNumber,
             ADDR.ZERO,
             NUM.ZERO,
             NUM.ZERO,

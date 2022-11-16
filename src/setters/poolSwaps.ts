@@ -7,6 +7,7 @@ export const setPoolSwap = (
     tx: string,
     poolId: i32,
     blockTimestamp: i32,
+    blockNumber: i32,
     fromAddress: Address,
     amount0In: BigDecimal,
     amount1In: BigDecimal,
@@ -20,6 +21,7 @@ export const setPoolSwap = (
         swap = new PoolSwap(tx);
         swap.poolId = poolId;
         swap.block_timestamp = blockTimestamp;
+        swap.block_number = blockNumber,
         swap.fromAddress = fromAddress;
         swap.amount0_in = amount0In;
         swap.amount0_out = amount1In;
