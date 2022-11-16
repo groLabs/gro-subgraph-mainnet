@@ -146,6 +146,7 @@ type CoreData @entity {
   id: ID! # 0x
   total_supply_gvt: BigDecimal!
   total_supply_pwrd_based: BigDecimal!
+  total_supply_gro: BigDecimal!
 }
 
 # user

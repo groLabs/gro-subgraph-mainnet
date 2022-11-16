@@ -14,6 +14,7 @@ export const initCoreData = (save: boolean): CoreData => {
 		core = new CoreData('0x');
 		core.total_supply_gvt = NUM.ZERO;
 		core.total_supply_pwrd_based = NUM.ZERO;
+		core.total_supply_gro = NUM.ZERO;
 		if (save)
 			core.save();
 	}
@@ -35,6 +36,8 @@ export const updateTotalSupply = (
 			core.total_supply_gvt = core.total_supply_gvt.plus(amount);
 		} else if (coin === 'pwrd') {
 			core.total_supply_pwrd_based = core.total_supply_pwrd_based.plus(basedAmount);
+		} else if (coin === 'gro') {
+			core.total_supply_gro = core.total_supply_gro.plus(amount);
 		} else {
 			showLog.error(`coreData.ts->updateTotalSupply(): can't update for {} {}`, [coin, side]);
 		}
@@ -43,6 +46,8 @@ export const updateTotalSupply = (
 			core.total_supply_gvt = core.total_supply_gvt.minus(amount);
 		} else if (coin === 'pwrd') {
 			core.total_supply_pwrd_based = core.total_supply_pwrd_based.minus(basedAmount);
+		} else if (coin === 'gro') {
+			core.total_supply_gro = core.total_supply_gro.minus(amount);
 		} else {
 			showLog.error(`coreData.ts->updateTotalSupply(): can't update for {} {}`, [coin, side]);
 		}
