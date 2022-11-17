@@ -1,3 +1,19 @@
+import { parseLogEvent } from '../parsers/log';
+import { manageClaim } from '../managers/claims';
+import { parseStakerDepositEvent } from '../parsers/deposit';
+import { parseStakerWithdrawalEvent } from '../parsers/withdrawals';
+import { manageStakerDeposit } from '../managers/deposit';
+import { manageStakerWithdrawal } from '../managers/withdrawal';
+import {
+    parseClaimV1Event,
+    parseClaimV2Event,
+    parseMultiClaimV2Event,
+} from '../parsers/claim';
+import {
+    updateStakerSupply,
+    updateStakerAllocation,
+    updateStakerGroPerBlock,
+} from '../setters/staker';
 import {
     LogClaim as LogClaimV1,
     LogDeposit as LogDepositV1,
@@ -17,22 +33,6 @@ import {
     LogUpdatePool as LogUpdatePoolV2,
     LogGroPerBlock as LogGroPerBlockV2,
 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
-import {
-    parseClaimV1Event,
-    parseClaimV2Event,
-    parseMultiClaimV2Event,
-} from '../parsers/claim';
-import { parseStakerDepositEvent } from '../parsers/deposit';
-import { parseStakerWithdrawalEvent } from '../parsers/withdrawals';
-import { manageClaim } from '../managers/claims';
-import { manageStakerDeposit } from '../managers/deposit';
-import { manageStakerWithdrawal } from '../managers/withdrawal';
-import {
-    updateStakerSupply,
-    updateStakerAllocation,
-    updateStakerGroPerBlock,
-} from '../setters/staker';
-
 
 
 export function handleClaimV1(event: LogClaimV1): void {
@@ -99,23 +99,27 @@ export function handleSetPoolV2(event: LogSetPoolV2): void {
 }
 
 export function handleUpdatePoolV1(event: LogUpdatePoolV1): void {
+    const logs = parseLogEvent(event.receipt!.logs);
     updateStakerSupply(
         event.params.pid,
         event.params.lpSupply,
         event.params.accGroPerShare,
         event.block.number,
         event.block.timestamp,
-    )
+        logs,
+    );
 }
 
 export function handleUpdatePoolV2(event: LogUpdatePoolV2): void {
+    const logs = parseLogEvent(event.receipt!.logs);
     updateStakerSupply(
         event.params.pid,
         event.params.lpSupply,
         event.params.accGroPerShare,
         event.block.number,
         event.block.timestamp,
-    )
+        logs,
+    );
 }
 
 export function handleGroPerBlockV1(event: LogGroPerBlockV1): void {

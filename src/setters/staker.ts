@@ -1,10 +1,19 @@
+import { Log } from '../types/log';
 import { initMD } from './masterdata';
-import { BigInt } from '@graphprotocol/graph-ts';
 import { tokenToDecimal } from '../utils/tokens';
 import { StakerData } from '../../generated/schema';
 import {
+    log as showLog,
+    BigInt,
+    ethereum,
+    BigDecimal,
+} from '@graphprotocol/graph-ts';
+import {
     NUM,
-    DECIMALS
+    DECIMALS,
+    STAKER_ADDRESSES,
+    LOG_DEPOSIT_STAKER_SIG,
+    LOG_WITHDRAW_STAKER_SIG,
 } from '../utils/constants';
 
 
@@ -25,6 +34,31 @@ const initStakerData = (
     return staker;
 }
 
+// @dev: When there is a deposit/withdrawal in the lpTokenStaker, 
+// the LogUpdatePool event gives the total supply of that pool BEFORE
+// the deposit/withdrawal -> this needs to be added/deducted from the 
+// total supply within the LogUpdatePool event.
+const getTransferFromUpdatePool = (
+    logs: Log[]
+): BigDecimal => {
+    for (let i = 0; i < logs.length; i++) {
+        const log = logs[i];
+        if (
+            STAKER_ADDRESSES.includes(log.address)
+            && (log.topics[0].toHexString() == LOG_WITHDRAW_STAKER_SIG
+                || log.topics[0].toHexString() == LOG_DEPOSIT_STAKER_SIG)
+            && log.topics.length === 3
+        ) {
+            const value = ethereum.decode('uin256', log.data)!.toBigInt();
+            const result = (log.topics[0].toHexString() == LOG_WITHDRAW_STAKER_SIG)
+                ? tokenToDecimal(value, 18, 12).times(NUM.MINUS_ONE)
+                : tokenToDecimal(value, 18, 12);
+            return result;
+        }
+    }
+    return NUM.ZERO;
+}
+
 // @dev: from staker->LogUpdatePool()
 export const updateStakerSupply = (
     poolId: BigInt,
@@ -32,10 +66,11 @@ export const updateStakerSupply = (
     accGroPerShare: BigInt,
     blockNumber: BigInt,
     blockTimestamp: BigInt,
+    logs: Log[],
 ): void => {
     const staker = initStakerData(poolId.toI32());
-    staker.lp_supply = tokenToDecimal(lpSupply, 18, 12);
-    // staker.lp_supply = lpSupply.toBigDecimal();
+    const amount = getTransferFromUpdatePool(logs);
+    staker.lp_supply = tokenToDecimal(lpSupply, 18, 12).plus(amount).truncate(12);
     staker.acc_gro_per_share = tokenToDecimal(accGroPerShare, 12, 12);
     staker.block_number = blockNumber.toI32();
     staker.block_timestamp = blockTimestamp.toI32();

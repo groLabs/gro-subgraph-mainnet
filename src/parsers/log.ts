@@ -3,7 +3,6 @@ import { Log } from '../types/log';
 
 
 function parseLogEvent<T>(ev: T[]): Log[] {
-//function parseLogEvent (ev: ethereum.Log[]) {
     let logs = new Array<Log>(0);
     for (let i=0; i<ev.length; i++) {
         const log = new Log(
@@ -23,8 +22,6 @@ function parseLogEvent<T>(ev: T[]): Log[] {
     }
     return logs;
 }
-
-
 
 export {
     parseLogEvent

@@ -413,6 +413,7 @@ dataSources:
           handler: handleSetPoolV1
         - event: LogUpdatePool(indexed uint256,uint256,uint256,uint256)
           handler: handleUpdatePoolV1
+          receipt: true
         - event: LogGroPerBlock(uint256)
           handler: handleGroPerBlockV1
       file: ./src/mappings/staker.ts
@@ -455,6 +456,7 @@ dataSources:
           handler: handleSetPoolV2
         - event: LogUpdatePool(indexed uint256,uint256,uint256,uint256)
           handler: handleUpdatePoolV2
+          receipt: true
         - event: LogGroPerBlock(uint256)
           handler: handleGroPerBlockV2
       file: ./src/mappings/staker.ts

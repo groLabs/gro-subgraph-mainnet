@@ -81,6 +81,8 @@ export const LOG_WITHDRAWAL_SIG_V1 = '0x689bb63474b1590d4af4604d8f614b11b86fc5ae
 export const LOG_WITHDRAWAL_SIG_V23 = '0x64801196bdd255d4dd88bfd3e78324c2d63634b67e53e04166db348f7cd96490';
 export const LOG_DEPOSIT_SIG_V1 = '0x8bad9850b3d2edc5660781f45a304359a1ad12bfd16a0c6333f86b9ff55be0a1';
 export const LOG_DEPOSIT_SIG_V23 = '0x106d567c81498246019397cc04d5ce37ba76461ce2c881c06a2097b13b9b0fc9';
+export const LOG_DEPOSIT_STAKER_SIG = '0x9dbb0e7dda3e09710ce75b801addc87cf9d9c6c581641b3275fca409ad086c62';
+export const LOG_WITHDRAW_STAKER_SIG = '0xda9a10d7b992511ddadbfc7ff712c1424ce2058bbcdac8c9876d6f8de590d43f';
 
 // Stablecoin approvals no needed for now (they kill performance!)
 // export const DAI_ADDRESS = Address.fromString('0x6B175474E89094C44Da98b954EedeAC495271d0F');
