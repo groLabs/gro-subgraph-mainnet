@@ -25,17 +25,28 @@ const isStakerTransfer = (
         : false;
 }
 
+// const isStakerTransfer = (
+//     from: Address,
+//     to: Address,
+//     poolId: string,
+//     amount: BigDecimal,
+// ): bool => {
+//     let result = false;
+//     if (STAKER_ADDRESSES.includes(to)) {
+//         result = true;
+//         let staker = initStakerData(poolId);
+//         staker.lp_supply_tx = staker.lp_supply_tx.plus(amount);
+//         staker.save();
+//     } else if (STAKER_ADDRESSES.includes(from)) {
+//         result = true;
+//         let staker = initStakerData(poolId);
+//         staker.lp_supply_tx = staker.lp_supply_tx.minus(amount);
+//         staker.save();
+//     }
+//     return result;
+// }
+
 export {
     isDepositOrWithdrawal,
     isStakerTransfer,
 }
-
-
-
-
-
-
-
-
-
-

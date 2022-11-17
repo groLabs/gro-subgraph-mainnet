@@ -36,8 +36,16 @@ export function handleTransfer(event: Transfer): void {
     const value = event.params.value;
 
     if (
-        !isDepositOrWithdrawalGVT(event, from, to, value)
-        && !isStakerTransfer(from, to)
+        !isDepositOrWithdrawalGVT(
+            event,
+            from,
+            to,
+            value,
+        )
+        && !isStakerTransfer(
+            from,
+            to,
+        )
     ) {
         const ev = parseTransferEvent(event);
         manageTransfer(ev, 'gvt');

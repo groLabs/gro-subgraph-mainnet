@@ -23,7 +23,7 @@ export function handleApproval(event: Approval): void {
 export function handleTransfer(event: Transfer): void {
     const from = event.params.from;
     const to = event.params.to;
-    const value = event.params.value;
+    const value = tokenToDecimal(event.params.value, 18, DECIMALS);
 
     if (!isStakerTransfer(
         from,
@@ -34,13 +34,13 @@ export function handleTransfer(event: Transfer): void {
         if (from == ADDR.ZERO) {
             updateTotalSupply(
                 'deposit',
-                tokenToDecimal(value, 18, DECIMALS),
+                value,
                 'gro',
             );
         } else if (to == ADDR.ZERO) {
             updateTotalSupply(
                 'withdrawal',
-                tokenToDecimal(value, 18, DECIMALS),
+                value,
                 'gro',
             );
         }

@@ -20,10 +20,15 @@ export function handleApproval(event: Approval): void {
 export function handleTransfer(event: Transfer): void {
     const from = event.params.from;
     const to = event.params.to;
-
     if (
-        !isDepositOrWithdrawal(from, to)
-        && !isStakerTransfer(from, to)
+        !isDepositOrWithdrawal(
+            from,
+            to
+        )
+        && !isStakerTransfer(
+            from,
+            to,
+        )
     ) {
         const ev = parseTransferEvent(event);
         manageTransfer(ev, 'pwrd');
