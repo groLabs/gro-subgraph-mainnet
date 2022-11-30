@@ -1,6 +1,6 @@
 import { parseLogEvent } from '../parsers/log';
 import { tokenToDecimal } from '../utils/tokens';
-import { isStakerTransfer } from '../utils/contracts';
+import { isStakerTransfer,isTransferToGRouter } from '../utils/contracts';
 import { manageApproval } from '../managers/approvals';
 import { manageTransfer } from '../managers/transfers';
 import { updateTotalSupply } from '../setters/coreData';
@@ -19,6 +19,8 @@ import {
     DECIMALS,
     LOG_DEPOSIT_SIG_V1,
     LOG_DEPOSIT_SIG_V23,
+    LOG_GROUTER_DEPOSIT_SIG,
+    LOG_GROUTER_LEGACY_DEPOSIT_SIG,
     DEPOSIT_HANDLER_ADDRESSES,
 } from '../utils/constants';
 
@@ -46,6 +48,7 @@ export function handleTransfer(event: Transfer): void {
             from,
             to,
         )
+        && !isTransferToGRouter(to)
     ) {
         const ev = parseTransferEvent(event);
         manageTransfer(ev, 'gvt');
@@ -69,6 +72,13 @@ const isDepositOrWithdrawalGVT = (
                     DEPOSIT_HANDLER_ADDRESSES.includes(logs[i].address)
                     && (logs[i].topics[0].toHexString() == LOG_DEPOSIT_SIG_V1
                         || logs[i].topics[0].toHexString() == LOG_DEPOSIT_SIG_V23)
+                ) {
+                    return true;
+                }
+                if (
+                    ADDR.GROUTER.equals(logs[i].address)
+                    && (logs[i].topics[0].toHexString() == LOG_GROUTER_DEPOSIT_SIG
+                        || logs[i].topics[0].toHexString() == LOG_GROUTER_LEGACY_DEPOSIT_SIG)
                 ) {
                     return true;
                 }

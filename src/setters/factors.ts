@@ -49,6 +49,26 @@ export const setPwrdFactor = (): void => {
     factor.save();
 }
 
+export const updateGTokenFactor = (): void => {
+    const factor = initFactor(false);
+    // gvt factor
+    const gvtContract = Gvt.bind(ADDR.GVT);
+    const gvtFactor = gvtContract.try_factor();
+    if (gvtFactor.reverted) {
+        log.error('setGvtFactor() reverted in src/setters/factors.ts', []);
+    } else {
+        factor.gvt = tokenToDecimal(gvtFactor.value, 18, 12);
+    }
+    const pwrdContract = Pwrd.bind(ADDR.PWRD);
+    const pwrdFactor = pwrdContract.try_factor();
+    if (pwrdFactor.reverted) {
+        log.error('getPwrdFactor() reverted in src/setters/factors.ts', []);
+    } else {
+        factor.pwrd = tokenToDecimal(pwrdFactor.value, 18, 12);
+    }
+    factor.save();
+}
+
 // Retrieves gvt or pwrd factor at the time of tx
 export const getFactor = (token: string): BigDecimal => {
     if (token === 'gvt') {

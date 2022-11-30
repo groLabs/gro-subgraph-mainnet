@@ -25,6 +25,24 @@ function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
+// parse core deposit events
+function parseGRouterDepositEvent<T>(ev: T): DepoWithdrawEvent {
+    const event = new DepoWithdrawEvent(
+        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.block.number.toI32(),
+        ev.block.timestamp.toI32(),
+        ev.address,
+        'core_deposit',
+        ev.params.sender.toHexString(),   // links with User.id,
+        ADDR.ZERO,                      // from
+        ev.params.sender,                 // to
+        ev.params.trancheAmount,      // coinAmount
+        ev.params.calcAmount,            // usdAmount
+        NO_POOL,                        // poolId
+    )
+    return event;
+}
+
 // parse staker deposit events
 function parseStakerDepositEvent<T>(ev: T): DepoWithdrawEvent {
     const poolId = (ev.params.pid)
@@ -49,4 +67,5 @@ function parseStakerDepositEvent<T>(ev: T): DepoWithdrawEvent {
 export {
     parseCoreDepositEvent,
     parseStakerDepositEvent,
+    parseGRouterDepositEvent
 }
