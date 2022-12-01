@@ -10,7 +10,6 @@ import { manageCoreDeposit } from '../managers/deposit';
 import { manageCoreWithdrawal } from '../managers/withdrawal';
 
 export function handleLogDeposit(event: LogDeposit): void {
-    event.logType
     const ev = parseGRouterDepositEvent(event);
     const token = getGroToken(event.params.tranche);
     manageCoreDeposit(

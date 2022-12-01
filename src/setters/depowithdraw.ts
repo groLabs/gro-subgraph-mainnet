@@ -44,7 +44,9 @@ export const setDepoWithdrawTx = (
     tx.userAddress = ev.userAddress;
     tx.fromAddress = ev.fromAddress;
     tx.toAddress = ev.toAddress;
-    tx.coinAmount = ev.coinAmount.isZero() ? getCoinAmount(logs, tx, false) : tokenToDecimal(ev.coinAmount, 18, DECIMALS);
+    tx.coinAmount = ev.coinAmount.isZero() 
+       ? getCoinAmount(logs, tx, false) 
+       : tokenToDecimal(ev.coinAmount, 18, DECIMALS);
     tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
     tx.factor = getFactor(token);
     tx.poolId = ev.poolId;

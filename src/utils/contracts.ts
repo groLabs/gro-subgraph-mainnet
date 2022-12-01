@@ -26,7 +26,7 @@ const isStakerTransfer = (
 }
 
 const isTransferToGRouter = (to: Address): bool => {
-    return  ADDR.GROUTER.equals(to)
+    return  ADDR.GROUTER.equals(to);
 }
 
 // const isStakerTransfer = (
