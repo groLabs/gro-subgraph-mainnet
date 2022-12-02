@@ -1,15 +1,14 @@
 import { ThreePool } from "../../generated/GRouter/ThreePool"
-import { ADDR,NUM } from '../utils/constants';
-import { tokenToDecimal } from '../utils/tokens';
-import { log, BigDecimal } from '@graphprotocol/graph-ts';
+import { ADDR } from '../utils/constants';
+import { log, BigInt } from '@graphprotocol/graph-ts';
 
 
-export function get3CrvVirtualPrice( tx: string):BigDecimal {
+export function get3CrvVirtualPrice( tx: string):BigInt {
     const contract = ThreePool.bind(ADDR.THREE_POOL);
     const price = contract.try_get_virtual_price();
     if (price.reverted) {
         log.error('Get virtual price for 3crv on tx:{} failed', [tx]);
-        return NUM.ZERO;
+        return BigInt.zero();
     }
-    return tokenToDecimal(price.value, 18, 7);
+    return price.value;
 }

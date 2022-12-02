@@ -17,6 +17,7 @@ const initFactor = (save: boolean): Factor => {
     let factor = Factor.load('0x');
     if (!factor) {
         factor = new Factor('0x');
+        factor.timestamp = 0;
         factor.pwrd = NUM.PWRD_START_FACTOR;
         factor.gvt = NUM.GVT_START_FACTOR;
         if (save)
@@ -49,7 +50,7 @@ export const setPwrdFactor = (): void => {
     factor.save();
 }
 
-export const updateGTokenFactor = (): void => {
+export const updateGTokenFactor = (timestamp: i32): void => {
     const factor = initFactor(false);
     // gvt factor
     const gvtContract = Gvt.bind(ADDR.GVT);
@@ -66,6 +67,7 @@ export const updateGTokenFactor = (): void => {
     } else {
         factor.pwrd = tokenToDecimal(pwrdFactor.value, 18, 12);
     }
+    factor.timestamp = timestamp;
     factor.save();
 }
 

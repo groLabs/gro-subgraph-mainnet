@@ -8,6 +8,9 @@ import { parseGRouterWithdrawEvent } from '../parsers/withdrawals';
 import { getGroToken } from '../utils/tokens';
 import { manageCoreDeposit } from '../managers/deposit';
 import { manageCoreWithdrawal } from '../managers/withdrawal';
+import {
+	updateGTokenFactor
+} from '../setters/factors';
 
 export function handleLogDeposit(event: LogDeposit): void {
     const ev = parseGRouterDepositEvent(event);
@@ -17,6 +20,7 @@ export function handleLogDeposit(event: LogDeposit): void {
         [],
         token
     );
+    updateGTokenFactor(event.block.timestamp.toI32())
 }
 
 export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
@@ -27,6 +31,7 @@ export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
         [],
         token
     );
+    updateGTokenFactor(event.block.timestamp.toI32())
 }
 
 export function handleLogWithdrawal(event: LogWithdrawal): void {
@@ -37,6 +42,7 @@ export function handleLogWithdrawal(event: LogWithdrawal): void {
         [],
         token
     );
+    updateGTokenFactor(event.block.timestamp.toI32())
 }
 
 

@@ -28,8 +28,13 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
 
 function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
     let usdAmount = ev.params.calcAmount;
-    if(ev.params.tokenIndex.toI32() == 3){
-        usdAmount = get3CRVUSDAmount(usdAmount.toBigDecimal(), ev.transaction.hash.toHexString());
+    let tokenIndex = ev.params.tokenIndex.toI32();
+    if(tokenIndex == 1 || tokenIndex == 2){
+        const addedDecimals = BigInt.fromI32(10)
+           .pow(12)
+        usdAmount = usdAmount.times(addedDecimals);
+    } else if (tokenIndex == 3){
+        usdAmount = get3CRVUSDAmount(usdAmount, ev.transaction.hash.toHexString());
     }
     const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
@@ -86,9 +91,11 @@ function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-function get3CRVUSDAmount(coinAmount: BigDecimal, tx:string): BigInt{
+function get3CRVUSDAmount(coinAmount: BigInt, tx:string): BigInt{
     const price = get3CrvVirtualPrice(tx);
-    return BigInt.fromString(coinAmount.times(price).toString());
+    const result = coinAmount.times(price);
+    return result.div(BigInt.fromI32(10) // remove price's decimals
+                       .pow(18));
 }
 
 export {
