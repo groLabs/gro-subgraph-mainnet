@@ -36,4 +36,6 @@ export class Addr {
     public CHAINLINK_USDT_USD: Address;
     public GRO_VESTING_V1: Address;
     public GRO_VESTING_V2: Address;
+    public THREE_POOL: Address;
+    public GROUTER: Address
 }

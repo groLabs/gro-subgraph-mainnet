@@ -25,6 +25,10 @@ const isStakerTransfer = (
         : false;
 }
 
+const isTransferToGRouter = (to: Address): bool => {
+    return  ADDR.GROUTER.equals(to);
+}
+
 // const isStakerTransfer = (
 //     from: Address,
 //     to: Address,
@@ -49,4 +53,5 @@ const isStakerTransfer = (
 export {
     isDepositOrWithdrawal,
     isStakerTransfer,
+    isTransferToGRouter
 }

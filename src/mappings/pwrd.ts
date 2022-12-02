@@ -8,7 +8,8 @@ import {
 } from '../../generated/Gvt/ERC20';
 import {
     isStakerTransfer,
-    isDepositOrWithdrawal
+    isDepositOrWithdrawal,
+    isTransferToGRouter
 } from '../utils/contracts';
 
 
@@ -29,6 +30,7 @@ export function handleTransfer(event: Transfer): void {
             from,
             to,
         )
+        && !isTransferToGRouter(to)
     ) {
         const ev = parseTransferEvent(event);
         manageTransfer(ev, 'pwrd');

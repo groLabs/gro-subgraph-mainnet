@@ -971,6 +971,69 @@ dataSources:
           handler: handleHarvestedPrimaryUSDT
       file: ./src/mappings/convexStrategies.ts
 # *******************************************************************************************
+# ***********   GSquare   *******************************************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: GRouter
+    network: {{network}}
+    source:
+      address: "{{GRouterAddress}}"
+      abi: GRouter
+      startBlock: {{GRouterStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Totals
+        - CoreData
+        - TransferTx
+      abis:
+        - name: GRouter
+          file: ./abis/ethereum/GRouter.json
+        - name: ThreePool
+          file: ./abis/ethereum/ThreePool.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogDeposit(indexed address,uint256,uint256,bool,uint256,uint256)
+          handler: handleLogDeposit
+        - event: LogLegacyDeposit(indexed address,uint256[3],bool,uint256,uint256)
+          handler: handleLogLegacyDeposit
+        - event: LogWithdrawal(indexed address,uint256,uint256,bool,uint256)
+          handler: handleLogWithdrawal
+      file: ./src/mappings/grouter.ts
+# *******************************************************************************************
+# ***********   GVault   ********************************************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: GVault
+    network: {{network}}
+    source:
+      address: "{{GVaultAddress}}"
+      abi: GVault
+      startBlock: {{GVaultStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Factor
+      abis:
+        - name: GVault
+          file: ./abis/ethereum/GVault.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
+      eventHandlers:
+        - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleStrategyHarvestReport
+      file: ./src/mappings/gvault.ts
+# *******************************************************************************************
 # ***********   S T A B L E C O I N S   *****************************************************
 # *******************************************************************************************
   # - kind: ethereum/contract
