@@ -21,6 +21,7 @@ import {
     ADDR,
     DECIMALS,
     ERC20_TRANSFER_SIG,
+    G2_START_BLOCK
 } from '../utils/constants';
 
 // global vars to manage emergency <token> and <from>
@@ -48,7 +49,7 @@ export const setDepoWithdrawTx = (
        ? getCoinAmount(logs, tx, false) 
        : tokenToDecimal(ev.coinAmount, 18, DECIMALS);
     tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
-    tx.factor = getFactor(token);
+    tx.factor = getFactorForOldProtocol(ev.block, token);
     tx.poolId = ev.poolId;
     tx.save();
     return tx;
@@ -135,6 +136,13 @@ export function getCoinAmount(
         tx.hash.toHexString()
     ]);
     return NUM.ZERO;
+}
+
+function getFactorForOldProtocol(blockNumber: number, token: string): BigDecimal{
+    if(token == 'pwrd' && blockNumber < G2_START_BLOCK) 
+        return getStoredFactor(token);
+
+    return getFactor(token);
 }
 
 
