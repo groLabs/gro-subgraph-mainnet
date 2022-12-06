@@ -66,6 +66,7 @@ type Price @entity {
   dai: BigDecimal!
   usdc: BigDecimal!
   usdt: BigDecimal!
+  threeCrv: BigDecimal!
   balancer_gro_weth: BigDecimal!
   uniswap_gvt_gro: BigDecimal!
   uniswap_gro_usdc: BigDecimal!

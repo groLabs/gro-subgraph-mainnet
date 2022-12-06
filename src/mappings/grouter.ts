@@ -8,9 +8,8 @@ import { parseGRouterWithdrawEvent } from '../parsers/withdrawals';
 import { getGroToken } from '../utils/tokens';
 import { manageCoreDeposit } from '../managers/deposit';
 import { manageCoreWithdrawal } from '../managers/withdrawal';
-import {
-	updateGTokenFactor
-} from '../setters/factors';
+import { updateGTokenFactor } from '../setters/factors';
+import { setGvtPrice } from "../setters/price"
 
 export function handleLogDeposit(event: LogDeposit): void {
     const ev = parseGRouterDepositEvent(event);
@@ -20,7 +19,10 @@ export function handleLogDeposit(event: LogDeposit): void {
         [],
         token
     );
-    updateGTokenFactor(event.block.timestamp.toI32())
+
+    // update GToken's factor and price
+    updateGTokenFactor(event.block.timestamp.toI32());
+    setGvtPrice();
 }
 
 export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
@@ -31,7 +33,9 @@ export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
         [],
         token
     );
-    updateGTokenFactor(event.block.timestamp.toI32())
+    // update GToken's factor and price
+    updateGTokenFactor(event.block.timestamp.toI32());
+    setGvtPrice();
 }
 
 export function handleLogWithdrawal(event: LogWithdrawal): void {
@@ -42,7 +46,9 @@ export function handleLogWithdrawal(event: LogWithdrawal): void {
         [],
         token
     );
-    updateGTokenFactor(event.block.timestamp.toI32())
+    // update GToken's factor and price
+    updateGTokenFactor(event.block.timestamp.toI32());
+    setGvtPrice();
 }
 
 

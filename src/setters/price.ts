@@ -5,6 +5,7 @@ import {
     getPricePerShare,
     tokenToDecimal
 } from '../utils/tokens';
+import { get3CrvVirtualPrice } from "../utils/threePool";
 import {
     log,
     BigInt,
@@ -37,6 +38,7 @@ export const initPrice = (): Price => {
         price.dai = NUM.ZERO;
         price.usdc = NUM.ZERO;
         price.usdt = NUM.ZERO;
+        price.threeCrv = NUM.ZERO;
         price.balancer_gro_weth = NUM.ZERO;
         price.uniswap_gvt_gro = NUM.ZERO;
         price.uniswap_gro_usdc = NUM.ZERO;
@@ -49,6 +51,12 @@ export const initPrice = (): Price => {
 export const setGvtPrice = (): void => {
     let price = initPrice();
     price.gvt = getPricePerShare('gvt');
+    price.save();
+}
+
+export const set3CrvPrice = (): void => {
+    let price = initPrice();
+    price.threeCrv = get3CrvVirtualPrice();
     price.save();
 }
 
@@ -256,4 +264,10 @@ export const setStableCoinPrice = (
         }
         price.save();
     }
+}
+
+// Retrieves latest stored 3crv price (before a tx)
+export const get3CrvPrice = (): BigDecimal => {
+    const price = initPrice();
+    return price.threeCrv;
 }

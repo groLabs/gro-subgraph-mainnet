@@ -5,7 +5,7 @@ import {
     ADDR,
     NO_POOL,
 } from '../utils/constants';
-import { get3CrvVirtualPrice } from "../utils/threePool"
+import { get3CrvPrice } from "../setters/price"
 
 
 // parse core withdrawal events
@@ -34,7 +34,7 @@ function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
            .pow(12)
         usdAmount = usdAmount.times(addedDecimals);
     } else if (tokenIndex == 3){
-        usdAmount = get3CRVUSDAmount(usdAmount, ev.transaction.hash.toHexString());
+        usdAmount = get3CRVUSDAmount(usdAmount);
     }
     const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
@@ -91,11 +91,14 @@ function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-function get3CRVUSDAmount(coinAmount: BigInt, tx:string): BigInt{
-    const price = get3CrvVirtualPrice(tx);
-    const result = coinAmount.times(price);
-    return result.div(BigInt.fromI32(10) // remove price's decimals
-                       .pow(18));
+function get3CRVUSDAmount(coinAmount: BigInt): BigInt{
+    const price = get3CrvPrice();
+    return BigInt.fromString(
+             price.times(
+                coinAmount.toBigDecimal()
+             )
+             .toString()
+           );
 }
 
 export {
