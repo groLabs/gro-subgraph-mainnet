@@ -1,4 +1,4 @@
-import { ThreePool } from "../../generated/GRouter/ThreePool"
+import { ThreePool } from "../../generated/ChainlinkAggregator/ThreePool"
 import { ADDR } from '../utils/constants';
 import { tokenToDecimal } from "../utils/tokens";
 import { log, BigDecimal } from '@graphprotocol/graph-ts';

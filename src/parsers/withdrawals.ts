@@ -5,7 +5,7 @@ import {
     ADDR,
     NO_POOL,
 } from '../utils/constants';
-import { get3CrvPrice } from "../setters/price"
+import { amountToUsd } from "../utils/tokens";
 
 
 // parse core withdrawal events
@@ -27,15 +27,14 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
 }
 
 function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
-    let usdAmount = ev.params.calcAmount;
+    const shareAmount = ev.params.calcAmount;
     let tokenIndex = ev.params.tokenIndex.toI32();
+    let usdAmount = getUSDAmountOfShare(tokenIndex, shareAmount.toBigDecimal());
     if(tokenIndex == 1 || tokenIndex == 2){
         const addedDecimals = BigInt.fromI32(10)
-           .pow(12)
+           .pow(12);
         usdAmount = usdAmount.times(addedDecimals);
-    } else if (tokenIndex == 3){
-        usdAmount = get3CRVUSDAmount(usdAmount);
-    }
+    } 
     const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -91,14 +90,19 @@ function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-function get3CRVUSDAmount(coinAmount: BigInt): BigInt{
-    const price = get3CrvPrice();
-    return BigInt.fromString(
-             price.times(
-                coinAmount.toBigDecimal()
-             )
-             .toString()
-           );
+function getUSDAmountOfShare(tokenIndex: number, coinAmount:BigDecimal): BigInt {
+    let usdAmount = BigDecimal.zero();
+    if(tokenIndex == 0){
+        usdAmount = amountToUsd("dai", coinAmount);
+    } else if(tokenIndex == 1){
+        usdAmount = amountToUsd("usdc", coinAmount);
+    } else if(tokenIndex == 2) {
+        usdAmount = amountToUsd("usdt", coinAmount);
+    } else {
+        usdAmount = amountToUsd("3crv", coinAmount);
+    }
+
+    return BigInt.fromString(usdAmount.truncate(0).toString());
 }
 
 export {

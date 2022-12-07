@@ -115,6 +115,8 @@ export const amountToUsd = (
             ? _price.usdc
             : (coin == 'usdt')
                 ? _price.usdt
-                : NUM.ZERO;
+                : (coin == "3crv")
+                    ? _price.threeCrv
+                    : NUM.ZERO;
    return amount.times(price).truncate(DECIMALS);
 }

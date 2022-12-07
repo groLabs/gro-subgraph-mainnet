@@ -35,6 +35,12 @@ dataSources:
           file: ./abis/ethereum/ConvexStrategy.json
         - name: WeightedPool
           file: ./abis/ethereum/BalancerGroWethPool.json
+        - name: ThreePool
+          file: ./abis/ethereum/ThreePool.json
+        - name: Gvt
+          file: ./abis/ethereum/Gvt.json
+        - name: Pwrd
+          file: ./abis/ethereum/Pwrd.json
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
@@ -992,8 +998,6 @@ dataSources:
       abis:
         - name: GRouter
           file: ./abis/ethereum/GRouter.json
-        - name: ThreePool
-          file: ./abis/ethereum/ThreePool.json
         - name: Gvt
           file: ./abis/ethereum/Gvt.json
         - name: Pwrd

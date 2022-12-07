@@ -266,8 +266,3 @@ export const setStableCoinPrice = (
     }
 }
 
-// Retrieves latest stored 3crv price (before a tx)
-export const get3CrvPrice = (): BigDecimal => {
-    const price = initPrice();
-    return price.threeCrv;
-}
