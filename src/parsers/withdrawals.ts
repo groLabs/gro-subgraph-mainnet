@@ -1,11 +1,12 @@
 // @ts-nocheck
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { BigInt } from '@graphprotocol/graph-ts';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
 import {
     ADDR,
     NO_POOL,
+    NUM
 } from '../utils/constants';
-import { amountToUsd } from "../utils/tokens";
+import { getUSDAmountOfShare } from '../utils/tokens';
 
 
 // parse core withdrawal events
@@ -28,13 +29,8 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
 
 function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
     const shareAmount = ev.params.calcAmount;
-    let tokenIndex = ev.params.tokenIndex.toI32();
-    let usdAmount = getUSDAmountOfShare(tokenIndex, shareAmount.toBigDecimal());
-    if(tokenIndex == 1 || tokenIndex == 2){
-        const addedDecimals = BigInt.fromI32(10)
-           .pow(12);
-        usdAmount = usdAmount.times(addedDecimals);
-    } 
+    const tokenIndex = ev.params.tokenIndex.toI32();
+    const usdAmount = getUSDAmountOfShare(tokenIndex, shareAmount.toBigDecimal());
     const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -88,21 +84,6 @@ function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         poolId,                         // poolId
     )
     return event;
-}
-
-function getUSDAmountOfShare(tokenIndex: number, coinAmount:BigDecimal): BigInt {
-    let usdAmount = BigDecimal.zero();
-    if(tokenIndex == 0){
-        usdAmount = amountToUsd("dai", coinAmount);
-    } else if(tokenIndex == 1){
-        usdAmount = amountToUsd("usdc", coinAmount);
-    } else if(tokenIndex == 2) {
-        usdAmount = amountToUsd("usdt", coinAmount);
-    } else {
-        usdAmount = amountToUsd("3crv", coinAmount);
-    }
-
-    return BigInt.fromString(usdAmount.truncate(0).toString());
 }
 
 export {

@@ -120,3 +120,25 @@ export const amountToUsd = (
                     : NUM.ZERO;
    return amount.times(price).truncate(DECIMALS);
 }
+
+export const getUSDAmountOfShare = (
+    tokenIndex: number,
+    coinAmount:BigDecimal
+): BigInt =>{
+    let usdAmount = NUM.ZERO;
+    const addDecimal = BigInt.fromI32(10).pow(12).toBigDecimal();
+
+    if(tokenIndex == 0){
+        usdAmount = amountToUsd("dai", coinAmount);
+    } else if(tokenIndex == 1){
+        usdAmount = amountToUsd("usdc", coinAmount)
+                      .times(addDecimal);
+    } else if(tokenIndex == 2) {
+        usdAmount = amountToUsd("usdt", coinAmount)
+                      .times(addDecimal);
+    } else if(tokenIndex == 3) {
+        usdAmount = amountToUsd("3crv", coinAmount);
+    } 
+
+    return BigInt.fromString(usdAmount.truncate(0).toString());
+}
