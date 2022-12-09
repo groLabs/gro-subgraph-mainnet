@@ -4,7 +4,12 @@ import {
 import {
 	updateGTokenFactor as updateFactor
 } from '../setters/factors';
+import { setGvtPrice } from '../setters/price';
 
 export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): void {
-    updateFactor(event.block.timestamp.toI32())
+    // update factor
+    updateFactor(event.block.timestamp.toI32());
+
+    // update gvt price
+    setGvtPrice();
   }

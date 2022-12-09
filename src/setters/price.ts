@@ -24,7 +24,7 @@ import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVa
 import { WeightedPool as BalancerGroWethPool } from '../../generated/BalancerGroWethPool/WeightedPool';
 import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import { AccessControlledOffchainAggregator as ChainlinkAggregator } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
-
+import { ThreePool } from '../../generated/ChainlinkAggregator/ThreePool';
 
 export const initPrice = (): Price => {
     let price = Price.load('0x');
@@ -37,6 +37,7 @@ export const initPrice = (): Price => {
         price.dai = NUM.ZERO;
         price.usdc = NUM.ZERO;
         price.usdt = NUM.ZERO;
+        price.threeCrv = NUM.ZERO;
         price.balancer_gro_weth = NUM.ZERO;
         price.uniswap_gvt_gro = NUM.ZERO;
         price.uniswap_gro_usdc = NUM.ZERO;
@@ -50,6 +51,20 @@ export const setGvtPrice = (): void => {
     let price = initPrice();
     price.gvt = getPricePerShare('gvt');
     price.save();
+}
+
+export const set3CrvPrice = (): void => {
+    const contract = ThreePool.bind(ADDR.THREE_POOL);
+    const virtualPrice = contract.try_get_virtual_price();
+    if (virtualPrice.reverted) {
+        log.error('Get virtual price for 3crv failed', []);
+    } else {
+        const crvPrice = tokenToDecimal(virtualPrice.value, 18, 7);
+        let price = initPrice();
+        price.threeCrv = crvPrice;
+        price.save();
+    }
+    
 }
 
 // TODO: update gro price as well (knowing gvt price, we can update gro)
@@ -257,3 +272,4 @@ export const setStableCoinPrice = (
         price.save();
     }
 }
+
