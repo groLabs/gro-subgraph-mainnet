@@ -41,5 +41,61 @@
         ],
         "name":"LogStrategyHarvestReport",
         "type":"event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint48",
+            "name": "strategyId",
+            "type": "uint48"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "strategyDebt",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "totalVaultDebt",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "lossFromStrategyWithdrawal",
+            "type": "uint256"
+          }
+        ],
+        "name": "LogWithdrawalFromStrategy",
+        "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "strategy",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "pos",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogStrategyAdded",
+      "type": "event"
     }
 ]

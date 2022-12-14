@@ -81,6 +81,45 @@ export const getStrategies = (): Strat[] => {
             'convex',
             true,
         ),
+        new Strat(
+            '0x2d13826359803522cce7a4cfa2c1b582303dd0b4',   // strategy
+            '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
+            ADDR.ZERO.toHexString(),   // g2 no adapter again
+            'convexFrax',
+            'Convex-Frax',
+            '3CRVVault',
+            '3CRV Vault',
+            '3CRV',
+            'Frax',
+            'convex',
+            true,
+        ),
+        new Strat(
+            '0xf5c3953ae4639806fcbcc3196f71dd81b0da4348',   // strategy
+            '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
+            ADDR.ZERO.toHexString(),   // g2 no adapter again
+            'convexMim',
+            'Convex-Mim',
+            '3CRVVault',
+            '3CRV Vault',
+            '3CRV',
+            'Mim',
+            'convex',
+            true,
+        ),
+        new Strat(
+            '0x3a622db2db50f463df562dc5f341545a64c580fc',   // strategy
+            '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
+            ADDR.ZERO.toHexString(),   // g2 no adapter again
+            'convexLusd',
+            'Convex-Lusd',
+            '3CRVVault',
+            '3CRV Vault',
+            '3CRV',
+            'Lusd',
+            'convex',
+            true,
+        ),
     ];
     return strats;
 }

@@ -110,6 +110,51 @@ type Harvest @entity {
   timestamp: Int!
 }
 
+# strategy
+type GVaultStrategy @entity {
+  id: ID! #strategy address
+  coin: String!
+  metacoin: String!
+  protocol: String!
+  strat_name: String!
+  strat_display_name: String!
+  vault_name: String!
+  vault_display_name: String!
+  vault_address: Bytes!
+  total_assets_strategy: BigDecimal!  # doesn't save now
+  strategy_debt: BigDecimal!
+  block_strategy_reported: Int!
+  block_strategy_withdraw: Int!
+  harvests: [GVaultHarvest!] @derivedFrom(field: "strategyAddress")
+  withdraws: [StrategyWithdraw!] @derivedFrom(field: "strategyAddress")
+}
+
+type GVaultHarvest @entity {
+  id: ID! # hash-logIndex
+  strategyAddress: GVaultStrategy!
+  gain: BigDecimal!
+  loss: BigDecimal!
+  debtPaid: BigDecimal!
+  debtAdded: BigDecimal!
+  lockedProfit: BigDecimal!
+  timestamp: Int!
+}
+
+type StrategyWithdraw @entity {
+  id: ID! # hash-logIndex
+  strategyAddress: GVaultStrategy!
+  strategyId: Int!
+  strategyDebt: BigDecimal!
+  totalVaultDebt: BigDecimal!
+  lossFromStrategyWithdrawal: BigDecimal!
+  timestamp: Int!
+}
+
+type StrategyQueue @entity {
+  id: ID! # strategy's id
+  strategyAddress: Bytes!
+}
+
 # pool data
 type PoolData @entity {
   id: ID! # pool id
