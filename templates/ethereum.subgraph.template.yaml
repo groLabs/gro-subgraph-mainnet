@@ -977,7 +977,7 @@ dataSources:
           handler: handleHarvestedPrimaryUSDT
       file: ./src/mappings/convexStrategies.ts
 # *******************************************************************************************
-# ***********   GSquare   *******************************************************************
+# ***********   G R O U T E R   *************************************************************
 # *******************************************************************************************
   - kind: ethereum/contract
     name: GRouter
@@ -1011,7 +1011,7 @@ dataSources:
           handler: handleLogWithdrawal
       file: ./src/mappings/grouter.ts
 # *******************************************************************************************
-# ***********   GVault   ********************************************************************
+# ***********   G V A U L T   ***************************************************************
 # *******************************************************************************************
   - kind: ethereum/contract
     name: GVault
@@ -1037,6 +1037,104 @@ dataSources:
         - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyHarvestReport
       file: ./src/mappings/gvault.ts
+# *******************************************************************************************
+# ***********   G T R A N C H E   ***********************************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: GTranche
+    network: {{network}}
+    source:
+      address: "{{GTrancheAddress}}"
+      abi: GTranche
+      startBlock: {{GTrancheStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TBC
+      abis:
+        - name: GTranche
+          file: ./abis/ethereum/GTranche.json
+      eventHandlers:
+        - event: LogNewDeposit(indexed address,indexed address,uint256,uint256,indexed bool,uint256)
+          handler: handleLogNewDeposit
+        - event: LogNewWithdrawal(indexed address,indexed address,uint256,uint256,indexed bool,uint256,uint256)
+          handler: handleLogNewWithdrawal
+      file: ./src/mappings/gtranche.ts
+# *******************************************************************************************
+# ***********   P N L (G^2)   ***************************************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: PnLG2
+    network: {{network}}
+    source:
+      address: "{{PnLG2Address}}"
+      abi: PnLFixedRate
+      startBlock: {{PnLG2StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TBC
+      abis:
+        - name: PnLFixedRate
+          file: ./abis/ethereum/PnLG2.json
+      eventHandlers:
+        - event: LogNewFixedRate(int64)
+          handler: handleLogNewFixedRate
+        - event: LogNewPendingFixedRate(int64)
+          handler: LogNewPendingFixedRate
+      file: ./src/mappings/pnlg2.ts
+# *******************************************************************************************
+# ***********   S T O P - L O S S  L O G I C   **********************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: StopLossLogic
+    network: {{network}}
+    source:
+      address: "{{StopLossLogicAddress}}"
+      abi: StopLossLogic
+      startBlock: {{StopLossLogicStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TBC
+      abis:
+        - name: StopLossLogic
+          file: ./abis/ethereum/StopLossLogic.json
+      eventHandlers:
+        - event: LogStrategyUpdated(indexed address,uint128,uint128)
+          handler: handleLogStrategyUpdated
+      file: ./src/mappings/stoplosslogic.ts
+# *******************************************************************************************
+# ***********   C O N V E X  F R A X (G^2)   ************************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: ConvexFrax
+    network: {{network}}
+    source:
+      address: "{{ConvexFraxAddress}}"
+      abi: ConvexStrategy
+      startBlock: {{ConvexFraxStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TBC
+      abis:
+        - name: ConvexStrategy
+          file: ./abis/ethereum/ConvexFrax.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvested
+      file: ./src/mappings/convexfrax.ts
+
+
 # *******************************************************************************************
 # ***********   S T A B L E C O I N S   *****************************************************
 # *******************************************************************************************

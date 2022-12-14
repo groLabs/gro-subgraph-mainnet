@@ -79,6 +79,14 @@
     "GRouterAddress": "0x8E45C0936fa1a65bDaD3222bEFeC6a03C83372cE",
     "GRouterStartBlock": 15581679,
     "GVaultAddress": "0x325c8Df4CFb5B068675AFF8f62aA668D1dEc3C4B",
-    "GVaultStartBlock": 15581679
+    "GVaultStartBlock": 15581679,
+    "GTrancheAddress": "0x23E8d5c2B26A4a05dc94Ea79807272fB664721DE",
+    "GTrancheStartBlock": 15581679,
+    "PnLG2Address": "0xc19DF09a6Ecb926853163e37b9D80e35B683A3f6",
+    "PnLG2StartBlock": 15581679,
+    "StopLossLogicAddress": "0x886A5790BA2f549b511a5B59FbeEdF8184f60318",
+    "StopLossLogicStartBlock": 15581679,
+    "ConvexFraxAddress": "0xd1B9aF64Ed5CdcaEb58955d82FB384b3e558Df7B",
+    "ConvexFraxStartBlock": 16169160
   }
   

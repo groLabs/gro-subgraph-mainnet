@@ -75,6 +75,18 @@
     "SecondaryStratUSDCAddress": "0xd370998b2e7941151e7bb9f6e337a12f337d0682",
     "SecondaryStratUSDCStartBlock": 15700000,
     "PrimaryStratUSDTAddress": "0xde5a25415c637b52d59ef980b29a5fda8dc3c70b",
-    "PrimaryStratUSDTStartBlock": 15700000
+    "PrimaryStratUSDTStartBlock": 15700000,
+    "GRouterAddress": "0xb732473B9b1E56F8d1E68bC3fd8bb65E9A338e03",
+    "GRouterStartBlock": 16168951,
+    "GVaultAddress": "0xAe013D9bfa88f54A825831f969CB44ee020872d8",
+    "GVaultStartBlock": 16168936,
+    "GTrancheAddress": "0x23E8d5c2B26A4a05dc94Ea79807272fB664721DE",
+    "GTrancheStartBlock": 16168943,
+    "PnLG2Address": "0xc19DF09a6Ecb926853163e37b9D80e35B683A3f6",
+    "PnLG2StartBlock": 16168954,
+    "StopLossLogicAddress": "0x886A5790BA2f549b511a5B59FbeEdF8184f60318",
+    "StopLossLogicStartBlock": 16169130,
+    "ConvexFraxAddress": "0xd1B9aF64Ed5CdcaEb58955d82FB384b3e558Df7B",
+    "ConvexFraxStartBlock": 16169160
   }
   

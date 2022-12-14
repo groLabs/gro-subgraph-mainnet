@@ -1,0 +1,155 @@
+[
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "NotOwner",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "strategy",
+                "type": "address"
+            }
+        ],
+        "name": "LogStrategyRemoved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "strategy",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint128",
+                "name": "equilibriumValue",
+                "type": "uint128"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint128",
+                "name": "healthThreshold",
+                "type": "uint128"
+            }
+        ],
+        "name": "LogStrategyUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_strategy",
+                "type": "address"
+            }
+        ],
+        "name": "removeStrategy",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "setOwner",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_strategy",
+                "type": "address"
+            },
+            {
+                "internalType": "uint128",
+                "name": "_equilibriumValue",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "_healthThreshold",
+                "type": "uint128"
+            }
+        ],
+        "name": "setStrategy",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "stopLossCheck",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "strategyData",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "equilibriumValue",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "healthThreshold",
+                "type": "uint128"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]
