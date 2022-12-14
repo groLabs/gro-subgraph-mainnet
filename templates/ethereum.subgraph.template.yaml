@@ -1026,6 +1026,10 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Factor
+        - GVaultStrategy
+        - GVaultHarvest
+        - StrategyWithdraw
+        - StrategyQueue
       abis:
         - name: GVault
           file: ./abis/ethereum/GVault.json
@@ -1036,6 +1040,10 @@ dataSources:
       eventHandlers:
         - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyHarvestReport
+        - event: LogWithdrawalFromStrategy(uint48,uint256,uint256,uint256)
+          handler: handleWithdrawalFromStrategy
+        - event: LogStrategyAdded(indexed address,indexed uint256,uint256)
+          handler: handleStrategyAdded
       file: ./src/mappings/gvault.ts
 # *******************************************************************************************
 # ***********   G T R A N C H E   ***********************************************************
