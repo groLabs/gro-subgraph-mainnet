@@ -37,5 +37,6 @@ export class Addr {
     public GRO_VESTING_V1: Address;
     public GRO_VESTING_V2: Address;
     public THREE_POOL: Address;
-    public GROUTER: Address
+    public GROUTER: Address;
+    public GTRANCHE: Address
 }

@@ -1030,9 +1030,12 @@ dataSources:
         - GVaultHarvest
         - StrategyWithdraw
         - StrategyQueue
+        - MasterData
       abis:
         - name: GVault
           file: ./abis/ethereum/GVault.json
+        - name: GTranche
+          file: ./abis/ethereum/GTranche.json
         - name: Gvt
           file: ./abis/ethereum/Gvt.json
         - name: Pwrd
@@ -1046,7 +1049,7 @@ dataSources:
           handler: handleStrategyAdded
       file: ./src/mappings/gvault.ts
 # *******************************************************************************************
-# ***********   G T R A N C H E   ***********************************************************
+# ***********   GTranche   ********************************************************************
 # *******************************************************************************************
   - kind: ethereum/contract
     name: GTranche
@@ -1060,15 +1063,14 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - TBC
+        - MasterData
+        - TrancheBalance
       abis:
         - name: GTranche
           file: ./abis/ethereum/GTranche.json
       eventHandlers:
-        - event: LogNewDeposit(indexed address,indexed address,uint256,uint256,indexed bool,uint256)
-          handler: handleLogNewDeposit
-        - event: LogNewWithdrawal(indexed address,indexed address,uint256,uint256,indexed bool,uint256,uint256)
-          handler: handleLogNewWithdrawal
+        - event: LogNewTrancheBalance(uint256[2],uint256)
+          handler: handleNewTrancheBalance
       file: ./src/mappings/gtranche.ts
 # *******************************************************************************************
 # ***********   P N L (G^2)   ***************************************************************

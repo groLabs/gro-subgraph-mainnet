@@ -7,6 +7,7 @@ import {
 	updateGTokenFactor as updateFactor
 } from '../setters/factors';
 import { setGvtPrice } from '../setters/price';
+import { updateGTokenUtilization } from '../setters/masterdata'
 import { 
   setGVaultHarvest,
   setStrategyQueue,
@@ -45,6 +46,9 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
 
     // update gvt price
     setGvtPrice();
+
+    // update GToken utilization
+    updateGTokenUtilization();
 }
 
 export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): void {

@@ -54,6 +54,15 @@ type MasterData @entity {
   total_bonus_out: BigDecimal!
   init_unlocked_percent: BigDecimal!
   global_start_time: Int!
+  gtoken_utilization:BigDecimal!
+}
+
+type TrancheBalance @entity {
+  id: ID! # hash-logIndex
+  timestamp: Int!
+  junior_tranche_balance: BigDecimal!
+  senior_tranche_balance:BigDecimal!
+  utilization: BigDecimal!
 }
 
 # latest token price
