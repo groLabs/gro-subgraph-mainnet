@@ -4,7 +4,7 @@
   "scripts": {
     "eth-test-hosted": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:hosted",
     "eth-prod-hosted": "SCOPE=prod BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:prod:hosted",
-    "eth-g2-internal": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:hosted",
+    "eth-g2-internal": "SCOPE=g2 BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:hosted",
     "eth-test-studio": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:studio",
     "eth-prod-studio": "SCOPE=prod BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:prod:studio",
     "eth-test-local": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:local",
