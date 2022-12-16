@@ -54,6 +54,7 @@ type MasterData @entity {
   total_bonus_out: BigDecimal!
   init_unlocked_percent: BigDecimal!
   global_start_time: Int!
+  gtoken_utilization:BigDecimal!
 }
 
 # latest token price

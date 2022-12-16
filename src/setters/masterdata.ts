@@ -18,6 +18,7 @@ export const initMD = (): MasterData => {
 		md.total_bonus_out = NUM.ZERO;
 		md.global_start_time = i32(0);
 		md.init_unlocked_percent = NUM.ZERO;
+		md.gtoken_utilization = NUM.ZERO;
 	}
 	return md;
 }
