@@ -56,8 +56,8 @@ export const ADDR: Addr = {
     GRO_VESTING_V1: Address.fromString('0xA28693bf01Dc261887b238646Bb9636cB3a3730B'),
     GRO_VESTING_V2: Address.fromString('0x748218256AfE0A19a88EBEB2E0C5Ce86d2178360'),
     THREE_POOL: Address.fromString('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'),
-    GROUTER: Address.fromString('0x8E45C0936fa1a65bDaD3222bEFeC6a03C83372cE'),
-    GTRANCHE: Address.fromString('0x24432a08869578aAf4d1eadA12e1e78f171b1a2b'),
+    GROUTER: Address.fromString('0xb732473B9b1E56F8d1E68bC3fd8bb65E9A338e03'),
+    GTRANCHE: Address.fromString('0x23E8d5c2B26A4a05dc94Ea79807272fB664721DE'),
 }
 
 // Pool ids
