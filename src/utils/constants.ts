@@ -32,10 +32,13 @@ export const NUM: Num = {
 export const NO_ADDR = Bytes.empty();
 
 // Contract addresses
+// TODO: retrieve data from config files
 export const ADDR: Addr = {
     ZERO: Address.fromString('0x0000000000000000000000000000000000000000'),
-    GVT: Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c'),
-    PWRD: Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b'),
+    // GVT: Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c'),
+    GVT: Address.fromString('0xB0279D0338d2eadd97F199eF7F31BA77AC8759b9'),
+    // PWRD: Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b'),
+    PWRD: Address.fromString('0xF0E00481D623Fa7Adf06B3453182418B7d0cF233'),
     UNISWAPV2_GVT_GRO: Address.fromString('0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB'),
     UNISWAPV2_GRO_USDC: Address.fromString('0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6'),
     UNISWAPV2_USDC_WETH: Address.fromString('0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc'),
