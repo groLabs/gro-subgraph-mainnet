@@ -206,6 +206,16 @@ export const getTotalAssetsStrat = (
     return assets;
 }
 
+export const getStrategyAddressByQueueId = (queueId: number): Address => {
+    const strats = getStrategies();
+    for (let i = 0; i < strats.length; i++) {
+      if (strats[i].queueId == queueId) {
+        return Address.fromString(strats[i].id);
+      }
+    }
+    return ADDR.ZERO;
+  }
+  
 // export const getTotalAssetsStrat = (
 //     vaultAddress: Address,
 //     strategyAddress: Address,

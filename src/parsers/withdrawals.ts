@@ -1,12 +1,11 @@
 // @ts-nocheck
 import { BigInt } from '@graphprotocol/graph-ts';
+import { getUSDAmountOfShare } from '../utils/tokens';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
 import {
     ADDR,
     NO_POOL,
-    NUM
 } from '../utils/constants';
-import { getUSDAmountOfShare } from '../utils/tokens';
 
 
 // parse core withdrawal events
@@ -37,11 +36,11 @@ function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.address,
         'core_withdrawal',
-        ev.params.sender.toHexString(),   // links with User.id,
-        ev.params.sender,                 // from
+        ev.params.sender.toHexString(), // links with User.id,
+        ev.params.sender,               // from
         ADDR.ZERO,                      // to
-        ev.params.tokenAmount,         // coinAmount
-        usdAmount,                     // usdAmount
+        ev.params.tokenAmount,          // coinAmount
+        usdAmount,                      // usdAmount
         NO_POOL,                        // poolId
     )
     return event;

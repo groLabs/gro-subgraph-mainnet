@@ -242,21 +242,18 @@ export const setGVaultStrategy = (
     debtAdded: BigDecimal,
     strategyDebt: BigDecimal,
     block: BigInt,
-):void => {
+): void => {
     const id = strategyAddress.toHexString();
     log.info('vault strategy: {}',[id])
     let strat = initGVaultStrategy(id);
-    
     // TO DO total_assets_strategy 
-
-    if(eventType == "harvest"){
+    if (eventType == 'harvest') {
         strat.strategy_debt = strat.strategy_debt.minus(debtPaid).plus(debtAdded);
         strat.block_strategy_reported = block.toI32();
-    } else if(eventType == "withdraw"){
+    } else if (eventType == 'withdraw') {
         strat.strategy_debt = strategyDebt;
         strat.block_strategy_withdraw = block.toI32();
     }
-    
     strat.save();
 }
 
@@ -282,7 +279,6 @@ export const setGVaultHarvest = (
         harvest.timestamp = timestamp.toI32();
         harvest.save();
     }
-    
     return harvest;
 }
 
@@ -313,8 +309,6 @@ export const setGVaultHarvest = (
 //         withdraw.timestamp = timestamp.toI32();
 //         withdraw.save();
 //     }
-    
-    
 //     return withdraw;
 // }
 
