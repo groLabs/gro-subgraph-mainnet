@@ -25,6 +25,7 @@ export class Strategy {
     protocol: string
     metacoin: string
     active: boolean
+    queueId: number
     constructor(
         id: string,
         vault: string,
@@ -37,6 +38,7 @@ export class Strategy {
         metacoin: string,
         protocol: string,
         active: boolean,
+        queueId: number,
     ) {
         this.id = id
         this.vault = vault
@@ -49,6 +51,7 @@ export class Strategy {
         this.metacoin = metacoin
         this.protocol = protocol
         this.active = active
+        this.queueId = queueId
     }
 }
 

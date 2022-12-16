@@ -126,7 +126,7 @@ type GVaultStrategy @entity {
   block_strategy_reported: Int!
   block_strategy_withdraw: Int!
   harvests: [GVaultHarvest!] @derivedFrom(field: "strategyAddress")
-  withdraws: [StrategyWithdraw!] @derivedFrom(field: "strategyAddress")
+  # withdraws: [StrategyWithdraw!] @derivedFrom(field: "strategyAddress")
 }
 
 type GVaultHarvest @entity {
@@ -140,20 +140,20 @@ type GVaultHarvest @entity {
   timestamp: Int!
 }
 
-type StrategyWithdraw @entity {
-  id: ID! # hash-logIndex
-  strategyAddress: GVaultStrategy!
-  strategyId: Int!
-  strategyDebt: BigDecimal!
-  totalVaultDebt: BigDecimal!
-  lossFromStrategyWithdrawal: BigDecimal!
-  timestamp: Int!
-}
+# type StrategyWithdraw @entity {
+#  id: ID! # hash-logIndex
+#  strategyAddress: GVaultStrategy!
+#  strategyId: Int!
+#  strategyDebt: BigDecimal!
+#  totalVaultDebt: BigDecimal!
+#  lossFromStrategyWithdrawal: BigDecimal!
+#  timestamp: Int!
+#}
 
-type StrategyQueue @entity {
-  id: ID! # strategy's id
-  strategyAddress: Bytes!
-}
+#type StrategyQueue @entity {
+#  id: ID! # strategy's id
+#  strategyAddress: Bytes!
+#}
 
 # pool data
 type PoolData @entity {

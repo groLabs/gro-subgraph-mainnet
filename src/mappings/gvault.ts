@@ -1,20 +1,24 @@
 import {
  LogStrategyHarvestReport,
  LogWithdrawalFromStrategy,
- LogStrategyAdded
+//  LogStrategyAdded
 } from '../../generated/GVault/GVault';
+import { updateGTokenUtilization } from '../setters/gtranche'
 import {
 	updateGTokenFactor as updateFactor
 } from '../setters/factors';
 import { setGvtPrice } from '../setters/price';
 import { 
   setGVaultHarvest,
-  setStrategyQueue,
+  // setStrategyQueue,
   setGVaultStrategy,
-  setStrategyWithdraw
+  // setStrategyWithdraw
 } from '../setters/strats';
+import {
+  getStrategies,
+} from '../utils/strats';
 import { tokenToDecimal } from '../utils/tokens';
-import { DECIMALS, NUM } from '../utils/constants';
+import { DECIMALS, NUM, ADDR } from '../utils/constants';
 import { Address } from '@graphprotocol/graph-ts';
 
 export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): void {
@@ -45,29 +49,43 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
 
     // update gvt price
     setGvtPrice();
+
+    // update Gtoken utilization
+    updateGTokenUtilization();
 }
 
 export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): void {
-    const withdraw = setStrategyWithdraw(
-      event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
-      event.params.strategyId,
-      tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
-      tokenToDecimal(event.params.totalVaultDebt, 18, DECIMALS),
-      tokenToDecimal(event.params.lossFromStrategyWithdrawal, 18, DECIMALS),
-      event.block.timestamp
-    )
+    // const withdraw = setStrategyWithdraw(
+    //   event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+    //   event.params.strategyId,
+    //   tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
+    //   tokenToDecimal(event.params.totalVaultDebt, 18, DECIMALS),
+    //   tokenToDecimal(event.params.lossFromStrategyWithdrawal, 18, DECIMALS),
+    //   event.block.timestamp
+    // )
+    const strategyAddress = getStrategyAddressByQueueId(event.params.strategyId.toI32())
 
     // update GVault strategy
     setGVaultStrategy(
-      Address.fromString(withdraw.strategyAddress),
+      strategyAddress,
       'withdraw',
       NUM.ZERO,
       NUM.ZERO,
-      withdraw.strategyDebt,
+      event.params.strategyDebt,
       event.block.number
     )
 }
 
-export function handleStrategyAdded(event: LogStrategyAdded): void {
-  setStrategyQueue(event.params.strategy, event.params.id.toI32().toString())
+// export function handleStrategyAdded(event: LogStrategyAdded): void {
+//   setStrategyQueue(event.params.strategy, event.params.id.toI32().toString())
+// }
+
+export const getStrategyAddressByQueueId = (queueId: number): Address => {
+  const strats = getStrategies();
+  for (let i = 0; i < strats.length; i++) {
+      if (strats[i].queueId == queueId) {
+          return Address.fromString(strats[i].id);
+      }
+  }
+  return ADDR.ZERO;
 }
