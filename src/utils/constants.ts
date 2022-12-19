@@ -7,6 +7,8 @@ import {
     Num,
     Addr,
 } from '../types/constants';
+import { contracts } from '../../addresses';
+
 
 // Blocks
 export const GENESIS_POOL_GRO_WETH = 13355180;  // Oct-04-2021 10:03:33 PM
@@ -36,9 +38,11 @@ export const NO_ADDR = Bytes.empty();
 export const ADDR: Addr = {
     ZERO: Address.fromString('0x0000000000000000000000000000000000000000'),
     // GVT: Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c'),
-    GVT: Address.fromString('0xB0279D0338d2eadd97F199eF7F31BA77AC8759b9'),
+    // GVT: Address.fromString('0xB0279D0338d2eadd97F199eF7F31BA77AC8759b9'),
+    GVT: Address.fromString(contracts.GvtAddress),
     // PWRD: Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b'),
-    PWRD: Address.fromString('0xF0E00481D623Fa7Adf06B3453182418B7d0cF233'),
+    //PWRD: Address.fromString('0xF0E00481D623Fa7Adf06B3453182418B7d0cF233'),
+    PWRD: Address.fromString(contracts.PwrdAddress),
     UNISWAPV2_GVT_GRO: Address.fromString('0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB'),
     UNISWAPV2_GRO_USDC: Address.fromString('0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6'),
     UNISWAPV2_USDC_WETH: Address.fromString('0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc'),
