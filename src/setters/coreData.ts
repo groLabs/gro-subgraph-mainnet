@@ -3,7 +3,6 @@ import { CoreData } from '../../generated/schema';
 import { getStoredFactor } from '../setters/factors';
 import {
 	NUM,
-	ADDR,
 	DECIMALS,
 } from '../utils/constants';
 import {
@@ -38,13 +37,13 @@ export function setTotalSupply (
 	coin: string,
 ): void {
 	const decimals = (coin == 'uniswap_gro_usdc') ? 12 : DECIMALS;
-	if (from == ADDR.ZERO) {
+	if (from == Address.zero()) {
 		updateTotalSupply(
 			'deposit',
 			tokenToDecimal(amount, 18, decimals),
 			coin,
 		);
-	} else if (to == ADDR.ZERO) {
+	} else if (to == Address.zero()) {
 		updateTotalSupply(
 			'withdrawal',
 			tokenToDecimal(amount, 18, decimals),

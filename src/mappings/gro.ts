@@ -2,17 +2,16 @@ import {
     Approval,
     Transfer,
 } from '../../generated/Gvt/ERC20';
-import {
-    ADDR,
-    DECIMALS
-} from '../utils/constants';
+import { DECIMALS } from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
+import { Address } from '@graphprotocol/graph-ts';
 import { parseApprovalEvent } from '../parsers/approval';
 import { manageApproval } from '../managers/approvals';
 import { parseTransferEvent } from '../parsers/transfer';
 import { manageTransfer } from '../managers/transfers';
 import { isStakerTransfer } from '../utils/contracts';
 import { updateTotalSupply } from '../setters/coreData';
+
 
 
 export function handleApproval(event: Approval): void {
@@ -31,13 +30,13 @@ export function handleTransfer(event: Transfer): void {
     )) {
         const ev = parseTransferEvent(event);
         manageTransfer(ev, 'gro');
-        if (from == ADDR.ZERO) {
+        if (from == Address.zero()) {
             updateTotalSupply(
                 'deposit',
                 value,
                 'gro',
             );
-        } else if (to == ADDR.ZERO) {
+        } else if (to == Address.zero()) {
             updateTotalSupply(
                 'withdrawal',
                 value,

@@ -1,8 +1,7 @@
-import { ADDR } from './constants';
 import { Strategy } from '../../generated/schema';
 import { Strategy as Strat } from '../types/strats';
 import { Vyper_contract as vaultAdapter } from '../../generated/VaultAdapter/Vyper_contract';
-import { StableConvexXPool as convexStrategy } from '../../generated/ConvexStrategy/StableConvexXPool';
+// import { StableConvexXPool as convexStrategy } from '../../generated/ConvexStrategy/StableConvexXPool';
 import {
     Vyper_contract as vault,
     Vyper_contract__strategiesResult
@@ -89,7 +88,7 @@ export const getStrategies = (): Strat[] => {
         // new Strat(
         //     '0x2d13826359803522cce7a4cfa2c1b582303dd0b4',   // strategy
         //     '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
-        //     ADDR.ZERO.toHexString(),   // g2 no adapter again
+        //     Address.zero().toHexString(),   // g2 no adapter again
         //     'convexFrax',
         //     'Convex-Frax',
         //     '3CRVVault',
@@ -103,7 +102,7 @@ export const getStrategies = (): Strat[] => {
         // new Strat(
         //     '0xf5c3953ae4639806fcbcc3196f71dd81b0da4348',   // strategy
         //     '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
-        //     ADDR.ZERO.toHexString(),   // g2 no adapter again
+        //     Address.zero().toHexString(),   // g2 no adapter again
         //     'convexMim',
         //     'Convex-Mim',
         //     '3CRVVault',
@@ -117,7 +116,7 @@ export const getStrategies = (): Strat[] => {
         // new Strat(
         //     '0x3a622db2db50f463df562dc5f341545a64c580fc',   // strategy
         //     '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
-        //     ADDR.ZERO.toHexString(),   // g2 no adapter again
+        //     Address.zero().toHexString(),   // g2 no adapter again
         //     'convexLusd',
         //     'Convex-Lusd',
         //     '3CRVVault',
@@ -137,7 +136,7 @@ export const getGVaultStrategies = (): Strat[] => {
         new Strat(
             '0xd1b9af64ed5cdcaeb58955d82fb384b3e558df7b',   // strategy
             '0xae013d9bfa88f54a825831f969cb44ee020872d8',   // vault
-            ADDR.ZERO.toHexString(),                        // G^2 has no adapter
+            Address.zero().toHexString(),                        // G^2 has no adapter
             'convexFrax',
             'Convex-Frax',
             '3CRVVault',
@@ -172,7 +171,7 @@ export const getAdapterAddressByStrategy = (strategy: string): Address => {
             return Address.fromString(strats[i].adapter);
         }
     }
-    return ADDR.ZERO;
+    return Address.zero();
 }
 
 export const getAdaptersByCoin = (coin: string): string[] => {
@@ -219,7 +218,7 @@ export const getStrategyAddressByQueueId = (queueId: number): Address => {
         return Address.fromString(strats[i].id);
       }
     }
-    return ADDR.ZERO;
+    return Address.zero();
   }
   
 // export const getTotalAssetsStrat = (

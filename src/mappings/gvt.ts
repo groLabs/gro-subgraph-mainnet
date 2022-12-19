@@ -62,9 +62,9 @@ const isDepositOrWithdrawalGVT = (
     amount: BigInt,
 ): bool => {
     const receipt = event.receipt;
-    if (to == ADDR.ZERO) {
+    if (to == Address.zero()) {
         return true;
-    } else if (from == ADDR.ZERO) {
+    } else if (from == Address.zero()) {
         if (receipt) {
             const logs = parseLogEvent(event.receipt!.logs);
             for (let i = 0; i < logs.length; i++) {
@@ -97,33 +97,3 @@ const isDepositOrWithdrawalGVT = (
         return false;
     }
 }
-
-// export function handleTransfer(event: Transfer): void {
-//     const from = event.params.from;
-//     const to = event.params.to;
-//     if (
-//         !isDepositOrWithdrawal(from, to)
-//         && !isStakerTransfer(from, to)
-//     ) {
-//         const ev = parseTransferEvent(event);
-//         manageTransfer(ev, 'gvt');
-//     }
-// }
-
-// export function handleTransfer(event: Transfer): void {
-//     const from = event.params.from;
-//     const to = event.params.to;
-//     const amount = event.params.value;
-
-//     // deposits & withdrawals are managed by its handlers
-//     // if (isDepositOrWithdrawal(from, to)) {
-//     //     // updateTotalSupply(
-//     //     //     from,
-//     //     //     amount,
-//     //     //     'gvt',
-//     //     // );
-//     // } else if (!isStakerTransfer(from, to)) {
-//     //     const ev = parseTransferEvent(event);
-//     //     manageTransfer(ev, 'gvt');
-//     // }
-// }

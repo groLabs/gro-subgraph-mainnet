@@ -14,7 +14,6 @@ export class Num {
 }
 
 export class Addr {
-    public ZERO: Address;
     public GVT: Address;
     public PWRD: Address;
     public UNISWAPV2_GVT_GRO: Address;

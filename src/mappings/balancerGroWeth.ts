@@ -16,6 +16,7 @@ import {
 } from '../utils/constants';
 import {
     log,
+    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 
@@ -47,12 +48,12 @@ export function handleBalancerSwap(
             5,
             _now,
             blockNumber,
-            ADDR.ZERO,
+            Address.zero(),
             NUM.ZERO,
             NUM.ZERO,
             NUM.ZERO,
             NUM.ZERO,
-            ADDR.ZERO,
+            Address.zero(),
             getVirtualPrice(),
         );
     }

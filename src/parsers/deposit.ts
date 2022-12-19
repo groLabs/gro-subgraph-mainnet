@@ -1,10 +1,10 @@
 // @ts-nocheck
-import { BigInt } from '@graphprotocol/graph-ts';
+import { NO_POOL } from '../utils/constants';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
 import {
-    ADDR,
-    NO_POOL,
-} from '../utils/constants';
+    BigInt,
+    Address,
+} from '@graphprotocol/graph-ts';
 
 
 // parse core deposit events
@@ -16,7 +16,7 @@ function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.address,
         'core_deposit',
         ev.params.user.toHexString(),   // links with User.id,
-        ADDR.ZERO,                      // from
+        Address.zero(),                 // from
         ev.params.user,                 // to
         BigInt.fromString('0'),         // coinAmount
         ev.params.usdAmount,            // usdAmount
@@ -33,11 +33,11 @@ function parseGRouterDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.address,
         'core_deposit',
-        ev.params.sender.toHexString(),   // links with User.id,
-        ADDR.ZERO,                      // from
-        ev.params.sender,                 // to
-        ev.params.trancheAmount,      // coinAmount
-        ev.params.calcAmount,            // usdAmount
+        ev.params.sender.toHexString(), // links with User.id,
+        Address.zero(),                 // from
+        ev.params.sender,               // to
+        ev.params.trancheAmount,        // coinAmount
+        ev.params.calcAmount,           // usdAmount
         NO_POOL,                        // poolId
     )
     return event;
@@ -58,7 +58,7 @@ function parseStakerDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.params.user,                 // from
         ev.address,                     // to
         ev.params.amount,               // coinAmount
-        BigInt.fromString('0'),         // usdAmount // TODO **************************
+        BigInt.fromString('0'),         // usdAmount // TODO *******
         poolId,                         // poolId
     )
     return event;

@@ -6,6 +6,7 @@ import { setCurvePwrd3crvPrice } from '../setters/price';
 import { Vyper_contract as MetaPool } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import {
     log,
+    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
@@ -32,7 +33,7 @@ export function handleTokenExchange(event: TokenExchange): void {
         tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
         NUM.ZERO,
         tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
-        ADDR.ZERO,
+        Address.zero(),
         getVirtualPrice()
     );
 }
@@ -49,7 +50,7 @@ export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): v
         tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
         NUM.ZERO,
         tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
-        ADDR.ZERO,
+        Address.zero(),
         getVirtualPrice(),
     );
 }

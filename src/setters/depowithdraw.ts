@@ -3,6 +3,7 @@ import { TransferTx } from '../../generated/schema';
 import { DepoWithdraw } from '../types/depowithdraw';
 import {
     Bytes,
+    Address,
     ethereum,
     BigDecimal,
     log as showLog,
@@ -26,7 +27,7 @@ import {
 
 // global vars to manage emergency <token> and <from>
 let emergencyToken = '';
-let emergencyFrom = ADDR.ZERO;
+let emergencyFrom = Address.zero();
 
 
 // core deposits & withdrawals
@@ -69,7 +70,7 @@ export const setEmergencyWithdrawTx = (
     tx.coinAmount = getCoinAmount(logs, tx, true);
     tx.userAddress = emergencyFrom.toHexString();
     tx.fromAddress = emergencyFrom;
-    tx.toAddress = ADDR.ZERO;
+    tx.toAddress = Address.zero();
     tx.token = emergencyToken;
     const pricePerShare = getPricePerShare(emergencyToken);
     tx.usdAmount = (tx.coinAmount.times(pricePerShare)).truncate(DECIMALS);
@@ -119,8 +120,8 @@ export function getCoinAmount(
         ) {
             const from = ethereum.decode('address', log.topics[1])!.toAddress();
             const to = ethereum.decode('address', log.topics[2])!.toAddress();
-            if ((tx.type === 'core_deposit' && from == ADDR.ZERO)
-                || (tx.type === 'core_withdrawal' && to == ADDR.ZERO)) {
+            if ((tx.type === 'core_deposit' && from == Address.zero())
+                || (tx.type === 'core_withdrawal' && to == Address.zero())) {
                     if (isEmergency) {
                         emergencyToken = (log.address == ADDR.GVT) ? 'gvt' : 'pwrd';
                         emergencyFrom = from;
@@ -170,8 +171,8 @@ export function getCoinAmount(
         ) {
             const from = ethereum.decode('address', log.topics[1])!.toAddress();
             const to = ethereum.decode('address', log.topics[2])!.toAddress();
-            if ((tx.type === 'core_deposit' && from == ADDR.ZERO)
-                || (tx.type === 'core_withdrawal' && to == ADDR.ZERO)) {
+            if ((tx.type === 'core_deposit' && from == Address.zero())
+                || (tx.type === 'core_withdrawal' && to == Address.zero())) {
                 const value = ethereum.decode('uin256', log.data)!.toBigInt();
                 return tokenToDecimal(value, 18, 7);
             }
@@ -201,8 +202,8 @@ export function getCoinAmountEmergency(
         ) {
             const from = ethereum.decode('address', log.topics[1])!.toAddress();
             const to = ethereum.decode('address', log.topics[2])!.toAddress();
-            if ((tx.type === 'core_deposit' && from == ADDR.ZERO)
-                || (tx.type === 'core_withdrawal' && to == ADDR.ZERO)) {
+            if ((tx.type === 'core_deposit' && from == Address.zero())
+                || (tx.type === 'core_withdrawal' && to == Address.zero())) {
                 emergencyToken = (log.address == ADDR.GVT) ? 'gvt' : 'pwrd';
                 emergencyFrom = from;
                 const value = ethereum.decode('uin256', log.data)!.toBigInt();

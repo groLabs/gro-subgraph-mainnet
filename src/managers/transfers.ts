@@ -1,6 +1,6 @@
-import { ADDR } from '../utils/constants';
 import { setUser } from '../setters/users';
 import { setTotals } from '../setters/totals';
+import { Address } from '@graphprotocol/graph-ts';
 import { TransferEvent } from '../types/transfer';
 import { initCoreData } from '../setters/coreData';
 import { setTransferTx } from '../setters/transfers';
@@ -52,10 +52,10 @@ export const manageTransfer = (
     // case A -> if from == 0x, deposit (mint)
     // case B -> if to == 0x, withdrawal (burn)
     // case C -> else, transfer between users (transfer_in & transfer_out)
-    if (ev.fromAddress == ADDR.ZERO) {
+    if (ev.fromAddress == Address.zero()) {
         userAddressIn = ev.toAddress.toHexString();
         type = 'core_deposit';
-    } else if (ev.toAddress == ADDR.ZERO) {
+    } else if (ev.toAddress == Address.zero()) {
         userAddressOut = ev.fromAddress.toHexString();
         type = 'core_withdrawal';
     } else {

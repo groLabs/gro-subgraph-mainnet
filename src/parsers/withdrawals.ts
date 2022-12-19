@@ -1,11 +1,11 @@
 // @ts-nocheck
-import { BigInt } from '@graphprotocol/graph-ts';
+import { NO_POOL } from '../utils/constants';
 import { getUSDAmountOfShare } from '../utils/tokens';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
 import {
-    ADDR,
-    NO_POOL,
-} from '../utils/constants';
+    BigInt,
+    Address,
+} from '@graphprotocol/graph-ts';
 
 
 // parse core withdrawal events
@@ -18,7 +18,7 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         'core_withdrawal',
         ev.params.user.toHexString(),   // links with User.id,
         ev.params.user,                 // from
-        ADDR.ZERO,                      // to
+        Address.zero(),                 // to
         BigInt.fromString('0'),         // coinAmount
         ev.params.returnUsd,            // usdAmount
         NO_POOL,                        // poolId
@@ -38,7 +38,7 @@ function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
         'core_withdrawal',
         ev.params.sender.toHexString(), // links with User.id,
         ev.params.sender,               // from
-        ADDR.ZERO,                      // to
+        Address.zero(),                 // to
         ev.params.tokenAmount,          // coinAmount
         usdAmount,                      // usdAmount
         NO_POOL,                        // poolId
@@ -55,8 +55,8 @@ function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.address,
         'core_withdrawal',
         '',
-        ADDR.ZERO,
-        ADDR.ZERO,
+        Address.zero(),
+        Address.zero(),
         BigInt.fromString('0'),         // coinAmount
         BigInt.fromString('0'),         // usdAmount
         NO_POOL,                        // poolId

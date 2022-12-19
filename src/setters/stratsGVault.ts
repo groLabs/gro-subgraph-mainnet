@@ -9,8 +9,8 @@ import {
 } from '../../generated/schema';
 import {
     log,
-    Address,
     BigInt,
+    Address,
     BigDecimal
 } from '@graphprotocol/graph-ts';
 
@@ -24,7 +24,7 @@ const noGVaultStrategy = (): GVaultStrategy => {
     strat.strat_display_name = 'unknown';
     strat.vault_name = 'unknown';
     strat.vault_display_name = 'unknown';
-    strat.vault_address = ADDR.ZERO;
+    strat.vault_address = Address.zero();
     strat.total_assets_strategy = NUM.ZERO;
     strat.strategy_debt = NUM.ZERO;
     strat.block_strategy_reported = 0;

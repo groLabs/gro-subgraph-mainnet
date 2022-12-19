@@ -15,7 +15,6 @@ export const GENESIS_POOL_GRO_WETH = 13355180;  // Oct-04-2021 10:03:33 PM
 
 // Timestamps
 export const TS_LAUNCH = 1622204347;    // Friday 28 May 2021 12:19:07
-
 export const G2_START_BLOCK = 16038962  // The start block number that G2 works
 
 // Numbers
@@ -36,7 +35,6 @@ export const NO_ADDR = Bytes.empty();
 // Contract addresses
 // TODO: retrieve data from config files
 export const ADDR: Addr = {
-    ZERO: Address.fromString('0x0000000000000000000000000000000000000000'),
     // GVT: Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c'),
     // GVT: Address.fromString('0xB0279D0338d2eadd97F199eF7F31BA77AC8759b9'),
     GVT: Address.fromString(contracts.GvtAddress),

@@ -19,8 +19,8 @@ import {
 } from '../utils/strats';
 import {
     log,
-    Address,
     BigInt,
+    Address,
     BigDecimal
 } from '@graphprotocol/graph-ts';
 
@@ -34,8 +34,8 @@ const noStrategy = (): Strategy => {
     strat.strat_display_name = 'unknown';
     strat.vault_name = 'unknown';
     strat.vault_display_name = 'unknown';
-    strat.vault_address = ADDR.ZERO;
-    strat.vault_adapter_address = ADDR.ZERO;
+    strat.vault_address = Address.zero();
+    strat.vault_adapter_address = Address.zero();
     strat.total_assets_adapter = NUM.ZERO;
     strat.total_assets_strategy = NUM.ZERO;
     strat.strategy_debt = NUM.ZERO;
@@ -114,7 +114,7 @@ export const setStrategyReported = (
     const id = strategyAddress.toHexString();
     let strat = initStrategy(id);
     const adapterAddress = getAdapterAddressByStrategy(id);
-    if (adapterAddress != ADDR.ZERO) {
+    if (adapterAddress != Address.zero()) {
         const totalAssetsVault = getTotalAssetsVault(adapterAddress);
         const totalAssetsStrat = getTotalAssetsStrat(vaultAddress, strategyAddress);
         if (totalAssetsVault.reverted) {

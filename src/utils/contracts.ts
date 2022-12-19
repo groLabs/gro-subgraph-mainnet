@@ -10,7 +10,7 @@ const isDepositOrWithdrawal = (
     from: Address,
     to: Address,
 ): bool => {
-    return (from == ADDR.ZERO || to == ADDR.ZERO)
+    return (from == Address.zero() || to == Address.zero())
         ? true
         : false;
 }

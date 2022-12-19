@@ -1,12 +1,12 @@
+import { NUM } from '../utils/constants';
+import { initMD } from '../setters/masterdata';
+import { tokenToDecimal } from '../utils/tokens';
 import { LogBonusClaimed as LogBonusClaimedV1 } from '../../generated/GROHodlerV1/GROHodler';
 import { LogBonusClaimed as LogBonusClaimedV2 } from '../../generated/GROHodlerV2/GROHodler';
 import {
     updateNetReward,
     updateTotalBonus,
 } from '../setters/vestingBonus';
-import { tokenToDecimal } from '../utils/tokens';
-import { NUM } from '../utils/constants';
-import { initMD } from '../setters/masterdata';
 
 
 export function handleBonusClaimedV1(event: LogBonusClaimedV1): void {

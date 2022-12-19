@@ -8,8 +8,8 @@ import { manageCoreWithdrawal } from '../managers/withdrawal';
 import { parseGRouterWithdrawEvent } from '../parsers/withdrawals';
 import {
     LogDeposit,
+    LogWithdrawal,
     LogLegacyDeposit,
-    LogWithdrawal
 } from '../../generated/GRouter/GRouter';
 
 

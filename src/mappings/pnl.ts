@@ -28,7 +28,6 @@ export function handlePnLExecution(event: LogPnLExecution): void {
 		// showLog.warning(`No log for tx hash {}`,
 		// 	[event.transaction.hash.toHexString()]);
 	}
-
 }
 
 // check if the PNL event has a withdrawal event within the same transaction
