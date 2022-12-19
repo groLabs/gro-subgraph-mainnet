@@ -128,10 +128,16 @@ export const getStrategies = (): Strat[] => {
         //     true,
         //     0,
         // ),
+    ];
+    return strats;
+}
+
+export const getGVaultStrategies = (): Strat[] => {
+    const strats = [
         new Strat(
-            '0xd1B9aF64Ed5CdcaEb58955d82FB384b3e558Df7B',   // strategy
-            '0xAe013D9bfa88f54A825831f969CB44ee020872d8',   // vault
-            ADDR.ZERO.toHexString(),   // g2 no adapter again
+            '0xd1b9af64ed5cdcaeb58955d82fb384b3e558df7b',   // strategy
+            '0xae013d9bfa88f54a825831f969cb44ee020872d8',   // vault
+            ADDR.ZERO.toHexString(),                        // G^2 has no adapter
             'convexFrax',
             'Convex-Frax',
             '3CRVVault',
@@ -207,7 +213,7 @@ export const getTotalAssetsStrat = (
 }
 
 export const getStrategyAddressByQueueId = (queueId: number): Address => {
-    const strats = getStrategies();
+    const strats = getGVaultStrategies();
     for (let i = 0; i < strats.length; i++) {
       if (strats[i].queueId == queueId) {
         return Address.fromString(strats[i].id);

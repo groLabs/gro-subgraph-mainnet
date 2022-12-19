@@ -4,6 +4,7 @@ import {
 } from '../../generated/schema';
 import { initMD } from '../setters/masterdata';
 import { initAllStrategies } from '../setters/strats';
+import { initAllGVaultStrategies } from '../setters/stratsGVault';
 
 const initMasterDataOnce = (): void => {
 	let md = MasterData.load('0x');
@@ -11,6 +12,7 @@ const initMasterDataOnce = (): void => {
 		md = initMD();
 		md.save;
 		initAllStrategies();
+		initAllGVaultStrategies();
 	}
 }
 

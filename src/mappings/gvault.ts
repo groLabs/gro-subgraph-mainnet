@@ -1,22 +1,20 @@
 import { setGvtPrice } from '../setters/price';
-import { getStrategies } from '../utils/strats';
 import { tokenToDecimal } from '../utils/tokens';
-import { Address } from '@graphprotocol/graph-ts';
-import { DECIMALS, NUM, ADDR } from '../utils/constants';
 import { updateGTokenUtilization } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
 import { updateGTokenFactor as updateFactor } from '../setters/factors';
 import {
+  NUM,
+  DECIMALS,
+} from '../utils/constants';
+import {
   LogStrategyHarvestReport,
   LogWithdrawalFromStrategy,
-  //  LogStrategyAdded
 } from '../../generated/GVault/GVault';
 import {
   setGVaultHarvest,
-  // setStrategyQueue,
   setGVaultStrategy,
-  // setStrategyWithdraw
-} from '../setters/strats';
+} from '../setters/stratsGVault';
 
 
 export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): void {
