@@ -1,6 +1,6 @@
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
-import { updateGTokenUtilization } from '../setters/gtranche';
+import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
 import { updateGTokenFactor as updateFactor } from '../setters/factors';
 import {
@@ -47,7 +47,7 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
   setGvtPrice();
 
   // update Gtoken utilization
-  updateGTokenUtilization();
+  setUtilizationRatio(NUM.ZERO);
 }
 
 export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): void {

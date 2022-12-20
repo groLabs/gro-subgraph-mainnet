@@ -1,12 +1,17 @@
-import { initMD } from '../setters/masterdata';
 import { tokenToDecimal } from '../utils/tokens';
-import { LogNewTrancheBalance } from '../../generated/GTranche/GTranche';
+import { setUtilizationRatio } from '../setters/gtranche';
+import {
+    LogNewTrancheBalance,
+    LogNewUtilizationThreshold,
+} from '../../generated/GTranche/GTranche';
 
 
 export function handleNewTrancheBalance(event: LogNewTrancheBalance): void {
-    const utilization = tokenToDecimal(event.params._utilization, 4, 4);
-    // update GToken utilization
-    let masterdata = initMD();
-    masterdata.gtoken_utilization = utilization;
-    masterdata.save();
+    const utilRatio = tokenToDecimal(event.params._utilization, 4, 4);
+    setUtilizationRatio(utilRatio);
+}
+
+export function handleLogNewUtilizationThreshold(event: LogNewUtilizationThreshold): void {
+    const utilRatio = tokenToDecimal(event.params.newThreshold, 4, 4);
+    setUtilizationRatio(utilRatio);
 }

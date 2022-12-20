@@ -1070,6 +1070,8 @@ dataSources:
       eventHandlers:
         - event: LogNewTrancheBalance(uint256[2],uint256)
           handler: handleNewTrancheBalance
+        - event: LogNewUtilizationThreshold(uint256)
+          handler: LogNewTrancheBalance    
       file: ./src/mappings/gtranche.ts
 # *******************************************************************************************
 # ***********   P N L (G^2)   ***************************************************************

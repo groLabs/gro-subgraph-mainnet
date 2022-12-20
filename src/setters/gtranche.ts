@@ -1,23 +1,31 @@
 import { initMD } from './masterdata';
+import { NUM } from '../utils/constants';
 import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
 import { GTranche } from '../../generated/GTranche/GTranche';
 import {
     log,
     Address,
+    BigDecimal,
 } from '@graphprotocol/graph-ts';
 // contracts
 const gTrancheAddress = Address.fromString(contracts.GTrancheAddress);
 
 
-export const updateGTokenUtilization = (): void => {
-    const contract = GTranche.bind(gTrancheAddress);
-    const utilization = contract.try_utilization();
-    if (utilization.reverted) {
-        log.error('updateGTokenUtilization(): try_utilization() reverted in /setters/gtranche.ts', []);
+export const setUtilizationRatio = (
+    value: BigDecimal,
+): void => {
+    let md = initMD();
+    if (value != NUM.ZERO) {
+        md.utilization_ratio = value;
     } else {
-        let md = initMD();
-        md.gtoken_utilization = tokenToDecimal(utilization.value, 4, 4);
-        md.save();
+        const contract = GTranche.bind(gTrancheAddress);
+        const utilization = contract.try_utilization();
+        if (utilization.reverted) {
+            log.error('setUtilizationRatio(): try_utilization() reverted in /setters/gtranche.ts', []);
+        } else {
+            md.utilization_ratio = tokenToDecimal(utilization.value, 4, 4);
+        }
     }
+    md.save();
 }
