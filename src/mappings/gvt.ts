@@ -1,3 +1,4 @@
+import { contracts } from '../../addresses';
 import { parseLogEvent } from '../parsers/log';
 import { tokenToDecimal } from '../utils/tokens';
 import { isStakerTransfer,isTransferToGRouter } from '../utils/contracts';
@@ -15,7 +16,6 @@ import {
     Transfer,
 } from '../../generated/Gvt/ERC20';
 import {
-    ADDR,
     DECIMALS,
     LOG_DEPOSIT_SIG_V1,
     LOG_DEPOSIT_SIG_V23,
@@ -67,6 +67,7 @@ const isDepositOrWithdrawalGVT = (
     } else if (from == Address.zero()) {
         if (receipt) {
             const logs = parseLogEvent(event.receipt!.logs);
+            const gRouterAddress = Address.fromString(contracts.GRouterAddress);
             for (let i = 0; i < logs.length; i++) {
                 if (
                     DEPOSIT_HANDLER_ADDRESSES.includes(logs[i].address)
@@ -76,7 +77,7 @@ const isDepositOrWithdrawalGVT = (
                     return true;
                 }
                 if (
-                    ADDR.GROUTER.equals(logs[i].address)
+                    gRouterAddress.equals(logs[i].address)
                     && (logs[i].topics[0].toHexString() == LOG_GROUTER_DEPOSIT_SIG
                         || logs[i].topics[0].toHexString() == LOG_GROUTER_LEGACY_DEPOSIT_SIG)
                 ) {

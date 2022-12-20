@@ -1,15 +1,17 @@
+import { NUM } from '../utils/constants';
+import { contracts } from '../../addresses';
 import { Gvt } from '../../generated/Gvt/Gvt';
 import { Factor } from '../../generated/schema';
 import { tokenToDecimal } from '../utils/tokens';
 import { Pwrd } from '../../generated/Pwrd/Pwrd';
 import {
     log,
+    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
-import {
-    NUM,
-    ADDR,
-} from '../utils/constants';
+// contracts
+const gvtContractAddress = Address.fromString(contracts.GvtAddress);
+const pwrdContractAddress = Address.fromString(contracts.PwrdAddress);
 
 
 const initFactor = (save: boolean): Factor => {
@@ -27,7 +29,7 @@ const initFactor = (save: boolean): Factor => {
 
 export const setGvtFactor = (): void => {
     const factor = initFactor(false);
-    const contract = Gvt.bind(ADDR.GVT);
+    const contract = Gvt.bind(gvtContractAddress);
     const gvtFactor = contract.try_factor();
     if (gvtFactor.reverted) {
         log.error('setGvtFactor() reverted in src/setters/factors.ts', []);
@@ -39,7 +41,8 @@ export const setGvtFactor = (): void => {
 
 export const setPwrdFactor = (): void => {
     const factor = initFactor(false);
-    const contract = Pwrd.bind(ADDR.PWRD);
+    
+    const contract = Pwrd.bind(pwrdContractAddress);
     const pwrdFactor = contract.try_factor();
     if (pwrdFactor.reverted) {
         log.error('setPwrdFactor() reverted in src/setters/factors.ts', []);
@@ -51,15 +54,14 @@ export const setPwrdFactor = (): void => {
 
 export const updateGTokenFactor = (timestamp: i32): void => {
     const factor = initFactor(false);
-    // gvt factor
-    const gvtContract = Gvt.bind(ADDR.GVT);
+    const gvtContract = Gvt.bind(gvtContractAddress);
     const gvtFactor = gvtContract.try_factor();
     if (gvtFactor.reverted) {
         log.error('updateGTokenFactor() on gvt reverted in src/setters/factors.ts', []);
     } else {
         factor.gvt = tokenToDecimal(gvtFactor.value, 18, 12);
     }
-    const pwrdContract = Pwrd.bind(ADDR.PWRD);
+    const pwrdContract = Pwrd.bind(pwrdContractAddress);
     const pwrdFactor = pwrdContract.try_factor();
     if (pwrdFactor.reverted) {
         log.error('updateGTokenFactor() on pwrd reverted in src/setters/factors.ts', []);
@@ -73,7 +75,7 @@ export const updateGTokenFactor = (timestamp: i32): void => {
 // Retrieves gvt or pwrd factor at the time of tx
 export const getFactor = (token: string): BigDecimal => {
     if (token === 'gvt') {
-        const contract = Gvt.bind(ADDR.GVT);
+        const contract = Gvt.bind(gvtContractAddress);
         const gvtFactor = contract.try_factor();
         if (gvtFactor.reverted) {
             log.error('getFactor() on gvt reverted in src/utils/tokens.ts', []);
@@ -82,7 +84,7 @@ export const getFactor = (token: string): BigDecimal => {
             return tokenToDecimal(gvtFactor.value, 18, 12);
         }
     } else if (token === 'pwrd') {
-        const contract = Pwrd.bind(ADDR.PWRD);
+        const contract = Pwrd.bind(pwrdContractAddress);
         const pwrdFactor = contract.try_factor();
         if (pwrdFactor.reverted) {
             log.error('getFactor() on pwrd reverted in src/utils/tokens.ts', []);

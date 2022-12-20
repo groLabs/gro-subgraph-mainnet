@@ -1,3 +1,8 @@
+import { initMD } from './masterdata';
+import { NUM } from '../utils/constants';
+import { contracts } from '../../addresses';
+import { GROVesting as GROVestingV1 } from '../../generated/GROVestingV1/GROVesting';
+import { GROVesting as GROVestingV2 } from '../../generated/GROVestingV2/GROVesting';
 import {
     MasterData,
     VestingBonus,
@@ -8,13 +13,9 @@ import {
     BigDecimal,
     BigInt
 } from '@graphprotocol/graph-ts';
-import {
-    NUM,
-    ADDR,
-} from '../utils/constants';
-import { initMD } from './masterdata';
-import { GROVesting as GROVestingV1 } from '../../generated/GROVestingV1/GROVesting';
-import { GROVesting as GROVestingV2 } from '../../generated/GROVestingV2/GROVesting';
+// contracts
+const vesting1Address = Address.fromString(contracts.VestingV1Address);
+const vesting2Address = Address.fromString(contracts.VestingV2Address);
 
 
 export const initVestingBonus = (
@@ -110,7 +111,7 @@ export const updateGlobalTimeStamp = (
     vestingAddress: Address,
     save: boolean,
 ): MasterData => {
-    if (vestingAddress == ADDR.GRO_VESTING_V1) {
+    if (vestingAddress == vesting1Address) {
         const contract = GROVestingV1.bind(vestingAddress);
         const globalStartTime = contract.try_globalStartTime();
         if (globalStartTime.reverted) {
@@ -118,7 +119,7 @@ export const updateGlobalTimeStamp = (
         } else {
             md.global_start_time = globalStartTime.value.toI32();
         }
-    } else if (vestingAddress == ADDR.GRO_VESTING_V2) {
+    } else if (vestingAddress == vesting2Address) {
         const contract = GROVestingV2.bind(vestingAddress);
         const globalStartTime = contract.try_globalStartTime();
         if (globalStartTime.reverted) {

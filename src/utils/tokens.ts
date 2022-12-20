@@ -1,14 +1,17 @@
+import { contracts } from '../../addresses';
 import { Gvt } from '../../generated/Gvt/Gvt';
 import {
     log,
     BigInt,
+    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
     NUM,
-    ADDR,
     DECIMALS,
 } from '../utils/constants';
+// contract addresses
+const gvtAddress = Address.fromString(contracts.GvtAddress);
 
 
 // TEMPORARILY COPIED HERE
@@ -36,7 +39,7 @@ export const getGroToken = (isPwrd: bool): string => {
 }
 
 export const getGvtPrice = (): BigDecimal => {
-    const contract = Gvt.bind(ADDR.GVT);
+    const contract = Gvt.bind(gvtAddress);
     const pricePerShare = contract.try_getPricePerShare();
     if (pricePerShare.reverted) {
         log.error('getGvtPrice() reverted in src/utils/tokens.ts', []);

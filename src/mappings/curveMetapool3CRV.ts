@@ -1,4 +1,5 @@
 
+import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
 import { setPoolSwap } from '../setters/poolSwaps';
 import { setTotalSupply } from '../setters/coreData';
@@ -16,7 +17,6 @@ import {
 } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import {
     NUM,
-    ADDR,
     DECIMALS,
 } from '../utils/constants';
 
@@ -56,7 +56,9 @@ export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): v
 }
 
 const getVirtualPrice = (): BigDecimal => {
-    const contract = MetaPool.bind(ADDR.CURVE_PWRD_3CRV);
+    
+    const contractAddress = Address.fromString(contracts.CurveMetapool3CRVAddress);
+    const contract = MetaPool.bind(contractAddress);
     const virtualPrice = contract.try_get_virtual_price();
     if (virtualPrice.reverted) {
         log.error('getVirtualPrice() reverted in src/mapping/curveMetapool3CRV.ts', []);

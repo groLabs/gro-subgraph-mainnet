@@ -1,8 +1,5 @@
+import { NUM } from '../utils/constants';
 import { getGVaultStrategies } from '../utils/strats';
-import {
-    NUM,
-    ADDR,
-} from '../utils/constants';
 import {
     GVaultHarvest,
     GVaultStrategy

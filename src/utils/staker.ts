@@ -1,11 +1,18 @@
+import { NUM } from '../utils/constants';
+import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
-import {
-    NUM,
-    ADDR,
-} from '../utils/constants';
-import { Address, BigInt, log, BigDecimal } from '@graphprotocol/graph-ts';
+import { 
+    log,
+    BigInt, 
+    Address, 
+    BigDecimal,
+} from '@graphprotocol/graph-ts';
+// contracts
 import { LpTokenStaker as StakerV1 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
 import { LpTokenStaker as StakerV2 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
+// contract addresses
+const staker1Address = Address.fromString(contracts.LpTokenStakerV1Address);
+const staker2Address = Address.fromString(contracts.LpTokenStakerV2Address);
 
 
 const showError = (
@@ -26,7 +33,7 @@ export function getRewardDebt(
     poolId: i32,
 ): BigDecimal {
     let currentRewardDebt = NUM.ZERO;
-    if (contractAddress == ADDR.STAKER_V1) {
+    if (contractAddress == staker1Address) {
         const contract = StakerV1.bind(contractAddress);
         const userInfo = contract.try_userInfo(
             BigInt.fromI32(poolId),
@@ -37,7 +44,7 @@ export function getRewardDebt(
         } else {
             currentRewardDebt = tokenToDecimal(userInfo.value.getRewardDebt(), 18, 7);
         }
-    } else if (contractAddress == ADDR.STAKER_V2) {
+    } else if (contractAddress == staker2Address) {
         const contract = StakerV2.bind(contractAddress);
         const userInfo = contract.try_userInfo(
             BigInt.fromI32(poolId),

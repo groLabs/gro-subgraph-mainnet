@@ -8,7 +8,6 @@ import {
 } from '../../generated/schema';
 import {
     NUM,
-    ADDR,
     DECIMALS,
 } from '../utils/constants';
 import {
@@ -119,12 +118,12 @@ export const setStrategyReported = (
         const totalAssetsStrat = getTotalAssetsStrat(vaultAddress, strategyAddress);
         if (totalAssetsVault.reverted) {
             log.error(
-                `strats.ts->setStrategyReported: totalAssets reverted for adapter {}`,
+                `strats.ts->setStrategyReported(): totalAssets reverted for adapter {}`,
                 [adapterAddress.toHexString()]
             );
         } else if (totalAssetsStrat.reverted) {
             log.error(
-                `strats.ts->setStrategyReported: totalEstimatedAssets reverted for strategy {}`,
+                `strats.ts->setStrategyReported(): totalEstimatedAssets reverted for strategy {}`,
                 [id]
             );
         } else {
@@ -147,8 +146,11 @@ export const setStrategyReported = (
             strat.save();
         }
     } else {
-        log.error(`strats.ts->setStrategyReportedDAI: strategy {} not found`,
-            [strategyAddress.toHexString()]
+        log.error(`strats.ts->setStrategyReported(): adapter not found for strategy: {} adapter: {}`,
+            [
+                strategyAddress.toHexString(),
+                adapterAddress.toHexString()
+            ],
         );
     }
 }

@@ -1,8 +1,8 @@
+import { contracts } from '../../addresses';
 import { Address } from '@graphprotocol/graph-ts';
-import {
-    ADDR,
-    STAKER_ADDRESSES
-} from '../utils/constants';
+import { STAKER_ADDRESSES } from '../utils/constants';
+// contract addresses
+const gRouterAddress = Address.fromString(contracts.GRouterAddress);
 
 
 // check if Transfer is a deposit or withdrawal
@@ -26,7 +26,7 @@ const isStakerTransfer = (
 }
 
 const isTransferToGRouter = (to: Address): bool => {
-    return  ADDR.GROUTER.equals(to);
+    return  gRouterAddress.equals(to);
 }
 
 // const isStakerTransfer = (

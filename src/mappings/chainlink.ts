@@ -1,4 +1,5 @@
-import { ADDR } from '../utils/constants';
+import { contracts } from '../../addresses';
+import { Address } from '@graphprotocol/graph-ts';
 import { handleBalancerSwap } from './balancerGroWeth';
 import { updateAllStrategies } from '../setters/strats';
 import { updateGTokenFactor } from "../setters/factors";
@@ -8,14 +9,18 @@ import {
     set3CrvPrice,
     setGvtPrice
 } from '../setters/price';
-
+// contract addresses
+const chainlinkDaiUsdAddress = Address.fromString(contracts.ChainlinkDaiUsdAddress);
+const chainlinkUsdcUsdAddress = Address.fromString(contracts.ChainlinkUsdcUsdAddress);
+const chainlinkUsdtUsdAddress = Address.fromString(contracts.ChainlinkUsdtUsdAddress);
+// contract blocks
 const CURRENT_BLOCK = 15848232;
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
     // update stablecoin prices
-    setStableCoinPrice(ADDR.CHAINLINK_DAI_USD);
-    setStableCoinPrice(ADDR.CHAINLINK_USDC_USD);
-    setStableCoinPrice(ADDR.CHAINLINK_USDT_USD);
+    setStableCoinPrice(chainlinkDaiUsdAddress);
+    setStableCoinPrice(chainlinkUsdcUsdAddress);
+    setStableCoinPrice(chainlinkUsdtUsdAddress);
 
     // update 3crv price
     set3CrvPrice();

@@ -26,6 +26,8 @@
     "UniswapV2GvtGroStartBlock": 15581679,
     "UniswapV2GroUsdcAddress": "0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6",
     "UniswapV2GroUsdcStartBlock": 15581679,
+    "UniswapV2UsdcWethAddress": "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc",
+    "UniswapV2UsdcWethStartBlock": 15581679,
     "CurveMetapool3CRVAddress": "0xbcb91E689114B9Cc865AD7871845C95241Df4105",
     "CurveMetapool3CRVStartBlock": 15581679,
     "BalancerGroWethVaultAddress": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
@@ -54,6 +56,12 @@
     "UsdtStartBlock": 15581679,
     "ChainlinkAggregatorAddress": "0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82",
     "ChainlinkAggregatorStartBlock": 15581679,
+    "ChainlinkDaiUsdAddress": "0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82",
+    "ChainlinkDaiUsdStartBlock": 15581679,
+    "ChainlinkUsdcUsdAddress": "0x789190466E21a8b78b8027866CBBDc151542A26C",
+    "ChainlinkUsdcUsdStartBlock": 15581679,
+    "ChainlinkUsdtUsdAddress": "0xa964273552C1dBa201f5f000215F5BD5576e8f93",
+    "ChainlinkUsdtUsdStartBlock": 15581679,
     "VaultAddress": "0x6a01bC748d71489372BD8fB743b23F63d99aac85",
     "VaultStartBlock": 15581679,
     "VaultDAIAddress": "0x6a01bC748d71489372BD8fB743b23F63d99aac85",
@@ -87,6 +95,8 @@
     "StopLossLogicAddress": "0x886A5790BA2f549b511a5B59FbeEdF8184f60318",
     "StopLossLogicStartBlock": 15581679,
     "ConvexFraxAddress": "0xd1B9aF64Ed5CdcaEb58955d82FB384b3e558Df7B",
-    "ConvexFraxStartBlock": 16169160
+    "ConvexFraxStartBlock": 16169160,
+    "ThreePoolAddress": "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7",
+    "ThreePoolStartBlock": 16168930
   }
   

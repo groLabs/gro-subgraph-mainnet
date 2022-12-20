@@ -5,7 +5,6 @@ import {
 } from "@graphprotocol/graph-ts";
 import {
     Num,
-    Addr,
 } from '../types/constants';
 import { contracts } from '../../addresses';
 
@@ -34,55 +33,55 @@ export const NO_ADDR = Bytes.empty();
 
 // Contract addresses
 // TODO: retrieve data from config files
-export const ADDR: Addr = {
-    // GVT: Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c'),
-    // GVT: Address.fromString('0xB0279D0338d2eadd97F199eF7F31BA77AC8759b9'),
-    GVT: Address.fromString(contracts.GvtAddress),
-    // PWRD: Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b'),
-    //PWRD: Address.fromString('0xF0E00481D623Fa7Adf06B3453182418B7d0cF233'),
-    PWRD: Address.fromString(contracts.PwrdAddress),
-    UNISWAPV2_GVT_GRO: Address.fromString('0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB'),
-    UNISWAPV2_GRO_USDC: Address.fromString('0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6'),
-    UNISWAPV2_USDC_WETH: Address.fromString('0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc'),
-    CURVE_PWRD_3CRV: Address.fromString('0xbcb91E689114B9Cc865AD7871845C95241Df4105'),
-    BALANCER_GRO_WETH_VAULT: Address.fromString('0xBA12222222228d8Ba445958a75a0704d566BF2C8'),
-    BALANCER_GRO_WETH_POOL: Address.fromString('0x702605F43471183158938C1a3e5f5A359d7b31ba'),
-    STAKER_V1: Address.fromString('0x001C249c09090D79Dc350A286247479F08c7aaD7'),
-    STAKER_V2: Address.fromString('0x2E32bAd45a1C29c1EA27cf4dD588DF9e68ED376C'),
-    DEPOSIT_HANDLER_V1: Address.fromString('0x79b14d909381D79B655C0700d0fdc2C7054635b9'),
-    DEPOSIT_HANDLER_V2: Address.fromString('0x9da6ad743F4F2A247A56350703A4B501c7f2C224'),
-    DEPOSIT_HANDLER_V3: Address.fromString('0xB7207Ea9446DcA1dEC1c1FC93c6Fcdf8B4a44F40'),
-    WITHDRAWAL_HANDLER_V1: Address.fromString('0xd89512Bdf570476310DE854Ef69D715E0e85B09F'),
-    WITHDRAWAL_HANDLER_V2: Address.fromString('0x59B6b763509198d07cF8F13a2dc6F2df98CB0a1d'),
-    WITHDRAWAL_HANDLER_V3: Address.fromString('0x641bEFA4dB601578A64F0Fc1f4E89E9869268Fe7'),
-    CHAINLINK_DAI_USD: Address.fromString('0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82'),
-    CHAINLINK_USDC_USD: Address.fromString('0x789190466E21a8b78b8027866CBBDc151542A26C'),
-    CHAINLINK_USDT_USD: Address.fromString('0xa964273552C1dBa201f5f000215F5BD5576e8f93'),
-    GRO_VESTING_V1: Address.fromString('0xA28693bf01Dc261887b238646Bb9636cB3a3730B'),
-    GRO_VESTING_V2: Address.fromString('0x748218256AfE0A19a88EBEB2E0C5Ce86d2178360'),
-    THREE_POOL: Address.fromString('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'),
-    GROUTER: Address.fromString('0xb732473B9b1E56F8d1E68bC3fd8bb65E9A338e03'),
-    GTRANCHE: Address.fromString('0x23E8d5c2B26A4a05dc94Ea79807272fB664721DE'),
-}
+// export const ADDR: Addr = {
+//     // GVT: Address.fromString('0x3ADb04E127b9C0a5D36094125669d4603AC52a0c'),
+//     // GVT: Address.fromString('0xB0279D0338d2eadd97F199eF7F31BA77AC8759b9'),
+//     GVT: Address.fromString(contracts.GvtAddress),
+//     // PWRD: Address.fromString('0xF0a93d4994B3d98Fb5e3A2F90dBc2d69073Cb86b'),
+//     //PWRD: Address.fromString('0xF0E00481D623Fa7Adf06B3453182418B7d0cF233'),
+//     PWRD: Address.fromString(contracts.PwrdAddress),
+//     UNISWAPV2_GVT_GRO: Address.fromString('0x2ac5bC9ddA37601EDb1A5E29699dEB0A5b67E9bB'),
+//     UNISWAPV2_GRO_USDC: Address.fromString('0x21C5918CcB42d20A2368bdCA8feDA0399EbfD2f6'),
+//     UNISWAPV2_USDC_WETH: Address.fromString('0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc'),
+//     CURVE_PWRD_3CRV: Address.fromString('0xbcb91E689114B9Cc865AD7871845C95241Df4105'),
+//     BALANCER_GRO_WETH_VAULT: Address.fromString('0xBA12222222228d8Ba445958a75a0704d566BF2C8'),
+//     BALANCER_GRO_WETH_POOL: Address.fromString('0x702605F43471183158938C1a3e5f5A359d7b31ba'),
+//     STAKER_V1: Address.fromString('0x001C249c09090D79Dc350A286247479F08c7aaD7'),
+//     STAKER_V2: Address.fromString('0x2E32bAd45a1C29c1EA27cf4dD588DF9e68ED376C'),
+//     DEPOSIT_HANDLER_V1: Address.fromString('0x79b14d909381D79B655C0700d0fdc2C7054635b9'),
+//     DEPOSIT_HANDLER_V2: Address.fromString('0x9da6ad743F4F2A247A56350703A4B501c7f2C224'),
+//     DEPOSIT_HANDLER_V3: Address.fromString('0xB7207Ea9446DcA1dEC1c1FC93c6Fcdf8B4a44F40'),
+//     WITHDRAWAL_HANDLER_V1: Address.fromString('0xd89512Bdf570476310DE854Ef69D715E0e85B09F'),
+//     WITHDRAWAL_HANDLER_V2: Address.fromString('0x59B6b763509198d07cF8F13a2dc6F2df98CB0a1d'),
+//     WITHDRAWAL_HANDLER_V3: Address.fromString('0x641bEFA4dB601578A64F0Fc1f4E89E9869268Fe7'),
+//     CHAINLINK_DAI_USD: Address.fromString('0xDEc0a100eaD1fAa37407f0Edc76033426CF90b82'),
+//     CHAINLINK_USDC_USD: Address.fromString('0x789190466E21a8b78b8027866CBBDc151542A26C'),
+//     CHAINLINK_USDT_USD: Address.fromString('0xa964273552C1dBa201f5f000215F5BD5576e8f93'),
+//     GRO_VESTING_V1: Address.fromString('0xA28693bf01Dc261887b238646Bb9636cB3a3730B'),
+//     GRO_VESTING_V2: Address.fromString('0x748218256AfE0A19a88EBEB2E0C5Ce86d2178360'),
+//     THREE_POOL: Address.fromString('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'),
+//     GROUTER: Address.fromString('0xb732473B9b1E56F8d1E68bC3fd8bb65E9A338e03'),
+//     GTRANCHE: Address.fromString('0x23E8d5c2B26A4a05dc94Ea79807272fB664721DE'),
+// }
 
 // Pool ids
 export const BALANCER_GRO_WETH_POOLID = Bytes.fromHexString('0x702605f43471183158938c1a3e5f5a359d7b31ba00020000000000000000009f');
 
 // Groups of contract addresses
 export const STAKER_ADDRESSES = [
-    ADDR.STAKER_V1,
-    ADDR.STAKER_V2,
+    Address.fromString(contracts.LpTokenStakerV1Address),
+    Address.fromString(contracts.LpTokenStakerV2Address),
 ];
 export const DEPOSIT_HANDLER_ADDRESSES = [
-    ADDR.DEPOSIT_HANDLER_V1,
-    ADDR.DEPOSIT_HANDLER_V2,
-    ADDR.DEPOSIT_HANDLER_V3,
+    Address.fromString(contracts.DepositHandlerV1Address),
+    Address.fromString(contracts.DepositHandlerV2Address),
+    Address.fromString(contracts.DepositHandlerV3Address),
 ];
 
 export const WITHDRAWAL_HANDLER_ADDRESSES = [
-    ADDR.WITHDRAWAL_HANDLER_V1,
-    ADDR.WITHDRAWAL_HANDLER_V2,
-    ADDR.WITHDRAWAL_HANDLER_V3,
+    Address.fromString(contracts.WithdrawHandlerV1Address),
+    Address.fromString(contracts.WithdrawHandlerV2Address),
+    Address.fromString(contracts.WithdrawHandlerV3Address),
 ];
 
 // Function signatures

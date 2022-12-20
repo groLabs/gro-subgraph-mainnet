@@ -1,4 +1,5 @@
 import { getTxData } from '../utils/tx';
+import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
 import { setPoolSwap } from '../setters/poolSwaps';
 import { setTotalSupply } from '../setters/coreData';
@@ -11,7 +12,6 @@ import {
 } from '../setters/price';
 import {
     NUM,
-    ADDR,
     DECIMALS,
 } from '../utils/constants';
 import {
@@ -60,7 +60,8 @@ export function handleBalancerSwap(
 }
 
 const getVirtualPrice = (): BigDecimal => {
-    const contract = BalancerPool.bind(ADDR.BALANCER_GRO_WETH_POOL);
+    const contractAddress = Address.fromString(contracts.BalancerGroWethPoolAddress);
+    const contract = BalancerPool.bind(contractAddress);
     const virtualPrice = contract.try_getRate();
     if (virtualPrice.reverted) {
         log.error('getVirtualPrice() reverted in src/mappings/balancerGroWeth.ts', []);
