@@ -1,18 +1,18 @@
-import { setUser } from '../setters/users'
-import {
-    setDepoWithdrawTx,
-    setStakerDepoWithdrawTx,
-} from '../setters/depowithdraw';
-import { DepoWithdraw } from '../types/depowithdraw';
 import { Log } from '../types/log';
-import { setTotals } from '../setters/totals';
+import { setUser } from '../setters/users'
 import { setPools } from '../setters/pools';
+import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
+import { DepoWithdraw } from '../types/depowithdraw';
 import { initVestingBonus } from '../setters/vestingBonus';
 import {
     initCoreData,
     updateTotalSupply,
 } from '../setters/coreData';
+import {
+    setDepoWithdrawTx,
+    setStakerDepoWithdrawTx,
+} from '../setters/depowithdraw';
 
 
 // Manage core deposit

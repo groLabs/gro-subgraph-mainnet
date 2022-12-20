@@ -115,7 +115,7 @@ export const updateStakerGroPerBlock = (
     gro_per_block: BigInt,
 ): void => {
     const md = initMD();
-    const groPerBlock = tokenToDecimal(gro_per_block, 18, 7);
+    const groPerBlock = tokenToDecimal(gro_per_block, 18, DECIMALS);
     md.gro_per_block = groPerBlock
     md.save();
 }

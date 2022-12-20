@@ -1,7 +1,6 @@
 import { contracts } from '../../addresses';
 import { parseLogEvent } from '../parsers/log';
 import { tokenToDecimal } from '../utils/tokens';
-import { isStakerTransfer,isTransferToGRouter } from '../utils/contracts';
 import { manageApproval } from '../managers/approvals';
 import { manageTransfer } from '../managers/transfers';
 import { updateTotalSupply } from '../setters/coreData';
@@ -15,6 +14,10 @@ import {
     Approval,
     Transfer,
 } from '../../generated/Gvt/ERC20';
+import {
+    isStakerTransfer,
+    isTransferToGRouter
+} from '../utils/contracts';
 import {
     DECIMALS,
     LOG_DEPOSIT_SIG_V1,
@@ -36,7 +39,6 @@ export function handleTransfer(event: Transfer): void {
     const from = event.params.from;
     const to = event.params.to;
     const value = event.params.value;
-
     if (
         !isDepositOrWithdrawalGVT(
             event,

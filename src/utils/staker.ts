@@ -1,10 +1,14 @@
-import { NUM } from '../utils/constants';
+
 import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
-import { 
+import {
+    NUM,
+    DECIMALS,
+} from '../utils/constants';
+import {
     log,
-    BigInt, 
-    Address, 
+    BigInt,
+    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 // contracts
@@ -22,7 +26,7 @@ const showError = (
 ): void => {
     const data = `on userAddress: {}, poolId: {}`;
     log.error(
-        `getRewardDebt() reverted in src/utils/staker.ts for StakerV${version} ${data}`,
+        `getRewardDebt(): try_userInfo reverted for Staker${version} ${data} in /utils/staker.ts`,
         [userAddress, poolId.toString()]
     );
 }
@@ -40,9 +44,9 @@ export function getRewardDebt(
             Address.fromString(userAddress)
         );
         if (userInfo.reverted) {
-            showError('1', userAddress, poolId);
+            showError('V1', userAddress, poolId);
         } else {
-            currentRewardDebt = tokenToDecimal(userInfo.value.getRewardDebt(), 18, 7);
+            currentRewardDebt = tokenToDecimal(userInfo.value.getRewardDebt(), 18, DECIMALS);
         }
     } else if (contractAddress == staker2Address) {
         const contract = StakerV2.bind(contractAddress);
@@ -51,13 +55,13 @@ export function getRewardDebt(
             Address.fromString(userAddress)
         );
         if (userInfo.reverted) {
-            showError('2', userAddress, poolId);
+            showError('V2', userAddress, poolId);
         } else {
-            currentRewardDebt = tokenToDecimal(userInfo.value.getRewardDebt(), 18, 7);
+            currentRewardDebt = tokenToDecimal(userInfo.value.getRewardDebt(), 18, DECIMALS);
         }
     } else {
         log.error(
-            'getRewardDebt() reverted in src/utils/staker.ts -> No staker contract found {}',
+            'getRewardDebt(): no staker contract found {} in /utils/staker.ts',
             [contractAddress.toHexString()]
         );
     }

@@ -14,7 +14,7 @@ export const updateGTokenUtilization = (): void => {
     const contract = GTranche.bind(gTrancheAddress);
     const utilization = contract.try_utilization();
     if (utilization.reverted) {
-        log.error('updateGTokenUtilization() reverted in src/setters/gtranche.ts', []);
+        log.error('updateGTokenUtilization(): try_utilization() reverted in /setters/gtranche.ts', []);
     } else {
         let md = initMD();
         md.gtoken_utilization = tokenToDecimal(utilization.value, 4, 4);

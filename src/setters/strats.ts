@@ -118,12 +118,12 @@ export const setStrategyReported = (
         const totalAssetsStrat = getTotalAssetsStrat(vaultAddress, strategyAddress);
         if (totalAssetsVault.reverted) {
             log.error(
-                `strats.ts->setStrategyReported(): totalAssets reverted for adapter {}`,
+                `setStrategyReported(): try_totalAssets() on adapter {} reverted in /setters/strats.ts`,
                 [adapterAddress.toHexString()]
             );
         } else if (totalAssetsStrat.reverted) {
             log.error(
-                `strats.ts->setStrategyReported(): totalEstimatedAssets reverted for strategy {}`,
+                `setStrategyReported(): try_strategies() on strategy {} reverted in /setters/strats.ts`,
                 [id]
             );
         } else {
@@ -146,7 +146,7 @@ export const setStrategyReported = (
             strat.save();
         }
     } else {
-        log.error(`strats.ts->setStrategyReported(): adapter not found for strategy: {} adapter: {}`,
+        log.error(`setStrategyReported(): adapter not found for strategy: {} adapter: {} in /setters/strats.ts`,
             [
                 strategyAddress.toHexString(),
                 adapterAddress.toHexString()

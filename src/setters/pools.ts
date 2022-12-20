@@ -1,11 +1,14 @@
-import { Pool } from '../../generated/schema';
 import {
-    BigInt, 
-    Address, 
-} from '@graphprotocol/graph-ts';
-import { NUM } from '../utils/constants';
+    NUM,
+    DECIMALS,
+} from '../utils/constants';
+import { Pool } from '../../generated/schema';
 import { getRewardDebt } from '../utils/staker';
 import { tokenToDecimal } from '../utils/tokens';
+import {
+    BigInt,
+    Address,
+} from '@graphprotocol/graph-ts';
 
 
 const initPool = (
@@ -35,7 +38,7 @@ export const setPools = (
     coinAmount: BigInt,
 ): void => {
     let pool = initPool(userAddress, poolId);
-    const amount = tokenToDecimal(coinAmount, 18, 7);
+    const amount = tokenToDecimal(coinAmount, 18, DECIMALS);
 
     // Retrieve rewards debt from function userInfo() in staker contract
     // when there is any deposit, withdrawal or claim

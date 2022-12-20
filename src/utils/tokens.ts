@@ -14,7 +14,7 @@ import {
 const gvtAddress = Address.fromString(contracts.GvtAddress);
 
 
-// TEMPORARILY COPIED HERE
+// TEMPORARILY COPIED HERE (generates exception otherwise)
 import { Price } from '../../generated/schema';
 export const initPrice = (): Price => {
     let price = Price.load('0x');
@@ -42,10 +42,10 @@ export const getGvtPrice = (): BigDecimal => {
     const contract = Gvt.bind(gvtAddress);
     const pricePerShare = contract.try_getPricePerShare();
     if (pricePerShare.reverted) {
-        log.error('getGvtPrice() reverted in src/utils/tokens.ts', []);
+        log.error('getGvtPrice(): try_getPricePerShare() reverted in /utils/tokens.ts', []);
         return NUM.ZERO;
     } else {
-        return tokenToDecimal(pricePerShare.value, 18, 7);
+        return tokenToDecimal(pricePerShare.value, 18, DECIMALS);
     }
 }
 
@@ -65,7 +65,7 @@ export const getPricePerShare = (token: string): BigDecimal => {
     ) {
         price = NUM.ONE;
     } else {
-        // TODO: show log
+        log.error('getPricePerShare(): token {} not found in /utils/tokens.ts', [token]);
     }
     return price;
 }
@@ -118,7 +118,7 @@ export const amountToUsd = (
             ? _price.usdc
             : (coin == 'usdt')
                 ? _price.usdt
-                : (coin == "3crv")
+                : (coin == '3crv')
                     ? _price.threeCrv
                     : NUM.ZERO;
     return amount.times(price).truncate(DECIMALS);

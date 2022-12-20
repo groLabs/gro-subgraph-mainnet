@@ -1,4 +1,4 @@
-import { initMD } from "../setters/masterdata";
+import { initMD } from '../setters/masterdata';
 import { tokenToDecimal } from '../utils/tokens';
 import { LogNewTrancheBalance } from '../../generated/GTranche/GTranche';
 

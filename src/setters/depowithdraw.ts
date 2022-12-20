@@ -129,7 +129,7 @@ export function getCoinAmount(
                     emergencyFrom = from;
                 }
                 const value = ethereum.decode('uin256', log.data)!.toBigInt();
-                return tokenToDecimal(value, 18, 7);
+                return tokenToDecimal(value, 18, DECIMALS);
             }
         }
     }

@@ -2,6 +2,7 @@ import { NUM } from '../utils/constants';
 import { TS_LAUNCH } from '../utils/constants';
 import { MasterData } from '../../generated/schema';
 
+
 export const initMD = (): MasterData => {
 	let md = MasterData.load('0x');
 	if (!md) {

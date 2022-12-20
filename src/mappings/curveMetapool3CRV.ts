@@ -56,12 +56,11 @@ export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): v
 }
 
 const getVirtualPrice = (): BigDecimal => {
-    
     const contractAddress = Address.fromString(contracts.CurveMetapool3CRVAddress);
     const contract = MetaPool.bind(contractAddress);
     const virtualPrice = contract.try_get_virtual_price();
     if (virtualPrice.reverted) {
-        log.error('getVirtualPrice() reverted in src/mapping/curveMetapool3CRV.ts', []);
+        log.error('getVirtualPrice(): try_get_virtual_price() reverted in /mappings/curveMetapool3CRV.ts', []);
     } else {
         return tokenToDecimal(virtualPrice.value, 18, DECIMALS);
     }

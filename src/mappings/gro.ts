@@ -13,7 +13,6 @@ import { isStakerTransfer } from '../utils/contracts';
 import { updateTotalSupply } from '../setters/coreData';
 
 
-
 export function handleApproval(event: Approval): void {
     const ev = parseApprovalEvent(event);
     manageApproval(ev, 'gro');

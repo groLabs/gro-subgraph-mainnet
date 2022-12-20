@@ -6,7 +6,7 @@ const gRouterAddress = Address.fromString(contracts.GRouterAddress);
 
 
 // check if Transfer is a deposit or withdrawal
-const isDepositOrWithdrawal = (
+export const isDepositOrWithdrawal = (
     from: Address,
     to: Address,
 ): bool => {
@@ -16,7 +16,7 @@ const isDepositOrWithdrawal = (
 }
 
 // check if Transfer comes in or out of a staker contract
-const isStakerTransfer = (
+export const isStakerTransfer = (
     from: Address,
     to: Address,
 ): bool => {
@@ -25,33 +25,6 @@ const isStakerTransfer = (
         : false;
 }
 
-const isTransferToGRouter = (to: Address): bool => {
+export const isTransferToGRouter = (to: Address): bool => {
     return  gRouterAddress.equals(to);
-}
-
-// const isStakerTransfer = (
-//     from: Address,
-//     to: Address,
-//     poolId: string,
-//     amount: BigDecimal,
-// ): bool => {
-//     let result = false;
-//     if (STAKER_ADDRESSES.includes(to)) {
-//         result = true;
-//         let staker = initStakerData(poolId);
-//         staker.lp_supply_tx = staker.lp_supply_tx.plus(amount);
-//         staker.save();
-//     } else if (STAKER_ADDRESSES.includes(from)) {
-//         result = true;
-//         let staker = initStakerData(poolId);
-//         staker.lp_supply_tx = staker.lp_supply_tx.minus(amount);
-//         staker.save();
-//     }
-//     return result;
-// }
-
-export {
-    isDepositOrWithdrawal,
-    isStakerTransfer,
-    isTransferToGRouter
 }

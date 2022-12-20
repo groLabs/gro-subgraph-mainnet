@@ -194,6 +194,7 @@ export const getStratsByCoin = (coin: string): string[] => {
     return result;
 }
 
+//@dev: potential reversion is checked in calling function
 export const getTotalAssetsVault = (
     adapterAddress: Address,
 ): ethereum.CallResult<BigInt> => {
@@ -202,6 +203,7 @@ export const getTotalAssetsVault = (
     return totalAssets;
 }
 
+//@dev: potential reversion is checked in calling function
 export const getTotalAssetsStrat = (
     vaultAddress: Address,
     strategyAddress: Address,
@@ -220,12 +222,3 @@ export const getStrategyAddressByQueueId = (queueId: number): Address => {
     }
     return Address.zero();
   }
-  
-// export const getTotalAssetsStrat = (
-//     vaultAddress: Address,
-//     strategyAddress: Address,
-// ): ethereum.CallResult<BigInt> => {
-//     const contractStrategy = convexStrategy.bind(strategyAddress);
-//     const totalEstimatedAssets = contractStrategy.try_estimatedTotalAssets();
-//     return totalEstimatedAssets;
-// }

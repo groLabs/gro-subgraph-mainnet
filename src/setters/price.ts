@@ -24,7 +24,9 @@ import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair
 import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVault/Vault';
 import { WeightedPool as BalancerGroWethPool } from '../../generated/BalancerGroWethPool/WeightedPool';
 import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
-import { AccessControlledOffchainAggregator as ChainlinkAggregator } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
+import {
+    AccessControlledOffchainAggregator as ChainlinkAggregator
+} from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 // contract addresses
 const threePoolAddress = Address.fromString(contracts.ThreePoolAddress);
 const uni2GvtGroAddress = Address.fromString(contracts.UniswapV2GvtGroAddress);
@@ -70,9 +72,9 @@ export const set3CrvPrice = (): void => {
     const contract = ThreePool.bind(threePoolAddress);
     const virtualPrice = contract.try_get_virtual_price();
     if (virtualPrice.reverted) {
-        log.error('setters/price.ts/set3CrvPrice()->try_get_virtual_price reverted', []);
+        log.error('set3CrvPrice(): try_get_virtual_price() reverted in /setters/price.ts', []);
     } else {
-        const crvPrice = tokenToDecimal(virtualPrice.value, 18, 7);
+        const crvPrice = tokenToDecimal(virtualPrice.value, 18, DECIMALS);
         let price = initPrice();
         price.threeCrv = crvPrice;
         price.save();
@@ -85,13 +87,13 @@ export const setUniswapGvtGroPrice = (): void => {
     const reserves = contract.try_getReserves();
     const _totalSupply = contract.try_totalSupply();
     if (reserves.reverted) {
-        log.error('setters/price.ts/setUniswapGvtGroPrice()->try_getReserves() reverted', []);
+        log.error('setUniswapGvtGroPrice(): try_getReserves() reverted in /setters/price.ts', []);
     } else if (_totalSupply.reverted) {
-        log.error('setters/price.ts/setUniswapGvtGroPrice()->try_totalSupply() reverted', []);
+        log.error('setUniswapGvtGroPrice(): try_totalSupply() reverted in /setters/price.ts', []);
     } else {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
-        const gvtReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, 7);
-        const groReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, 7);
+        const gvtReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, DECIMALS);
+        const groReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, DECIMALS);
 
         // update Pool data
         updatePoolData(
@@ -122,13 +124,13 @@ export const setUniswapGroUsdcPrice = (): void => {
     const reserves = contract.try_getReserves();
     const _totalSupply = contract.try_totalSupply();
     if (reserves.reverted) {
-        log.error('setters/price.ts/setUniswapGroUsdcPrice()->try_getReserves() reverted', []);
+        log.error('setUniswapGroUsdcPrice(): try_getReserves() reverted in /setters/price.ts', []);
     } else if (_totalSupply.reverted) {
-        log.error('setters/price.ts/setUniswapGroUsdcPrice()->try_totalSupply() reverted', []);
+        log.error('setUniswapGroUsdcPrice(): try_totalSupply() reverted in /setters/price.ts', []);
     } else {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
-        const groReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, 7);
-        const usdcReserve = tokenToDecimal(reserves.value.get_reserve1(), 6, 7);
+        const groReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, DECIMALS);
+        const usdcReserve = tokenToDecimal(reserves.value.get_reserve1(), 6, DECIMALS);
 
         // update Pool data
         updatePoolData(
@@ -162,15 +164,15 @@ export const setCurvePwrd3crvPrice = (): void => {
     const totalSupply = contract.try_totalSupply();
     const virtualPrice = contract.try_get_virtual_price();
     if (reserves.reverted) {
-        log.error('setters/price.ts/setCurvePwrd3crvPrice()->try_get_balances() reverted', []);
+        log.error('setCurvePwrd3crvPrice(): try_get_balances() reverted in /setters/price.ts', []);
     } else if (totalSupply.reverted) {
-        log.error('setters/price.ts/setCurvePwrd3crvPrice()->try_totalSupply() reverted', []);
+        log.error('setCurvePwrd3crvPrice(): try_totalSupply() reverted in /setters/price.ts', []);
     } else if (virtualPrice.reverted) {
-        log.error('setters/price.ts/setCurvePwrd3crvPrice()->try_get_virtual_price() reverted', []);
+        log.error('setCurvePwrd3crvPrice(): try_get_virtual_price() reverted in /setters/price.ts', []);
     } else {
         const total_supply = tokenToDecimal(totalSupply.value, 18, 12);
-        const crv_reserve = tokenToDecimal(reserves.value[0], 18, 7);
-        const pwrd_reserve = tokenToDecimal(reserves.value[1], 18, 7);
+        const crv_reserve = tokenToDecimal(reserves.value[0], 18, DECIMALS);
+        const pwrd_reserve = tokenToDecimal(reserves.value[1], 18, DECIMALS);
 
         // update Pool data
         updatePoolData(
@@ -183,7 +185,7 @@ export const setCurvePwrd3crvPrice = (): void => {
 
         // update lpToken price
         const price = initPrice();
-        const lpPricePerShare = tokenToDecimal(virtualPrice.value, 18, 7);
+        const lpPricePerShare = tokenToDecimal(virtualPrice.value, 18, DECIMALS);
         price.curve_pwrd3crv = lpPricePerShare;
         price.save();
     }
@@ -198,24 +200,27 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
     const poolTokens = contractVault.try_getPoolTokens(BALANCER_GRO_WETH_POOLID);
     if (tx.block < GENESIS_POOL_GRO_WETH) {
         log.warning(
-            `setters/price.ts/setBalancerGroWethPrice()->GRO/WETH Vault updates before its pool creation ${tx.msg}`,
+            `setBalancerGroWethPrice(): GRO/WETH Vault updates before its pool creation ${tx.msg} in setters/price.ts`,
             tx.data
         )
     } else if (_totalSupply.reverted) {
         log.error(
-            `setters/price.ts/setBalancerGroWethPrice()->try_totalSupply() reverted ${tx.msg}`,
+            `setBalancerGroWethPrice(): try_totalSupply() reverted ${tx.msg} in /setters/price.ts`,
             tx.data
         );
     } else if (poolTokens.reverted) {
         log.error(
-            `setters/price.ts/setBalancerGroWethPrice()->try_getPoolTokens() reverted ${tx.msg}`,
+            `setBalancerGroWethPrice(): try_getPoolTokens() reverted ${tx.msg} in /setters/price.ts`,
             tx.data
         );
     } else {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
-        const reserves = poolTokens.value.getBalances().map<BigDecimal>((item: BigInt) => tokenToDecimal(item, 18, 7));
+        const reserves = poolTokens.value.getBalances().map<BigDecimal>((item: BigInt) => tokenToDecimal(item, 18, DECIMALS));
         if (reserves.length !== 2) {
-            log.error(`setters/price.ts/setBalancerGroWethPrice(): wrong reserves pair ${tx.msg}`, tx.data);
+            log.error(
+                `setBalancerGroWethPrice(): wrong reserves pair ${tx.msg} in /setters/price.ts`,
+                tx.data
+            );
         } else {
             const groReserve = reserves[0];
             const wethReserve = reserves[1];
@@ -246,11 +251,10 @@ export const setWethPrice = (): void => {
     const contract = UniswapV2Pair.bind(uni2UsdcWethAddress);
     const reserves = contract.try_getReserves();
     if (reserves.reverted) {
-        log.error('setters/price.ts/setWethPrice()->try_getReserves() reverted', []);
+        log.error('setWethPrice(): try_getReserves() reverted in /setters/price.ts', []);
     } else {
-        const usdcReserve = tokenToDecimal(reserves.value.get_reserve0(), 6, 7);
-        const wethReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, 7);
-
+        const usdcReserve = tokenToDecimal(reserves.value.get_reserve0(), 6, DECIMALS);
+        const wethReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, DECIMALS);
         // update WETH price
         // TODO: chainlink to calc the USD price of USDC.
         const price = initPrice();
@@ -265,9 +269,9 @@ export const setStableCoinPrice = (
     const contract = ChainlinkAggregator.bind(contractAddress);
     const latestRound = contract.try_latestRoundData();
     if (latestRound.reverted) {
-        log.error('setters/price.ts/setStableCoinPrice()->try_latestRoundData() reverted', []);
+        log.error('setStableCoinPrice(): try_latestRoundData() reverted in /setters/price.ts', []);
     } else {
-        const usdPrice = tokenToDecimal(latestRound.value.getAnswer(), 8, 7);
+        const usdPrice = tokenToDecimal(latestRound.value.getAnswer(), 8, DECIMALS);
         const price = initPrice();
         if (contractAddress == chainlinkDaiUsdAddress) {
             price.dai = usdPrice;
@@ -277,7 +281,7 @@ export const setStableCoinPrice = (
             price.usdt = usdPrice;
         } else {
             log.error(
-                'setters/price.ts/setStableCoinPrice()->Unknown chainlink feed address',
+                'setStableCoinPrice(): unknown chainlink feed address {} in /setters/price.ts',
                 [contractAddress.toHexString()]
             );
         }

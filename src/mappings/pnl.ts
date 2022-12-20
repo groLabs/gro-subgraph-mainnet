@@ -17,7 +17,6 @@ import {
 export function handlePnLExecution(event: LogPnLExecution): void {
 	setGvtPrice();
 	setGvtFactor();
-
 	const receipt = event.receipt;
 	if (receipt) {
 		const logs = parseLogEvent(event.receipt!.logs);
@@ -25,8 +24,6 @@ export function handlePnLExecution(event: LogPnLExecution): void {
 			setPwrdFactor();
 	} else {
 		setPwrdFactor();
-		// showLog.warning(`No log for tx hash {}`,
-		// 	[event.transaction.hash.toHexString()]);
 	}
 }
 
@@ -41,11 +38,6 @@ export function isWithdrawal(
 			&& (log.topics[0].toHexString() == LOG_WITHDRAWAL_SIG_V1
 				|| log.topics[0].toHexString() == LOG_WITHDRAWAL_SIG_V23)
 		) {
-			// showLog.warning(`True for addr {} sig {} tx hash {}`,
-			// 	[log.address.toHexString()
-			// 		, log.topics[0].toHexString()
-			// 		, log.transactionHash.toHexString()
-			// 	]);
 			return true;
 		}
 	}

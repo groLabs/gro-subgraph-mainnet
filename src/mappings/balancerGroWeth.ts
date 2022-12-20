@@ -64,19 +64,10 @@ const getVirtualPrice = (): BigDecimal => {
     const contract = BalancerPool.bind(contractAddress);
     const virtualPrice = contract.try_getRate();
     if (virtualPrice.reverted) {
-        log.error('getVirtualPrice() reverted in src/mappings/balancerGroWeth.ts', []);
+        log.error('getVirtualPrice(): try_getRate() reverted in /mappings/balancerGroWeth.ts', []);
     } else {
         return tokenToDecimal(virtualPrice.value, 18, DECIMALS);
     }
     return NUM.ZERO;
 }
 
-// Way too many swaps -> not feasible
-// export function handleSwap(event: Swap): void {
-//     if (event.params.poolId == BALANCER_GRO_WETH_POOLID) {
-//         setBalancerGroWethPrice();
-//         log.error('** handlePoolBalanceChanged INSIDE {}', [event.params.poolId.toHexString()]);
-//     } else {
-//         //log.error('** handlePoolBalanceChanged OUTSIDE {}', [event.params.poolId.toString()]);
-//     }
-// }

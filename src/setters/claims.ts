@@ -1,14 +1,14 @@
+import { ClaimEvent } from '../types/claim';
+import { DECIMALS } from '../utils/constants';
 import { Bytes } from '@graphprotocol/graph-ts';
 import { ClaimTx } from '../../generated/schema';
 import { tokenToDecimal } from '../utils/tokens';
-import { ClaimEvent } from '../types/claim';
-
 
 export const setClaimTx = (
     ev: ClaimEvent,
 ): ClaimTx => {
     let tx = new ClaimTx(ev.id);
-    const coinAmount = tokenToDecimal(ev.amount, 18, 7);
+    const coinAmount = tokenToDecimal(ev.amount, 18, DECIMALS);
     tx.contractAddress = ev.contractAddress;
     tx.block = ev.block;
     tx.timestamp = ev.timestamp;

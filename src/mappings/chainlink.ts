@@ -2,7 +2,7 @@ import { contracts } from '../../addresses';
 import { Address } from '@graphprotocol/graph-ts';
 import { handleBalancerSwap } from './balancerGroWeth';
 import { updateAllStrategies } from '../setters/strats';
-import { updateGTokenFactor } from "../setters/factors";
+import { updateGTokenFactor } from '../setters/factors';
 import { AnswerUpdated } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 import {
     setStableCoinPrice,

@@ -115,7 +115,10 @@ export const updateGlobalTimeStamp = (
         const contract = GROVestingV1.bind(vestingAddress);
         const globalStartTime = contract.try_globalStartTime();
         if (globalStartTime.reverted) {
-            log.error('TBC***********', []);
+            log.error(
+                'updateGlobalTimeStamp(): try_globalStartTime() on vesting v1 reverted in /setters/vestingBonus.ts',
+                []
+            );
         } else {
             md.global_start_time = globalStartTime.value.toI32();
         }
@@ -123,12 +126,18 @@ export const updateGlobalTimeStamp = (
         const contract = GROVestingV2.bind(vestingAddress);
         const globalStartTime = contract.try_globalStartTime();
         if (globalStartTime.reverted) {
-            log.error('TBC***********', []);
+            log.error(
+                'updateGlobalTimeStamp(): try_globalStartTime() on vesting v2 reverted in /setters/vestingBonus.ts',
+                []
+            );
         } else {
             md.global_start_time = globalStartTime.value.toI32();
         }
     } else {
-        log.error('TBC***********', []);
+        log.error(
+            'updateGlobalTimeStamp(): vesting contract {} not found in /setters/vestingBonus.ts',
+            [vestingAddress.toHexString()]
+        );
     }
     if (save)
         md.save();
