@@ -1,5 +1,8 @@
 import { tokenToDecimal } from '../utils/tokens';
-import { setUtilizationRatio } from '../setters/gtranche';
+import { 
+    setUtilizationRatio,
+    setUtilizationRatioLimit,
+} from '../setters/gtranche';
 import {
     LogNewTrancheBalance,
     LogNewUtilizationThreshold,
@@ -12,6 +15,6 @@ export function handleNewTrancheBalance(event: LogNewTrancheBalance): void {
 }
 
 export function handleLogNewUtilizationThreshold(event: LogNewUtilizationThreshold): void {
-    const utilRatio = tokenToDecimal(event.params.newThreshold, 4, 4);
-    setUtilizationRatio(utilRatio);
+    const utilRatioLimit = tokenToDecimal(event.params.newThreshold, 4, 4);
+    setUtilizationRatioLimit(utilRatioLimit);
 }

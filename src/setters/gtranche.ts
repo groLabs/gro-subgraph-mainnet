@@ -17,15 +17,23 @@ export const setUtilizationRatio = (
 ): void => {
     let md = initMD();
     if (value != NUM.ZERO) {
-        md.utilization_ratio = value;
+        md.util_ratio = value;
     } else {
         const contract = GTranche.bind(gTrancheAddress);
         const utilization = contract.try_utilization();
         if (utilization.reverted) {
             log.error('setUtilizationRatio(): try_utilization() reverted in /setters/gtranche.ts', []);
         } else {
-            md.utilization_ratio = tokenToDecimal(utilization.value, 4, 4);
+            md.util_ratio = tokenToDecimal(utilization.value, 4, 4);
         }
     }
+    md.save();
+}
+
+export const setUtilizationRatioLimit = (
+    value: BigDecimal,
+): void => {
+    let md = initMD();
+    md.util_ratio_limit = value;
     md.save();
 }
