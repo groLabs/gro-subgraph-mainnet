@@ -1,15 +1,22 @@
+import { contracts } from '../../addresses';
 import { Strategy } from '../../generated/schema';
 import { Strategy as Strat } from '../types/strats';
 import { Vyper_contract as vaultAdapter } from '../../generated/VaultAdapter/Vyper_contract';
 import {
     Vyper_contract as vault,
-    Vyper_contract__strategiesResult
+    Vyper_contract__strategiesResult,
 } from '../../generated/Vault/Vyper_contract';
+import { 
+    GVault,
+    GVault__strategiesResult,
+} from '../../generated/GVault/GVault';
 import {
     BigInt,
     Address,
     ethereum,
 } from '@graphprotocol/graph-ts';
+// contracts
+const gVaultAddress = Address.fromString(contracts.GVaultAddress);
 
 
 export const getStrategies = (): Strat[] => {
@@ -135,13 +142,13 @@ export const getGVaultStrategies = (): Strat[] => {
         new Strat(
             '0xd1b9af64ed5cdcaeb58955d82fb384b3e558df7b', // strategy address
             '0xae013d9bfa88f54a825831f969cb44ee020872d8', // vault address
-            Address.zero().toHexString(), // adapter address (not applicable for G^2)
-            'convexFrax',   // strategy name
-            'Convex-Frax',  // strategy display name
-            '3CRVVault',    // vault name
+            Address.zero().toHexString(),   // adapter address (not applicable for G^2)
+            'Convex XPool 3CRV primary',    // strategy name
+            'Convex-FRAX-3CRV',             // strategy display name
+            '3CRV',         // vault name
             '3CRV yVault',  // vault display name
-            '3CRV',         // coin
-            'Frax',         // metacoin
+            '3crv',         // coin
+            'frax',         // metacoin
             'convex',       // protocol
             true,           // active
             1,              // queue id
@@ -209,6 +216,14 @@ export const getTotalAssetsStrat = (
 ): ethereum.CallResult<Vyper_contract__strategiesResult> => {
     const contractAdapter = vault.bind(vaultAddress);
     const assets = contractAdapter.try_strategies(strategyAddress);
+    return assets;
+}
+
+export const getTotalAssetsStrat3crv = (
+    strategyAddress: Address,
+): ethereum.CallResult<GVault__strategiesResult> => {
+    const contract = GVault.bind(gVaultAddress);
+    const assets = contract.try_strategies(strategyAddress);  //contract.try_strategies(strategyAddress);
     return assets;
 }
 

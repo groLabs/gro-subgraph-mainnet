@@ -94,8 +94,8 @@
     "PnLG2StartBlock": 15581679,
     "StopLossLogicAddress": "0x886A5790BA2f549b511a5B59FbeEdF8184f60318",
     "StopLossLogicStartBlock": 15581679,
-    "ConvexFraxAddress": "0xd1B9aF64Ed5CdcaEb58955d82FB384b3e558Df7B",
-    "ConvexFraxStartBlock": 16169160,
+    "ConvexStrategy3CrvAddress": "0xd1B9aF64Ed5CdcaEb58955d82FB384b3e558Df7B",
+    "ConvexStrategy3CrvStartBlock": 16169160,
     "ThreePoolAddress": "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7",
     "ThreePoolStartBlock": 16168930
   }

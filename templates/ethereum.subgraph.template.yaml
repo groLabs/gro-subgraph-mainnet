@@ -992,6 +992,8 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - User
+        - Price
+        - Factor
         - Totals
         - CoreData
         - TransferTx
@@ -1025,6 +1027,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - Price
         - Factor
         - MasterData
         - GVaultStrategy
@@ -1125,25 +1128,25 @@ dataSources:
 # ***********   C O N V E X  F R A X (G^2)   ************************************************
 # *******************************************************************************************
   - kind: ethereum/contract
-    name: ConvexFrax
+    name: ConvexStrategy3Crv
     network: {{network}}
     source:
-      address: "{{ConvexFraxAddress}}"
+      address: "{{ConvexStrategy3CrvAddress}}"
       abi: ConvexStrategy
-      startBlock: {{ConvexFraxStartBlock}}
+      startBlock: {{ConvexStrategy3CrvStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - TBC
+        - GVaultStrategy
       abis:
         - name: ConvexStrategy
-          file: ./abis/ethereum/ConvexFrax.json
+          file: ./abis/ethereum/ConvexStrategy3Crv.json
       eventHandlers:
         - event: Harvested(uint256,uint256,uint256,uint256)
           handler: handleHarvested
-      file: ./src/mappings/convexfrax.ts
+      file: ./src/mappings/convexStrategies3Crv.ts
 
 
 # *******************************************************************************************
