@@ -78,7 +78,6 @@ type Price @entity {
 # latest factor
 type Factor @entity {
   id: ID! # 0x
-  timestamp: Int!
   pwrd: BigDecimal!
   gvt: BigDecimal!
 }

@@ -2,7 +2,7 @@ import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
-import { updateGTokenFactor as updateFactor } from '../setters/factors';
+import { updateFactors } from '../setters/factors';
 import {
   NUM,
   DECIMALS,
@@ -41,7 +41,7 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
   )
 
   // update factor
-  updateFactor(event.block.timestamp.toI32());
+  updateFactors();
 
   // update gvt price
   setGvtPrice();

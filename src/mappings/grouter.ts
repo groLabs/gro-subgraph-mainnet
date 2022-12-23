@@ -1,7 +1,6 @@
-
 import { getGroToken } from '../utils/tokens';
 import { setGvtPrice } from '../setters/price';
-import { updateGTokenFactor } from '../setters/factors';
+import { updateFactors } from '../setters/factors';
 import { manageCoreDeposit } from '../managers/deposit';
 import { parseGRouterDepositEvent } from '../parsers/deposit';
 import { manageCoreWithdrawal } from '../managers/withdrawal';
@@ -22,7 +21,7 @@ export function handleLogDeposit(event: LogDeposit): void {
         token,
     );
     // update GToken's factor and price
-    updateGTokenFactor(event.block.timestamp.toI32());
+    updateFactors();
     setGvtPrice();
 }
 
@@ -35,7 +34,7 @@ export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
         token,
     );
     // update GToken's factor and price
-    updateGTokenFactor(event.block.timestamp.toI32());
+    updateFactors();
     setGvtPrice();
 }
 
@@ -48,6 +47,6 @@ export function handleLogWithdrawal(event: LogWithdrawal): void {
         token,
     );
     // update GToken's factor and price
-    updateGTokenFactor(event.block.timestamp.toI32());
+    updateFactors();
     setGvtPrice();
 }

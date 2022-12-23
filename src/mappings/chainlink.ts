@@ -2,7 +2,7 @@ import { contracts } from '../../addresses';
 import { Address } from '@graphprotocol/graph-ts';
 import { handleBalancerSwap } from './balancerGroWeth';
 import { updateAllStrategies } from '../setters/strats';
-import { updateGTokenFactor } from '../setters/factors';
+import { updateFactors } from '../setters/factors';
 import { AnswerUpdated } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 import {
     setStableCoinPrice,
@@ -27,7 +27,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
 
     // update GVT & PWRD factor and price
     setGvtPrice();
-    updateGTokenFactor(event.block.number.toI32());
+    updateFactors();
 
     // minimize the subgraph synch time 
     if (event.block.number.toI32() > CURRENT_BLOCK - 30000)

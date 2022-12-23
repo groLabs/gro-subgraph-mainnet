@@ -18,7 +18,6 @@ const initFactor = (save: boolean): Factor => {
     let factor = Factor.load('0x');
     if (!factor) {
         factor = new Factor('0x');
-        factor.timestamp = 0;
         factor.pwrd = NUM.PWRD_START_FACTOR;
         factor.gvt = NUM.GVT_START_FACTOR;
         if (save)
@@ -41,7 +40,6 @@ export const setGvtFactor = (): void => {
 
 export const setPwrdFactor = (): void => {
     const factor = initFactor(false);
-    
     const contract = Pwrd.bind(pwrdContractAddress);
     const pwrdFactor = contract.try_factor();
     if (pwrdFactor.reverted) {
@@ -52,23 +50,22 @@ export const setPwrdFactor = (): void => {
     factor.save();
 }
 
-export const updateGTokenFactor = (timestamp: i32): void => {
+export const updateFactors = (): void => {
     const factor = initFactor(false);
     const gvtContract = Gvt.bind(gvtContractAddress);
     const gvtFactor = gvtContract.try_factor();
     if (gvtFactor.reverted) {
-        log.error('updateGTokenFactor(): try_factor() on gvt reverted in /setters/factors.ts', []);
+        log.error('updateFactors(): try_factor() on gvt reverted in /setters/factors.ts', []);
     } else {
         factor.gvt = tokenToDecimal(gvtFactor.value, 18, 12);
     }
     const pwrdContract = Pwrd.bind(pwrdContractAddress);
     const pwrdFactor = pwrdContract.try_factor();
     if (pwrdFactor.reverted) {
-        log.error('updateGTokenFactor(): try_factor() on pwrd reverted in /setters/factors.ts', []);
+        log.error('updateFactors(): try_factor() on pwrd reverted in /setters/factors.ts', []);
     } else {
         factor.pwrd = tokenToDecimal(pwrdFactor.value, 18, 12);
     }
-    factor.timestamp = timestamp;
     factor.save();
 }
 
