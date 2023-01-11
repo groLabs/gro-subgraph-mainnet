@@ -1,5 +1,6 @@
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
+import { setNewReleaseFactor } from '../setters/gvault';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
 import { updateFactors } from '../setters/factors';
@@ -8,6 +9,7 @@ import {
   DECIMALS,
 } from '../utils/constants';
 import {
+  LogNewReleaseFactor,
   LogStrategyHarvestReport,
   LogWithdrawalFromStrategy,
 } from '../../generated/GVault/GVault';
@@ -16,6 +18,10 @@ import {
   setGVaultStrategy,
 } from '../setters/stratsGVault';
 
+
+export function handleLogNewReleaseFactor(event: LogNewReleaseFactor): void {
+  setNewReleaseFactor(event.params.factor.toI32());
+}
 
 export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): void {
   //Save HarvestReport

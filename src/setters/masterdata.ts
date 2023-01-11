@@ -21,6 +21,7 @@ export const initMD = (): MasterData => {
 		md.init_unlocked_percent = NUM.ZERO;
 		md.util_ratio = NUM.ZERO;
 		md.util_ratio_limit = NUM.ONE;
+		md.gvault_release_factor = i32(86400);
 	}
 	return md;
 }

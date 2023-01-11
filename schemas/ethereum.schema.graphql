@@ -56,6 +56,7 @@ type MasterData @entity {
   global_start_time: Int!
   util_ratio: BigDecimal!
   util_ratio_limit: BigDecimal!
+  gvault_release_factor: Int!
 }
 
 # latest token price
@@ -102,6 +103,7 @@ type Strategy @entity {
   harvests: [Harvest!] @derivedFrom(field: "strategyAddress")
 }
 
+# harvest
 type Harvest @entity {
   id: ID! # hash-logIndex
   strategyAddress: Strategy!
@@ -110,7 +112,7 @@ type Harvest @entity {
   timestamp: Int!
 }
 
-# strategy
+# G2 strategy
 type GVaultStrategy @entity {
   id: ID! #strategy address
   coin: String!
@@ -129,6 +131,7 @@ type GVaultStrategy @entity {
   # withdraws: [StrategyWithdraw!] @derivedFrom(field: "strategyAddress")
 }
 
+# G2 harvest
 type GVaultHarvest @entity {
   id: ID! # hash-logIndex
   strategyAddress: GVaultStrategy!

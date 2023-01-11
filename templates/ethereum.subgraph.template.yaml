@@ -1046,6 +1046,8 @@ dataSources:
       eventHandlers:
         - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyHarvestReport
+        - event: LogNewReleaseFactor(uint256)
+          handler: handleLogNewReleaseFactor
         # - event: LogWithdrawalFromStrategy(uint48,uint256,uint256,uint256)
         #   handler: handleWithdrawalFromStrategy
         # - event: LogStrategyAdded(indexed address,indexed uint256,uint256)
