@@ -131,7 +131,7 @@ type GVaultStrategy @entity {
   # withdraws: [StrategyWithdraw!] @derivedFrom(field: "strategyAddress")
 }
 
-# G2 harvest
+# G2 Strategy harvest (from GVault)
 type GVaultHarvest @entity {
   id: ID! # hash-logIndex
   strategyAddress: GVaultStrategy!
