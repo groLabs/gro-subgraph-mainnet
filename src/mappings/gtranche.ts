@@ -5,16 +5,16 @@ import {
 } from '../setters/gtranche';
 import {
     LogNewTrancheBalance,
-    LogNewUtilizationThreshold,
+    LogNewUtilisationThreshold,
 } from '../../generated/GTranche/GTranche';
 
 
 export function handleNewTrancheBalance(event: LogNewTrancheBalance): void {
-    const utilRatio = tokenToDecimal(event.params._utilization, 4, 4);
+    const utilRatio = tokenToDecimal(event.params._utilisation, 4, 4);
     setUtilizationRatio(utilRatio);
 }
 
-export function handleLogNewUtilizationThreshold(event: LogNewUtilizationThreshold): void {
+export function handleLogNewUtilisationThreshold(event: LogNewUtilisationThreshold): void {
     const utilRatioLimit = tokenToDecimal(event.params.newThreshold, 4, 4);
     setUtilizationRatioLimit(utilRatioLimit);
 }

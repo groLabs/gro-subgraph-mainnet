@@ -68,6 +68,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "StrategyDebtNotZero",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -86,6 +91,17 @@
   {
     "inputs": [],
     "name": "StrategyNotActive",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "errorNo",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyNotMoved",
     "type": "error"
   },
   {
@@ -340,6 +356,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "lockedProfit",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "excessLoss",
         "type": "uint256"
       }
     ],
@@ -933,25 +955,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_index",
-        "type": "uint256"
-      }
-    ],
-    "name": "getStrategyAssets",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "getStrategyData",
     "outputs": [
@@ -981,6 +984,25 @@
       {
         "internalType": "uint256",
         "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getStrategyDebt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -1804,7 +1826,7 @@
         "type": "uint256"
       }
     ],
-    "name": "withdrawalQueue",
+    "name": "withdrawalQueueAt",
     "outputs": [
       {
         "internalType": "address",

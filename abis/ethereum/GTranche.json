@@ -8,7 +8,7 @@
             },
             {
                 "internalType": "address[2]",
-                "name": "_tranchTokens",
+                "name": "_trancheTokens",
                 "type": "address[2]"
             },
             {
@@ -180,7 +180,7 @@
             {
                 "indexed": false,
                 "internalType": "uint256",
-                "name": "_utilization",
+                "name": "_utilisation",
                 "type": "uint256"
             }
         ],
@@ -197,7 +197,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "LogNewUtilizationThreshold",
+        "name": "LogNewUtilisationThreshold",
         "type": "event"
     },
     {
@@ -438,6 +438,19 @@
     },
     {
         "inputs": [],
+        "name": "hasMigrated",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "hasMigratedFromOldTranche",
         "outputs": [
             {
@@ -467,6 +480,19 @@
         "name": "migrateFromOldTranche",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "minDeposit",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -572,7 +598,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "setUtilizationThreshold",
+        "name": "setUtilisationThreshold",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -630,7 +656,7 @@
     },
     {
         "inputs": [],
-        "name": "utilisationThreshold",
+        "name": "utilisation",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -643,7 +669,7 @@
     },
     {
         "inputs": [],
-        "name": "utilization",
+        "name": "utilisationThreshold",
         "outputs": [
             {
                 "internalType": "uint256",

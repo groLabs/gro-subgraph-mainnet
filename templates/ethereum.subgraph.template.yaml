@@ -1044,7 +1044,7 @@ dataSources:
         - name: Pwrd
           file: ./abis/ethereum/Pwrd.json
       eventHandlers:
-        - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256)
+        - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyHarvestReport
         - event: LogNewReleaseFactor(uint256)
           handler: handleLogNewReleaseFactor
@@ -1075,7 +1075,7 @@ dataSources:
       eventHandlers:
         - event: LogNewTrancheBalance(uint256[2],uint256)
           handler: handleNewTrancheBalance
-        - event: LogNewUtilizationThreshold(uint256)
+        - event: LogNewUtilisationThreshold(uint256)
           handler: LogNewTrancheBalance    
       file: ./src/mappings/gtranche.ts
 # *******************************************************************************************
@@ -1130,12 +1130,32 @@ dataSources:
 # ***********   C O N V E X   S T R A T E G I E S  G^2  (3CRV) ******************************
 # *******************************************************************************************
   - kind: ethereum/contract
-    name: ConvexStrategy3Crv
+    name: ConvexStrategyFrax
     network: {{network}}
     source:
-      address: "{{ConvexStrategy3CrvAddress}}"
+      address: "{{ConvexStrategyFraxAddress}}"
       abi: ConvexStrategy
-      startBlock: {{ConvexStrategy3CrvStartBlock}}
+      startBlock: {{ConvexStrategyFraxStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - GVaultStrategy
+      abis:
+        - name: ConvexStrategy
+          file: ./abis/ethereum/ConvexStrategy3Crv.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvested
+      file: ./src/mappings/convexStrategies3Crv.ts
+  - kind: ethereum/contract
+    name: ConvexStrategyMim
+    network: {{network}}
+    source:
+      address: "{{ConvexStrategyMimAddress}}"
+      abi: ConvexStrategy
+      startBlock: {{ConvexStrategyMimStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

@@ -1,4 +1,4 @@
-import { Harvested } from '../../generated/ConvexStrategy3Crv/ConvexStrategy';
+import { Harvested } from '../../generated/ConvexStrategyFrax/ConvexStrategy';
 
 
 export function handleHarvested(event: Harvested): void {

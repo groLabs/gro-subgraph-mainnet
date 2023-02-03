@@ -37,7 +37,17 @@
     },
     {
         "inputs": [],
+        "name": "ConvexToken",
+        "type": "error"
+    },
+    {
+        "inputs": [],
         "name": "LTMinAmountExpected",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "LpToken",
         "type": "error"
     },
     {

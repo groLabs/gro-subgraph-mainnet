@@ -20,7 +20,7 @@ export const setUtilizationRatio = (
         md.util_ratio = value;
     } else {
         const contract = GTranche.bind(gTrancheAddress);
-        const utilization = contract.try_utilization();
+        const utilization = contract.try_utilisation();
         if (utilization.reverted) {
             log.error('setUtilizationRatio(): try_utilization() reverted in /setters/gtranche.ts', []);
         } else {

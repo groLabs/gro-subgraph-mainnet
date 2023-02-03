@@ -91,48 +91,6 @@ export const getStrategies = (): Strat[] => {
             true,           // active
             0,              // queue id (not applicable for non G^2)
         ),
-        // new Strat(
-        //     '0x2d13826359803522cce7a4cfa2c1b582303dd0b4',   // strategy
-        //     '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
-        //     Address.zero().toHexString(),   // g2 no adapter again
-        //     'convexFrax',
-        //     'Convex-Frax',
-        //     '3CRVVault',
-        //     '3CRV Vault',
-        //     '3CRV',
-        //     'Frax',
-        //     'convex',
-        //     true,
-        //     0,
-        // ),
-        // new Strat(
-        //     '0xf5c3953ae4639806fcbcc3196f71dd81b0da4348',   // strategy
-        //     '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
-        //     Address.zero().toHexString(),   // g2 no adapter again
-        //     'convexMim',
-        //     'Convex-Mim',
-        //     '3CRVVault',
-        //     '3CRV Vault',
-        //     '3CRV',
-        //     'Mim',
-        //     'convex',
-        //     true,
-        //     0,
-        // ),
-        // new Strat(
-        //     '0x3a622db2db50f463df562dc5f341545a64c580fc',   // strategy
-        //     '0xb9d9e972100a1dd01cd441774b45b5821e136043',   // vault
-        //     Address.zero().toHexString(),   // g2 no adapter again
-        //     'convexLusd',
-        //     'Convex-Lusd',
-        //     '3CRVVault',
-        //     '3CRV Vault',
-        //     '3CRV',
-        //     'Lusd',
-        //     'convex',
-        //     true,
-        //     0,
-        // ),
     ];
     return strats;
 }
@@ -140,10 +98,10 @@ export const getStrategies = (): Strat[] => {
 export const getGVaultStrategies = (): Strat[] => {
     const strats = [
         new Strat(
-            '0xd1b9af64ed5cdcaeb58955d82fb384b3e558df7b', // strategy address
-            '0xae013d9bfa88f54a825831f969cb44ee020872d8', // vault address
+            '0x02ba6fa63e094499a03f76bb7f19d191c0f9742a', // strategy address
+            '0x4d9c9760ad1597c7c68cc4cde21f9c43e62d82db', // vault address (GVault)
             Address.zero().toHexString(),   // adapter address (not applicable for G^2)
-            'Convex XPool 3CRV primary',    // strategy name
+            'Convex FRAX 3CRV primary',     // strategy name
             'Convex-FRAX-3CRV',             // strategy display name
             '3CRV',         // vault name
             '3CRV yVault',  // vault display name
@@ -152,6 +110,20 @@ export const getGVaultStrategies = (): Strat[] => {
             'convex',       // protocol
             true,           // active
             1,              // queue id
+        ),
+        new Strat(
+            '0xaeeed92f98e3362c49b2111388715354bf838c03', // strategy address
+            '0x4d9c9760ad1597c7c68cc4cde21f9c43e62d82db', // vault address (GVault)
+            Address.zero().toHexString(),   // adapter address (not applicable for G^2)
+            'Convex MIM 3CRV primary',      // strategy name
+            'Convex-MIM-3CRV',              // strategy display name
+            '3CRV',         // vault name
+            '3CRV yVault',  // vault display name
+            '3crv',         // coin
+            'mim',          // metacoin
+            'convex',       // protocol
+            true,           // active
+            2,              // queue id
         ),
     ];
     return strats;

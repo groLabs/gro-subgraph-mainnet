@@ -36,7 +36,7 @@ function parseGRouterDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.params.sender.toHexString(), // links with User.id,
         Address.zero(),                 // from
         ev.params.sender,               // to
-        ev.params.trancheAmount,        // coinAmount
+        ev.params.trancheTokens,        // coinAmount 
         ev.params.calcAmount,           // usdAmount
         NO_POOL,                        // poolId
     )
