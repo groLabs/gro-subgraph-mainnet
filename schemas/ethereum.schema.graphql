@@ -140,6 +140,7 @@ type GVaultHarvest @entity {
   debtPaid: BigDecimal!
   debtAdded: BigDecimal!
   lockedProfit: BigDecimal!
+  excessLoss: BigDecimal!
   timestamp: Int!
 }
 

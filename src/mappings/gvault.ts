@@ -33,6 +33,7 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     tokenToDecimal(event.params.debtPaid, 18, DECIMALS),
     tokenToDecimal(event.params.debtAdded, 18, DECIMALS),
     tokenToDecimal(event.params.lockedProfit, 18, DECIMALS),
+    tokenToDecimal(event.params.excessLoss, 18, DECIMALS),
     event.block.timestamp,
   );
 

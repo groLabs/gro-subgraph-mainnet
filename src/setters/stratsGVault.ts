@@ -122,6 +122,7 @@ export const setGVaultStrategy = (
     strat.save();
 }
 
+// @dev: triggered by GVault->`LogStrategyHarvestReport`
 export const setGVaultHarvest = (
     id: string,
     strategyAddress: string,
@@ -130,6 +131,7 @@ export const setGVaultHarvest = (
     debtPaid: BigDecimal,
     debtAdded: BigDecimal,
     lockedProfit: BigDecimal,
+    excessLoss: BigDecimal,
     timestamp: BigInt,
 ): GVaultHarvest => {
     let harvest = GVaultHarvest.load(id);
@@ -141,6 +143,7 @@ export const setGVaultHarvest = (
         harvest.debtPaid = debtPaid;
         harvest.debtAdded = debtAdded;
         harvest.lockedProfit = lockedProfit;
+        harvest.excessLoss = excessLoss;
         harvest.timestamp = timestamp.toI32();
         harvest.save();
     }
