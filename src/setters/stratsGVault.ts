@@ -34,6 +34,7 @@ const noGVaultStrategy = (): GVaultStrategy => {
     strat.vault_address = Address.zero();
     strat.total_assets_strategy = NUM.ZERO;
     strat.strategy_debt = NUM.ZERO;
+    strat.locked_profit = NUM.ZERO;
     strat.block_strategy_reported = 0;
     strat.block_strategy_withdraw = 0;
     return strat;
@@ -55,6 +56,7 @@ export const initAllGVaultStrategies = (): void => {
             strat.vault_address = Address.fromString(str.vault);
             strat.total_assets_strategy = NUM.ZERO;
             strat.strategy_debt = NUM.ZERO;
+            strat.locked_profit = NUM.ZERO;
             strat.block_strategy_reported = 0;
             strat.block_strategy_withdraw = 0;
             strat.save();
@@ -80,6 +82,7 @@ export const initGVaultStrategy = (stratAddress: string): GVaultStrategy => {
                 strat.vault_address = Address.fromString(str.vault);
                 strat.total_assets_strategy = NUM.ZERO;
                 strat.strategy_debt = NUM.ZERO;
+                strat.locked_profit = NUM.ZERO;
                 strat.block_strategy_reported = 0;
                 strat.block_strategy_withdraw = 0;
                 return strat;
@@ -96,6 +99,7 @@ export const setGVaultStrategy = (
     debtPaid: BigDecimal,
     debtAdded: BigDecimal,
     strategyDebt: BigDecimal,
+    lockedProfit: BigDecimal,
     block: BigInt,
 ): void => {
     const id = strategyAddress.toHexString();
@@ -103,6 +107,7 @@ export const setGVaultStrategy = (
     if (eventType == 'harvest') {
         strat.strategy_debt = strat.strategy_debt.minus(debtPaid).plus(debtAdded);
         strat.block_strategy_reported = block.toI32();
+        strat.locked_profit = lockedProfit;
     } else if (eventType == 'withdraw') {
         strat.strategy_debt = strategyDebt;
         strat.block_strategy_withdraw = block.toI32();

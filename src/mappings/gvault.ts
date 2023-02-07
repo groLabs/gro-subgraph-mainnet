@@ -24,7 +24,7 @@ export function handleLogNewReleaseFactor(event: LogNewReleaseFactor): void {
 }
 
 export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): void {
-  //Save HarvestReport
+  // save HarvestReport
   const harvest = setGVaultHarvest(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
     event.params.strategy.toHexString(),
@@ -37,6 +37,16 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     event.block.timestamp,
   );
 
+  // calc lockedProfit
+  // @dev: if loss > lockedProfitBeforeLoss, the lockedProfit = loss - lockedProfitBeforeLoss
+  //       this is to handle negative profit
+  let lockedProfit = NUM.ZERO;
+  if (harvest.loss.gt(harvest.excessLoss)) {
+    lockedProfit = harvest.excessLoss.minus(harvest.loss)
+  } else {
+    lockedProfit = harvest.lockedProfit;
+  }
+
   // update GVault strategy
   setGVaultStrategy(
     event.params.strategy,
@@ -44,6 +54,7 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     harvest.debtPaid,
     harvest.debtAdded,
     NUM.ZERO,
+    lockedProfit,
     event.block.number,
   )
 
@@ -75,6 +86,7 @@ export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): 
     NUM.ZERO,
     NUM.ZERO,
     tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
+    NUM.ZERO,
     event.block.number,
   );
 }
