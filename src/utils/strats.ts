@@ -1,24 +1,17 @@
 import { contracts } from '../../addresses';
-import { Strategy } from '../../generated/schema';
 import { Strategy as Strat } from '../types/strats';
-import { Vyper_contract as vaultAdapter } from '../../generated/VaultAdapter/Vyper_contract';
 import {
-    Vyper_contract as vault,
-    Vyper_contract__strategiesResult,
-} from '../../generated/Vault/Vyper_contract';
-import { 
     GVault,
     GVault__strategiesResult,
 } from '../../generated/GVault/GVault';
 import {
-    BigInt,
     Address,
     ethereum,
 } from '@graphprotocol/graph-ts';
 // contracts
 const gVaultAddress = Address.fromString(contracts.GVaultAddress);
 
-
+// Old Gro Protocol strategies (currently not used)
 export const getStrategies = (): Strat[] => {
     const strats = [
         new Strat(
@@ -127,68 +120,6 @@ export const getGVaultStrategies = (): Strat[] => {
         ),
     ];
     return strats;
-}
-
-export const getStrategiesByAdapter = (adapterAddress: string): Strategy[] => {
-    let result: Strategy[] = [];
-    const strats = getStrategies();
-    for (let i = 0; i < strats.length; i++) {
-        if (strats[i].adapter == adapterAddress) {
-            const str = Strategy.load(strats[i].id);
-            if (str)
-                result.push(str);
-        }
-    }
-    return result;
-}
-
-export const getAdapterAddressByStrategy = (strategy: string): Address => {
-    const strats = getStrategies();
-    for (let i = 0; i < strats.length; i++) {
-        if (strats[i].id == strategy) {
-            return Address.fromString(strats[i].adapter);
-        }
-    }
-    return Address.zero();
-}
-
-export const getAdaptersByCoin = (coin: string): string[] => {
-    let result: string[] = [];
-    const strats = getStrategies();
-    for (let i = 0; i < strats.length; i++) {
-        if (strats[i].coin === coin)
-            result.push(strats[i].adapter);
-    }
-    return result;
-}
-
-export const getStratsByCoin = (coin: string): string[] => {
-    let result: string[] = [];
-    const strats = getStrategies();
-    for (let i = 0; i < strats.length; i++) {
-        if (strats[i].coin === coin)
-            result.push(strats[i].id);
-    }
-    return result;
-}
-
-//@dev: potential reversion is checked in calling function
-export const getTotalAssetsVault = (
-    adapterAddress: Address,
-): ethereum.CallResult<BigInt> => {
-    const contractAdapter = vaultAdapter.bind(adapterAddress);
-    const totalAssets = contractAdapter.try_totalAssets();
-    return totalAssets;
-}
-
-//@dev: potential reversion is checked in calling function
-export const getTotalAssetsStrat = (
-    vaultAddress: Address,
-    strategyAddress: Address,
-): ethereum.CallResult<Vyper_contract__strategiesResult> => {
-    const contractAdapter = vault.bind(vaultAddress);
-    const assets = contractAdapter.try_strategies(strategyAddress);
-    return assets;
 }
 
 export const getTotalAssetsStrat3crv = (

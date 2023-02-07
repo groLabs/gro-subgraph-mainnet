@@ -154,33 +154,3 @@ export const setGVaultHarvest = (
     }
     return harvest;
 }
-
-// export const setStrategyWithdraw = (
-//     id: string,
-//     strategyId: BigInt,
-//     strategyDebt: BigDecimal,
-//     totalVaultDebt: BigDecimal,
-//     lossFromStrategyWithdrawal: BigDecimal,
-//     timestamp: BigInt,
-// ): StrategyWithdraw => {
-//     let strategyAddress = Address.zero().toHexString();
-//     let withdraw = StrategyWithdraw.load(id);
-//     if(!withdraw){
-//         withdraw = new StrategyWithdraw(id);
-//         const strategyQueue = StrategyQueue.load(strategyId.toString());
-//         if(strategyQueue){
-//             strategyAddress = strategyQueue.strategyAddress.toHexString();
-//         } else {
-//             log.warning('Not found strategy address by {}', [strategyId.toString()])
-//         }
-        
-//         withdraw.strategyAddress = strategyAddress;
-//         withdraw.strategyId = strategyId.toI32();
-//         withdraw.strategyDebt = strategyDebt;
-//         withdraw.totalVaultDebt = totalVaultDebt;
-//         withdraw.lossFromStrategyWithdrawal = lossFromStrategyWithdrawal;
-//         withdraw.timestamp = timestamp.toI32();
-//         withdraw.save();
-//     }
-//     return withdraw;
-// }
