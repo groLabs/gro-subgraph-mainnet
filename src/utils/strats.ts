@@ -126,7 +126,7 @@ export const getTotalAssetsStrat3crv = (
     strategyAddress: Address,
 ): ethereum.CallResult<GVault__strategiesResult> => {
     const contract = GVault.bind(gVaultAddress);
-    const assets = contract.try_strategies(strategyAddress);  //contract.try_strategies(strategyAddress);
+    const assets = contract.try_strategies(strategyAddress);
     return assets;
 }
 

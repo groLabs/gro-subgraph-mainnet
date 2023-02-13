@@ -116,6 +116,17 @@ export const setUniswapGvtGroPrice = (): void => {
         const oneLpValue = oneGvtValue.plus(oneGroValue);
         price.uniswap_gvt_gro = oneLpValue.truncate(DECIMALS);
         price.save();
+
+        // log.error(`HELLLOOO on setUniswapGvtGroPrice !!!(): oneGvt {} oneGro {} gvt price {} gro price {} oneGvtValue {} oneGroValue {} oneLpValue {}`,
+        // [
+        //     oneGvt.toString(),
+        //     oneGro.toString(),
+        //     price.gvt.toString(),
+        //     price.gro.toString(),
+        //     oneGvtValue.toString(),
+        //     oneGroValue.toString(),
+        //     oneLpValue.toString(),
+        // ]);
     }
 }
 
