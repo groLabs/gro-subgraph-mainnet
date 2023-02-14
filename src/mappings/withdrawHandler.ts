@@ -8,7 +8,6 @@ import { parseLogEvent } from '../parsers/log';
 
 
 export function handleWithdrawalV1(event: LogNewWithdrawalV1): void {
-    //setLatestPrice('groDAI_e_vault_v1_0');
     const ev = parseCoreWithdrawalEvent(event);
     const logs = parseLogEvent(event.receipt!.logs);
     const token = getGroToken(event.params.pwrd);
@@ -20,7 +19,6 @@ export function handleWithdrawalV1(event: LogNewWithdrawalV1): void {
 }
 
 export function handleWithdrawalV2(event: LogNewWithdrawalV2): void {
-    //setLatestPrice('groUSDC_e_vault_v1_0');
     const ev = parseCoreWithdrawalEvent(event);
     const logs = parseLogEvent(event.receipt!.logs);
     const token = getGroToken(event.params.pwrd);
@@ -32,7 +30,6 @@ export function handleWithdrawalV2(event: LogNewWithdrawalV2): void {
 }
 
 export function handleWithdrawalV3(event: LogNewWithdrawalV3): void {
-    //setLatestPrice('groUSDT_e_vault_v1_0');
     const ev = parseCoreWithdrawalEvent(event);
     const logs = parseLogEvent(event.receipt!.logs);
     const token = getGroToken(event.params.pwrd);

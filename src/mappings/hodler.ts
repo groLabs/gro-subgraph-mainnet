@@ -1,11 +1,11 @@
-import {
-    NUM,
-    DECIMALS,
-} from '../utils/constants';
 import { initMD } from '../setters/masterdata';
 import { tokenToDecimal } from '../utils/tokens';
 import { LogBonusClaimed as LogBonusClaimedV1 } from '../../generated/GROHodlerV1/GROHodler';
 import { LogBonusClaimed as LogBonusClaimedV2 } from '../../generated/GROHodlerV2/GROHodler';
+import {
+    NUM,
+    DECIMALS,
+} from '../utils/constants';
 import {
     updateNetReward,
     updateTotalBonus,

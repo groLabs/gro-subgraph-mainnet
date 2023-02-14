@@ -4,6 +4,7 @@ import { Bytes } from '@graphprotocol/graph-ts';
 import { ClaimTx } from '../../generated/schema';
 import { tokenToDecimal } from '../utils/tokens';
 
+
 export const setClaimTx = (
     ev: ClaimEvent,
 ): ClaimTx => {

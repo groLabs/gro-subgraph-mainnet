@@ -1,7 +1,3 @@
-import {
-    NUM,
-    DECIMALS,
-} from '../utils/constants';
 import { Pool } from '../../generated/schema';
 import { getRewardDebt } from '../utils/staker';
 import { tokenToDecimal } from '../utils/tokens';
@@ -9,6 +5,10 @@ import {
     BigInt,
     Address,
 } from '@graphprotocol/graph-ts';
+import {
+    NUM,
+    DECIMALS,
+} from '../utils/constants';
 
 
 const initPool = (

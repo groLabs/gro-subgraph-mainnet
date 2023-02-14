@@ -1,6 +1,5 @@
 import { initMD } from './masterdata';
 import { NUM } from '../utils/constants';
-import { contracts } from '../../addresses';
 import { GROVesting as GROVestingV1 } from '../../generated/GROVestingV1/GROVesting';
 import { GROVesting as GROVestingV2 } from '../../generated/GROVestingV2/GROVesting';
 import {
@@ -8,14 +7,15 @@ import {
     VestingBonus,
 } from '../../generated/schema';
 import {
+    vesting1Address,
+    vesting2Address,
+} from '../utils/contracts';
+import {
     log,
     Address,
     BigDecimal,
     BigInt
 } from '@graphprotocol/graph-ts';
-// contracts
-const vesting1Address = Address.fromString(contracts.VestingV1Address);
-const vesting2Address = Address.fromString(contracts.VestingV2Address);
 
 
 export const initVestingBonus = (
@@ -143,7 +143,6 @@ export const updateGlobalTimeStamp = (
         md.save();
     return md;
 }
-
 
 // Events <LogExit> & <LogInstantExit> from GROVesting
 // TODO: perhaps do it through managers?

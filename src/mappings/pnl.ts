@@ -3,14 +3,14 @@ import { setGvtPrice } from '../setters/price';
 import { parseLogEvent } from '../parsers/log';
 import { LogPnLExecution } from '../../generated/PnL/PnL';
 import {
+	setPwrdFactor,
+	setGvtFactor
+} from '../setters/factors';
+import {
 	LOG_WITHDRAWAL_SIG_V1,
 	LOG_WITHDRAWAL_SIG_V23,
 	WITHDRAWAL_HANDLER_ADDRESSES,
 } from '../utils/constants';
-import {
-	setPwrdFactor,
-	setGvtFactor
-} from '../setters/factors';
 
 
 // @dev: don't update factor if there is a pwrd withdrawal (the withdrawal will update the factor AFTER the based calc)

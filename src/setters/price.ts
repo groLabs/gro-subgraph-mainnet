@@ -1,6 +1,5 @@
 import { Tx } from '../types/tx';
 import { updatePoolData } from './poolData';
-import { contracts } from '../../addresses';
 import { Price } from '../../generated/schema';
 import {
     getPricePerShare,
@@ -18,6 +17,18 @@ import {
     GENESIS_POOL_GRO_WETH,
     BALANCER_GRO_WETH_POOLID,
 } from '../utils/constants';
+import {
+    threePoolAddress,
+    uni2GvtGroAddress,
+    uni2GroUsdcAddress,
+    uni2UsdcWethAddress,
+    curveMetapoolAddress,
+    balGroWethVaultAddress,
+    balGroWethPoolAddress,
+    chainlinkDaiUsdAddress,
+    chainlinkUsdcUsdAddress,
+    chainlinkUsdtUsdAddress,
+} from '../utils/contracts';
 // contracts
 import { ThreePool } from '../../generated/ChainlinkAggregator/ThreePool';
 import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
@@ -27,18 +38,6 @@ import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapo
 import {
     AccessControlledOffchainAggregator as ChainlinkAggregator
 } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
-// contract addresses
-const threePoolAddress = Address.fromString(contracts.ThreePoolAddress);
-const uni2GvtGroAddress = Address.fromString(contracts.UniswapV2GvtGroAddress);
-const uni2GroUsdcAddress = Address.fromString(contracts.UniswapV2GroUsdcAddress);
-const uni2UsdcWethAddress = Address.fromString(contracts.UniswapV2UsdcWethAddress);
-const curveMetapoolAddress = Address.fromString(contracts.CurveMetapool3CRVAddress);
-const balGroWethVaultAddress = Address.fromString(contracts.BalancerGroWethVaultAddress);
-const balGroWethPoolAddress = Address.fromString(contracts.BalancerGroWethPoolAddress);
-const chainlinkDaiUsdAddress = Address.fromString(contracts.ChainlinkDaiUsdAddress);
-const chainlinkUsdcUsdAddress = Address.fromString(contracts.ChainlinkUsdcUsdAddress);
-const chainlinkUsdtUsdAddress = Address.fromString(contracts.ChainlinkUsdtUsdAddress);
-
 
 
 export const initPrice = (): Price => {

@@ -94,7 +94,6 @@ type GVaultStrategy @entity {
   vault_name: String!
   vault_display_name: String!
   vault_address: Bytes!
-  total_assets_strategy: BigDecimal!  # doesn't save now
   strategy_debt: BigDecimal!
   locked_profit: BigDecimal!
   block_strategy_reported: Int!

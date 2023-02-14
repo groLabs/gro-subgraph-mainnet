@@ -1,7 +1,3 @@
-import {
-    Approval,
-    Transfer,
-} from '../../generated/Gvt/ERC20';
 import { DECIMALS } from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
 import { Address } from '@graphprotocol/graph-ts';
@@ -11,6 +7,10 @@ import { parseTransferEvent } from '../parsers/transfer';
 import { manageTransfer } from '../managers/transfers';
 import { isStakerTransfer } from '../utils/contracts';
 import { updateTotalSupply } from '../setters/coreData';
+import {
+    Approval,
+    Transfer,
+} from '../../generated/Gvt/ERC20';
 
 
 export function handleApproval(event: Approval): void {

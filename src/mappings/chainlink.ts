@@ -1,5 +1,3 @@
-import { contracts } from '../../addresses';
-import { Address } from '@graphprotocol/graph-ts';
 import { handleBalancerSwap } from './balancerGroWeth';
 import { updateFactors } from '../setters/factors';
 import { AnswerUpdated } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
@@ -8,10 +6,11 @@ import {
     set3CrvPrice,
     setStableCoinPrice
 } from '../setters/price';
-// contract addresses
-const chainlinkDaiUsdAddress = Address.fromString(contracts.ChainlinkDaiUsdAddress);
-const chainlinkUsdcUsdAddress = Address.fromString(contracts.ChainlinkUsdcUsdAddress);
-const chainlinkUsdtUsdAddress = Address.fromString(contracts.ChainlinkUsdtUsdAddress);
+import {
+    chainlinkDaiUsdAddress,
+    chainlinkUsdcUsdAddress,
+    chainlinkUsdtUsdAddress,
+} from '../utils/contracts';
 
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {

@@ -1,15 +1,12 @@
 import { initMD } from './masterdata';
 import { NUM } from '../utils/constants';
-import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
+import { gTrancheAddress } from '../utils/contracts';
 import { GTranche } from '../../generated/GTranche/GTranche';
 import {
     log,
-    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
-// contracts
-const gTrancheAddress = Address.fromString(contracts.GTrancheAddress);
 
 
 export const setUtilizationRatio = (
