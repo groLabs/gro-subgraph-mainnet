@@ -1,10 +1,13 @@
 
-import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
 import {
     NUM,
     DECIMALS,
 } from '../utils/constants';
+import {
+    staker1Address,
+    staker2Address,
+} from '../utils/contracts';
 import {
     log,
     BigInt,
@@ -14,9 +17,6 @@ import {
 // contracts
 import { LpTokenStaker as StakerV1 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
 import { LpTokenStaker as StakerV2 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
-// contract addresses
-const staker1Address = Address.fromString(contracts.LpTokenStakerV1Address);
-const staker2Address = Address.fromString(contracts.LpTokenStakerV2Address);
 
 
 const showError = (

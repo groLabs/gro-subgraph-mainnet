@@ -1,17 +1,14 @@
-import { contracts } from '../../addresses';
 import { Gvt } from '../../generated/Gvt/Gvt';
-import {
-    log,
-    BigInt,
-    Address,
-    BigDecimal,
-} from '@graphprotocol/graph-ts';
+import { gvtAddress } from '../utils/contracts';
 import {
     NUM,
     DECIMALS,
 } from '../utils/constants';
-// contract addresses
-const gvtAddress = Address.fromString(contracts.GvtAddress);
+import {
+    log,
+    BigInt,
+    BigDecimal,
+} from '@graphprotocol/graph-ts';
 
 
 // TEMPORARILY COPIED HERE (generates exception otherwise)

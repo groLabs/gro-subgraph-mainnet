@@ -773,8 +773,6 @@ dataSources:
         - MasterData
         - GVaultStrategy
         - GVaultHarvest
-        # - StrategyWithdraw
-        # - StrategyQueue
       abis:
         - name: GVault
           file: ./abis/ethereum/GVault.json
@@ -789,8 +787,12 @@ dataSources:
           handler: handleStrategyHarvestReport
         - event: LogNewReleaseFactor(uint256)
           handler: handleLogNewReleaseFactor
-        # - event: LogWithdrawalFromStrategy(uint48,uint256,uint256,uint256)
-        #   handler: handleWithdrawalFromStrategy
+        # - event: Deposit(indexed address,indexed address,uint256,uint256)
+        #   handler: handleDeposit
+        # - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
+        #   handler: handleWithdraw  
+        - event: LogWithdrawalFromStrategy(uint48,uint256,uint256,uint256)
+          handler: handleWithdrawalFromStrategy
         # - event: LogStrategyAdded(indexed address,indexed uint256,uint256)
         #   handler: handleStrategyAdded
       file: ./src/mappings/gvault.ts

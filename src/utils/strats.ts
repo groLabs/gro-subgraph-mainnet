@@ -1,4 +1,4 @@
-import { contracts } from '../../addresses';
+import { gVaultAddress } from '../utils/contracts';
 import { Strategy as Strat } from '../types/strats';
 import {
     GVault,
@@ -8,8 +8,7 @@ import {
     Address,
     ethereum,
 } from '@graphprotocol/graph-ts';
-// contracts
-const gVaultAddress = Address.fromString(contracts.GVaultAddress);
+
 
 // Old Gro Protocol strategies (currently not used)
 export const getStrategies = (): Strat[] => {
