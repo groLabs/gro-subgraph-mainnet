@@ -1,21 +1,10 @@
-// import {
-//     amountToUsd,
-//     tokenToDecimal
-// } from '../utils/tokens';
-import {
-    NUM,
-    // DECIMALS,
-} from '../utils/constants';
-import {
-    getGVaultStrategies,
-    // getTotalAssetsStrat3crv,
-} from '../utils/strats';
+import { NUM } from '../utils/constants';
+import { getGVaultStrategies } from '../utils/strats';
 import {
     GVaultHarvest,
     GVaultStrategy
 } from '../../generated/schema';
 import {
-    // log,
     BigInt,
     Address,
     BigDecimal
@@ -102,39 +91,17 @@ export const setGVaultDebt = (
     const id = strategyAddress.toHexString();
     let strat = initGVaultStrategy(id);
     if (eventType == 'harvest') {
-        // Based on event LogStrategyHarvestReport
+        // Based on event <LogStrategyHarvestReport>
         strat.strategy_debt = strat.strategy_debt.minus(debtPaid).plus(debtAdded);
         strat.block_strategy_reported = block.toI32();
         strat.locked_profit = lockedProfit;
     } else if (eventType == 'withdrawal') {
-        // Based on event LogWithdrawalFromStrategy
+        // Based on event <LogWithdrawalFromStrategy>
         strat.strategy_debt = strategyDebt;
         strat.block_strategy_withdraw = block.toI32();
     }
     strat.save();
 }
-
-// export const updateAllGVaultDebts = (): void => {
-//     // Based on event Deposit or Withdraw
-//     const strats = getGVaultStrategies();
-//     for (let i = 0; i < strats.length; i++) {
-//         const stratAddress = Address.fromString(strats[i].id)
-//         const totalDebt = getTotalAssetsStrat3crv(stratAddress);
-//         if (totalDebt.reverted) {
-//             log.error(
-//                 `updateAllGVaultDebts(): try_strategies() on strategy {} reverted in /setters/stratsGVault.ts`,
-//                 [strats[i].id]
-//             );
-//         } else {
-//             let strat = initGVaultStrategy(strats[i].id);
-//             strat.strategy_debt = amountToUsd(
-//                 '3crv',
-//                 tokenToDecimal(totalDebt.value.getTotalDebt(), 18, DECIMALS)
-//             );
-//             strat.save();
-//         }
-//     }
-// }
 
 // @dev: triggered by GVault->`LogStrategyHarvestReport`
 export const setGVaultHarvest = (

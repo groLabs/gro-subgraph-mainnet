@@ -5,10 +5,45 @@ import {
     GVault__strategiesResult,
 } from '../../generated/GVault/GVault';
 import {
+    log,
     Address,
     ethereum,
 } from '@graphprotocol/graph-ts';
 
+
+export const getGVaultStrategies = (): Strat[] => {
+    const strats = [
+        new Strat(
+            '0x02ba6fa63e094499a03f76bb7f19d191c0f9742a', // strategy address
+            '0x4d9c9760ad1597c7c68cc4cde21f9c43e62d82db', // vault address (GVault)
+            Address.zero().toHexString(),   // adapter address (not applicable for G^2)
+            'Convex FRAX 3CRV primary',     // strategy name
+            'Convex-FRAX-3CRV',             // strategy display name
+            '3CRV',         // vault name
+            '3CRV yVault',  // vault display name
+            '3crv',         // coin
+            'frax',         // metacoin
+            'convex',       // protocol
+            true,           // active
+            1,              // queue id [see log <LogStrategyAdded>]
+        ),
+        new Strat(
+            '0xaeeed92f98e3362c49b2111388715354bf838c03', // strategy address
+            '0x4d9c9760ad1597c7c68cc4cde21f9c43e62d82db', // vault address (GVault)
+            Address.zero().toHexString(),   // adapter address (not applicable for G^2)
+            'Convex MIM 3CRV primary',      // strategy name
+            'Convex-MIM-3CRV',              // strategy display name
+            '3CRV',         // vault name
+            '3CRV yVault',  // vault display name
+            '3crv',         // coin
+            'mim',          // metacoin
+            'convex',       // protocol
+            true,           // active
+            2,              // queue id [see log <LogStrategyAdded>]
+        ),
+    ];
+    return strats;
+}
 
 // Old Gro Protocol strategies (currently not used)
 export const getStrategies = (): Strat[] => {
@@ -87,40 +122,6 @@ export const getStrategies = (): Strat[] => {
     return strats;
 }
 
-export const getGVaultStrategies = (): Strat[] => {
-    const strats = [
-        new Strat(
-            '0x02ba6fa63e094499a03f76bb7f19d191c0f9742a', // strategy address
-            '0x4d9c9760ad1597c7c68cc4cde21f9c43e62d82db', // vault address (GVault)
-            Address.zero().toHexString(),   // adapter address (not applicable for G^2)
-            'Convex FRAX 3CRV primary',     // strategy name
-            'Convex-FRAX-3CRV',             // strategy display name
-            '3CRV',         // vault name
-            '3CRV yVault',  // vault display name
-            '3crv',         // coin
-            'frax',         // metacoin
-            'convex',       // protocol
-            true,           // active
-            1,              // queue id
-        ),
-        new Strat(
-            '0xaeeed92f98e3362c49b2111388715354bf838c03', // strategy address
-            '0x4d9c9760ad1597c7c68cc4cde21f9c43e62d82db', // vault address (GVault)
-            Address.zero().toHexString(),   // adapter address (not applicable for G^2)
-            'Convex MIM 3CRV primary',      // strategy name
-            'Convex-MIM-3CRV',              // strategy display name
-            '3CRV',         // vault name
-            '3CRV yVault',  // vault display name
-            '3crv',         // coin
-            'mim',          // metacoin
-            'convex',       // protocol
-            true,           // active
-            2,              // queue id
-        ),
-    ];
-    return strats;
-}
-
 export const getTotalAssetsStrat3crv = (
     strategyAddress: Address,
 ): ethereum.CallResult<GVault__strategiesResult> => {
@@ -136,5 +137,6 @@ export const getStrategyAddressByQueueId = (queueId: number): Address => {
             return Address.fromString(strats[i].id);
         }
     }
+    log.error('getStrategyAddressByQueueId(): strategy by id not found in /utils/strats.ts', []);
     return Address.zero();
 }

@@ -1,5 +1,6 @@
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
+import { Address } from '@graphprotocol/graph-ts';
 import { setNewReleaseFactor } from '../setters/gvault';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
@@ -9,17 +10,14 @@ import {
     DECIMALS,
 } from '../utils/constants';
 import {
-    // Deposit,
-    // Withdraw,
+    setGVaultDebt,
+    setGVaultHarvest,
+} from '../setters/stratsGVault';
+import {
     LogNewReleaseFactor,
     LogStrategyHarvestReport,
     LogWithdrawalFromStrategy,
 } from '../../generated/GVault/GVault';
-import {
-    setGVaultDebt,
-    setGVaultHarvest,
-    // updateAllGVaultDebts,
-} from '../setters/stratsGVault';
 
 
 export function handleLogNewReleaseFactor(event: LogNewReleaseFactor): void {
@@ -59,7 +57,7 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
         NUM.ZERO,
         lockedProfit,
         event.block.number,
-    )
+    );
 
     // update factor
     updateFactors();
@@ -71,24 +69,16 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     setUtilizationRatio(NUM.ZERO);
 }
 
-// export function handleDeposit(event: Deposit): void {
-//     updateAllGVaultDebts();
-// }
-
-// export function handleWithdraw(event: Withdraw): void {
-//     updateAllGVaultDebts();
-// }
-
 export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): void {
-    // TODO: confirm strategyId
     const strategyAddress = getStrategyAddressByQueueId(event.params.strategyId.toI32());
-    setGVaultDebt(
-        strategyAddress,
-        'withdrawal',
-        NUM.ZERO,
-        NUM.ZERO,
-        tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
-        NUM.ZERO,
-        event.block.number,
-    );
+    if (strategyAddress != Address.zero())
+        setGVaultDebt(
+            strategyAddress,
+            'withdrawal',
+            NUM.ZERO,
+            NUM.ZERO,
+            tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
+            NUM.ZERO,
+            event.block.number,
+        );
 }
