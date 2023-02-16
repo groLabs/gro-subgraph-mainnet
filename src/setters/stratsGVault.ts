@@ -82,8 +82,6 @@ export const initGVaultStrategy = (stratAddress: string): GVaultStrategy => {
 export const setGVaultDebt = (
     strategyAddress: Address,
     eventType: string,
-    debtPaid: BigDecimal,
-    debtAdded: BigDecimal,
     strategyDebt: BigDecimal,
     lockedProfit: BigDecimal,
     block: BigInt,
@@ -92,13 +90,16 @@ export const setGVaultDebt = (
     let strat = initGVaultStrategy(id);
     if (eventType == 'harvest') {
         // Based on event <LogStrategyHarvestReport>
-        strat.strategy_debt = strat.strategy_debt.minus(debtPaid).plus(debtAdded);
-        strat.block_strategy_reported = block.toI32();
         strat.locked_profit = lockedProfit;
+        strat.block_strategy_reported = block.toI32();
     } else if (eventType == 'withdrawal') {
         // Based on event <LogWithdrawalFromStrategy>
         strat.strategy_debt = strategyDebt;
         strat.block_strategy_withdraw = block.toI32();
+    } else if (eventType == 'total_changes') {
+        // Based on event <LogStrategyTotalChanges>
+        strat.strategy_debt = strategyDebt;
+        strat.block_strategy_reported = block.toI32();
     }
     strat.save();
 }

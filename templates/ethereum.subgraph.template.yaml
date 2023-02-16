@@ -787,12 +787,14 @@ dataSources:
           handler: handleStrategyHarvestReport
         - event: LogNewReleaseFactor(uint256)
           handler: handleLogNewReleaseFactor
+        - event: LogWithdrawalFromStrategy(uint48,uint256,uint256,uint256)
+          handler: handleWithdrawalFromStrategy
+        - event: LogStrategyTotalChanges(indexed address,uint256,uint256,uint256)
+          handler: handleStrategyTotalChanges
         # - event: Deposit(indexed address,indexed address,uint256,uint256)
         #   handler: handleDeposit
         # - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
         #   handler: handleWithdraw  
-        - event: LogWithdrawalFromStrategy(uint48,uint256,uint256,uint256)
-          handler: handleWithdrawalFromStrategy
         # - event: LogStrategyAdded(indexed address,indexed uint256,uint256)
         #   handler: handleStrategyAdded
       file: ./src/mappings/gvault.ts

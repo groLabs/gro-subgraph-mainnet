@@ -15,6 +15,7 @@ import {
 } from '../setters/stratsGVault';
 import {
     LogNewReleaseFactor,
+    LogStrategyTotalChanges,
     LogStrategyHarvestReport,
     LogWithdrawalFromStrategy,
 } from '../../generated/GVault/GVault';
@@ -52,8 +53,6 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     setGVaultDebt(
         event.params.strategy,
         'harvest',
-        harvest.debtPaid,
-        harvest.debtAdded,
         NUM.ZERO,
         lockedProfit,
         event.block.number,
@@ -75,10 +74,19 @@ export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): 
         setGVaultDebt(
             strategyAddress,
             'withdrawal',
-            NUM.ZERO,
-            NUM.ZERO,
             tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
             NUM.ZERO,
             event.block.number,
         );
+}
+
+export function handleStrategyTotalChanges(event: LogStrategyTotalChanges): void {
+    // update GVault strategy
+    setGVaultDebt(
+        event.params.strategy,
+        'total_changes',
+        tokenToDecimal(event.params.totalDebt, 18, DECIMALS),
+        NUM.ZERO,
+        event.block.number,
+    );
 }
