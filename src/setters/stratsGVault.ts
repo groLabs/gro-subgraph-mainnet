@@ -1,3 +1,4 @@
+import { initGVault } from './gvault';
 import { NUM } from '../utils/constants';
 import { getGVaultStrategies } from '../utils/strats';
 import {
@@ -22,7 +23,6 @@ const noGVaultStrategy = (): GVaultStrategy => {
     strat.vault_display_name = 'unknown';
     strat.vault_address = Address.zero();
     strat.strategy_debt = NUM.ZERO;
-    strat.locked_profit = NUM.ZERO;
     strat.block_strategy_reported = 0;
     strat.block_strategy_withdraw = 0;
     return strat;
@@ -43,7 +43,6 @@ export const initAllGVaultStrategies = (): void => {
             strat.vault_display_name = str.vault_display_name;
             strat.vault_address = Address.fromString(str.vault);
             strat.strategy_debt = NUM.ZERO;
-            strat.locked_profit = NUM.ZERO;
             strat.block_strategy_reported = 0;
             strat.block_strategy_withdraw = 0;
             strat.save();
@@ -68,7 +67,6 @@ export const initGVaultStrategy = (stratAddress: string): GVaultStrategy => {
                 strat.vault_display_name = str.vault_display_name;
                 strat.vault_address = Address.fromString(str.vault);
                 strat.strategy_debt = NUM.ZERO;
-                strat.locked_profit = NUM.ZERO;
                 strat.block_strategy_reported = 0;
                 strat.block_strategy_withdraw = 0;
                 return strat;
@@ -83,25 +81,32 @@ export const setGVaultDebt = (
     strategyAddress: Address,
     eventType: string,
     strategyDebt: BigDecimal,
-    lockedProfit: BigDecimal,
-    block: BigInt,
+    blockTs: BigInt,
 ): void => {
     const id = strategyAddress.toHexString();
     let strat = initGVaultStrategy(id);
-    if (eventType == 'harvest') {
-        // Based on event <LogStrategyHarvestReport>
-        strat.locked_profit = lockedProfit;
-        strat.block_strategy_reported = block.toI32();
-    } else if (eventType == 'withdrawal') {
+    if (eventType == 'withdrawal') {
         // Based on event <LogWithdrawalFromStrategy>
         strat.strategy_debt = strategyDebt;
-        strat.block_strategy_withdraw = block.toI32();
+        strat.block_strategy_withdraw = blockTs.toI32();
     } else if (eventType == 'total_changes') {
         // Based on event <LogStrategyTotalChanges>
         strat.strategy_debt = strategyDebt;
-        strat.block_strategy_reported = block.toI32();
+        strat.block_strategy_reported = blockTs.toI32();
     }
     strat.save();
+}
+
+// @dev: triggered by GVault->`LogStrategyHarvestReport`
+export const setGVaultLockedProfit = (
+    vaultAddress: Address,
+    lockedProfit: BigDecimal,
+    block: BigInt,
+): void => {
+    let vault = initGVault(vaultAddress);
+    vault.locked_profit = lockedProfit;
+    vault.locked_profit_timestamp = block.toI32();
+    vault.save();
 }
 
 // @dev: triggered by GVault->`LogStrategyHarvestReport`

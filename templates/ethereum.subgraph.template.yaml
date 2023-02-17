@@ -783,6 +783,8 @@ dataSources:
         - name: Pwrd
           file: ./abis/ethereum/Pwrd.json
       eventHandlers:
+        - event: LogStrategyAdded(indexed address,indexed uint256,uint256)
+          handler: handleStrategyAdded
         - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handleStrategyHarvestReport
         - event: LogNewReleaseFactor(uint256)
@@ -795,8 +797,7 @@ dataSources:
         #   handler: handleDeposit
         # - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
         #   handler: handleWithdraw  
-        # - event: LogStrategyAdded(indexed address,indexed uint256,uint256)
-        #   handler: handleStrategyAdded
+
       file: ./src/mappings/gvault.ts
 # *******************************************************************************************
 # ***********   G T R A N C H E   ***********************************************************

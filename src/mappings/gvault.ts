@@ -1,7 +1,6 @@
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
 import { Address } from '@graphprotocol/graph-ts';
-import { setNewReleaseFactor } from '../setters/gvault';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
 import { updateFactors } from '../setters/factors';
@@ -10,10 +9,16 @@ import {
     DECIMALS,
 } from '../utils/constants';
 import {
+    initGVault,
+    setNewReleaseFactor,
+} from '../setters/gvault';
+import {
     setGVaultDebt,
     setGVaultHarvest,
+    setGVaultLockedProfit,
 } from '../setters/stratsGVault';
 import {
+    LogStrategyAdded,
     LogNewReleaseFactor,
     LogStrategyTotalChanges,
     LogStrategyHarvestReport,
@@ -21,8 +26,15 @@ import {
 } from '../../generated/GVault/GVault';
 
 
+export function handleStrategyAdded(event: LogStrategyAdded): void {
+    initGVault(event.address);
+}
+
 export function handleLogNewReleaseFactor(event: LogNewReleaseFactor): void {
-    setNewReleaseFactor(event.params.factor.toI32());
+    setNewReleaseFactor(
+        event.address,
+        event.params.factor.toI32(),
+    );
 }
 
 export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): void {
@@ -42,20 +54,20 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     // calc lockedProfit
     // @dev: if loss > lockedProfitBeforeLoss, then lockedProfit = loss - lockedProfitBeforeLoss
     //       this is to handle negative profit from the last harvest
+    // TODO: REVIEW
     let lockedProfit = NUM.ZERO;
-    if (harvest.loss.gt(harvest.excessLoss)) {
-        lockedProfit = harvest.excessLoss.minus(harvest.loss)
-    } else {
-        lockedProfit = harvest.lockedProfit;
-    }
+    // if (harvest.loss.gt(harvest.excessLoss)) {
+    //     lockedProfit = harvest.excessLoss.minus(harvest.loss)
+    // } else {
+    //     lockedProfit = harvest.lockedProfit;
+    // }
+    lockedProfit = harvest.lockedProfit;
 
-    // update GVault strategy
-    setGVaultDebt(
-        event.params.strategy,
-        'harvest',
-        NUM.ZERO,
+    // update GVault lockedProfit
+    setGVaultLockedProfit(
+        event.address,
         lockedProfit,
-        event.block.number,
+        event.block.timestamp,
     );
 
     // update factor
@@ -75,7 +87,6 @@ export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): 
             strategyAddress,
             'withdrawal',
             tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
-            NUM.ZERO,
             event.block.number,
         );
 }
@@ -86,7 +97,6 @@ export function handleStrategyTotalChanges(event: LogStrategyTotalChanges): void
         event.params.strategy,
         'total_changes',
         tokenToDecimal(event.params.totalDebt, 18, DECIMALS),
-        NUM.ZERO,
         event.block.number,
     );
 }

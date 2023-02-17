@@ -15,7 +15,7 @@
     "generate:schema": "cp ./schemas/${BLOCKCHAIN}.schema.graphql schema.graphql && cp ./config/${NETWORK}-${SCOPE}.json addresses.ts && yarn generate:addresses",
     "deploy:mainnet:test:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
     "deploy:mainnet:prod:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-prod-eth",
-    "deploy:mainnet:g2:hosted:prerelease": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-sjs",
+    "deploy:mainnet:g2:hosted:prerelease": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
     "deploy:mainnet:g2:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
     "deploy:mainnet:test:studio": "graph deploy --studio gro-mainnet-test",
     "deploy:mainnet:prod:studio": "graph deploy --studio gro-mainnet",
