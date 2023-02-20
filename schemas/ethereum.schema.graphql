@@ -43,9 +43,9 @@ enum NetworkName {
 type MasterData @entity {
   id: ID! # 0x
   status: Status!
-  networkId: Int!
-  networkName: NetworkName!
-  launchTimestamp: Int!
+  network_id: Int!
+  network_name: NetworkName!
+  launch_timestamp: Int!
   gro_per_block: BigDecimal!
   total_alloc: BigDecimal!
   total_locked_amount: BigDecimal!
@@ -56,7 +56,6 @@ type MasterData @entity {
   global_start_time: Int!
   util_ratio: BigDecimal!
   util_ratio_limit: BigDecimal!
-  # gvault_release_factor: Int!
 }
 
 # latest token price
@@ -69,7 +68,7 @@ type Price @entity {
   dai: BigDecimal!
   usdc: BigDecimal!
   usdt: BigDecimal!
-  threeCrv: BigDecimal!
+  three_crv: BigDecimal!
   balancer_gro_weth: BigDecimal!
   uniswap_gvt_gro: BigDecimal!
   uniswap_gro_usdc: BigDecimal!
@@ -106,26 +105,26 @@ type GVaultStrategy @entity {
   strategy_debt: BigDecimal!
   block_strategy_reported: Int!
   block_strategy_withdraw: Int!
-  harvests: [GVaultHarvest!] @derivedFrom(field: "strategyAddress")
+  harvests: [GVaultHarvest!] @derivedFrom(field: "strategy_address")
 }
 
 # G2 strategy harvest (from GVault)
 type GVaultHarvest @entity {
   id: ID! # hash-logIndex
-  strategyAddress: GVaultStrategy!
+  strategy_address: GVaultStrategy!
   gain: BigDecimal!
   loss: BigDecimal!
-  debtPaid: BigDecimal!
-  debtAdded: BigDecimal!
-  lockedProfit: BigDecimal!
-  excessLoss: BigDecimal!
-  timestamp: Int!
+  debt_paid: BigDecimal!
+  debt_added: BigDecimal!
+  locked_profit: BigDecimal!
+  excess_loss: BigDecimal!
+  block_timestamp: Int!
 }
 
 # pool data
 type PoolData @entity {
   id: ID! # pool id
-  poolAddress: Bytes!
+  pool_address: Bytes!
   reserve0: BigDecimal!
   reserve1: BigDecimal!
   total_supply: BigDecimal!
@@ -145,15 +144,15 @@ type StakerData @entity {
 # pool swaps
 type PoolSwap @entity {
   id: ID! # timestamp-poolId
-  poolId: Int!
+  pool_id: Int!
   block_timestamp: Int!
   block_number: Int!
-  fromAddress: Bytes!
+  from_address: Bytes!
   amount0_in: BigDecimal!
   amount1_in: BigDecimal!
   amount0_out: BigDecimal!
   amount1_out: BigDecimal!
-  toAddress: Bytes!
+  to_address: Bytes!
   virtual_price: BigDecimal!
 }
 
@@ -172,18 +171,18 @@ type CoreData @entity {
 # user
 type User @entity {
   id: ID! # userAddress
-  transfers: [TransferTx!] @derivedFrom(field: "userAddress")
-  approvals: [ApprovalTx!] @derivedFrom(field: "ownerAddress")
-  claims: [ClaimTx!] @derivedFrom(field: "userAddress")
-  totals: Totals! @derivedFrom(field: "userAddress")
-  pools: [Pool!] @derivedFrom(field: "userAddress")
-  vestingBonus: VestingBonus! @derivedFrom(field: "userAddress")
+  transfers: [TransferTx!] @derivedFrom(field: "user_address")
+  approvals: [ApprovalTx!] @derivedFrom(field: "owner_address")
+  claims: [ClaimTx!] @derivedFrom(field: "user_address")
+  totals: Totals! @derivedFrom(field: "user_address")
+  pools: [Pool!] @derivedFrom(field: "user_address")
+  vestingBonus: VestingBonus! @derivedFrom(field: "user_address")
 }
 
 # aggregated amounts for personal stats
 type Totals @entity {
   id: ID! # userAddress
-  userAddress: User! # FK to User
+  user_address: User! # FK to User
   amount_added_pwrd: BigDecimal!
   amount_added_gvt: BigDecimal!
   amount_removed_pwrd: BigDecimal!
@@ -210,7 +209,7 @@ type Totals @entity {
 # vesting bonus
 type VestingBonus @entity {
   id: ID! # userAddress
-  userAddress: User! # FK to User
+  user_address: User! # FK to User
   locked_gro: BigDecimal!
   net_reward: BigDecimal!
   claim_now: BigDecimal!
@@ -222,8 +221,8 @@ type VestingBonus @entity {
 # staker pools
 type Pool @entity {
   id: ID! # userAddress-poolId
-  userAddress: User! # FK to User
-  poolId: Int!
+  user_address: User! # FK to User
+  pool_id: Int!
   net_reward: BigDecimal!
   reward_debt: BigDecimal!
   balance: BigDecimal! # rename to coinBalance
@@ -235,46 +234,46 @@ type Pool @entity {
 # staker deposits & withdrawals
 type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
-  contractAddress: Bytes!
-  block: Int!
-  timestamp: Int!
+  contract_address: Bytes!
+  block_number: Int!
+  block_timestamp: Int!
   hash: Bytes!
   type: TxType!
   token: Token!
-  userAddress: User! # FK to User
-  fromAddress: Bytes!
-  toAddress: Bytes!
-  coinAmount: BigDecimal!
-  usdAmount: BigDecimal!
-  poolId: Int
+  user_address: User! # FK to User
+  from_address: Bytes!
+  to_address: Bytes!
+  coin_amount: BigDecimal!
+  usd_amount: BigDecimal!
+  pool_id: Int
   factor: BigDecimal!
 }
 
 # gro protocol approvals
 type ApprovalTx @entity {
   id: ID! # hash-logIndex
-  contractAddress: Bytes!
-  block: Int!
-  timestamp: Int!
+  contract_address: Bytes!
+  block_number: Int!
+  block_timestamp: Int!
   hash: Bytes!
   type: TxType!
   token: Token!
-  ownerAddress: User! # FK to User
-  spenderAddress: Bytes
-  coinAmount: BigDecimal!
-  usdAmount: BigDecimal!
+  owner_address: User! # FK to User
+  spender_address: Bytes
+  coin_amount: BigDecimal!
+  usd_amount: BigDecimal!
 }
 
 # staker claims
 type ClaimTx @entity {
   id: ID! # hash-logIndex
-  contractAddress: Bytes!
-  block: Int!
-  timestamp: Int!
+  contract_address: Bytes!
+  block_number: Int!
+  block_timestamp: Int!
   hash: Bytes!
   type: TxType!
-  userAddress: User! # FK to User
-  poolId: [Int!]!
+  user_address: User! # FK to User
+  pool_id: [Int!]!
   vest: Boolean
   amount: BigDecimal!
 }

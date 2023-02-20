@@ -32,8 +32,8 @@ export const manageCoreDeposit = (
         tx.type,
         token,
         ev.userAddress,
-        tx.coinAmount,
-        tx.usdAmount,
+        tx.coin_amount,
+        tx.usd_amount,
         tx.factor,
     );
 
@@ -45,7 +45,7 @@ export const manageCoreDeposit = (
     // Step 5: Update total supply
     updateTotalSupply(
         'deposit',
-        tx.coinAmount,
+        tx.coin_amount,
         token,
     );
 }

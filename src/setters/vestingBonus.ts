@@ -26,7 +26,7 @@ export const initVestingBonus = (
     let vestingBonus = VestingBonus.load(id);
     if (!vestingBonus) {
         vestingBonus = new VestingBonus(id);
-        vestingBonus.userAddress = userAddress;
+        vestingBonus.user_address = userAddress;
         vestingBonus.locked_gro = NUM.ZERO;
         vestingBonus.net_reward = NUM.ZERO;
         vestingBonus.claim_now = NUM.ZERO;
@@ -157,7 +157,6 @@ export const updateExit = (
     // Step 0: load entities
     let md = initMD();
     let vestingBonus = initVestingBonus(userAddress, false);
-
     // Step 1: update total_bonus
     // call function
     md = updateTotalBonus(
@@ -165,23 +164,19 @@ export const updateExit = (
         penaltyAmount,
         false,
     );
-
     // Step 2: update total_locked_amount
     if (!isInstantExit && totalLockedAmount.ge(NUM.ZERO))
         md.total_locked_amount = totalLockedAmount;
-
     // Step 3: update global_start_time (Groove)
     md = updateGlobalTimeStamp(
         md,
         vestingAddress,
         false
     );
-
     // Step 4: update vesting_gro
     // TODO: rename by total_gro?
     if (!isInstantExit)
         vestingBonus.vesting_gro = vestingBonus.vesting_gro.plus(vestingAmount);
-
     // Step 5: Save changes to entities
     md.save();
     vestingBonus.save();

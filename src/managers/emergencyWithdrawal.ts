@@ -24,8 +24,8 @@ export const manageEmergencyCoreWithdrawal = (
         tx.type,
         tx.token,
         ev.userAddress,
-        tx.coinAmount,
-        tx.usdAmount,
+        tx.coin_amount,
+        tx.usd_amount,
         tx.factor,
     );
 
@@ -35,7 +35,7 @@ export const manageEmergencyCoreWithdrawal = (
     // Step 4: Update total supply
     updateTotalSupply(
         'withdrawal',
-        tx.coinAmount,
+        tx.coin_amount,
         tx.token,
     );
 

@@ -10,15 +10,15 @@ export const setClaimTx = (
 ): ClaimTx => {
     let tx = new ClaimTx(ev.id);
     const coinAmount = tokenToDecimal(ev.amount, 18, DECIMALS);
-    tx.contractAddress = ev.contractAddress;
-    tx.block = ev.block;
-    tx.timestamp = ev.timestamp;
+    tx.contract_address = ev.contractAddress;
+    tx.block_number = ev.block;
+    tx.block_timestamp = ev.timestamp;
     tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
     tx.type = (ev.pid.length > 1)
         ? 'multiclaim'
         : 'claim';
-    tx.userAddress = ev.userAddress;
-    tx.poolId = ev.pid;
+    tx.user_address = ev.userAddress;
+    tx.pool_id = ev.pid;
     tx.vest = ev.vest;
     tx.amount = coinAmount;
     tx.save();

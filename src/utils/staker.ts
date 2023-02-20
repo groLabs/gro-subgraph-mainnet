@@ -1,5 +1,7 @@
 
 import { tokenToDecimal } from '../utils/tokens';
+import { LpTokenStaker as StakerV1 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
+import { LpTokenStaker as StakerV2 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
 import {
     NUM,
     DECIMALS,
@@ -14,9 +16,6 @@ import {
     Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
-// contracts
-import { LpTokenStaker as StakerV1 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
-import { LpTokenStaker as StakerV2 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
 
 
 const showError = (

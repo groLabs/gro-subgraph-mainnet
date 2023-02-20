@@ -37,21 +37,21 @@ export const setDepoWithdrawTx = (
     token: string,
 ): TransferTx => {
     let tx = new TransferTx(ev.id);
-    tx.contractAddress = ev.contractAddress;
-    tx.block = ev.block;
-    tx.timestamp = ev.timestamp;
+    tx.contract_address = ev.contractAddress;
+    tx.block_number = ev.block;
+    tx.block_timestamp = ev.timestamp;
     tx.token = token;
     tx.type = ev.type;
     tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
-    tx.userAddress = ev.userAddress;
-    tx.fromAddress = ev.fromAddress;
-    tx.toAddress = ev.toAddress;
-    tx.coinAmount = ev.coinAmount.isZero()
+    tx.user_address = ev.userAddress;
+    tx.from_address = ev.fromAddress;
+    tx.to_address = ev.toAddress;
+    tx.coin_amount = ev.coinAmount.isZero()
         ? getCoinAmount(logs, tx, false)
         : tokenToDecimal(ev.coinAmount, 18, DECIMALS);
-    tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
+    tx.usd_amount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
     tx.factor = getFactorForOldProtocol(ev.block, token);
-    tx.poolId = ev.poolId;
+    tx.pool_id = ev.poolId;
     tx.save();
     return tx;
 }
@@ -62,22 +62,22 @@ export const setEmergencyWithdrawTx = (
     logs: Log[],
 ): TransferTx => {
     let tx = new TransferTx(ev.id);
-    tx.contractAddress = ev.contractAddress;
-    tx.block = ev.block;
-    tx.timestamp = ev.timestamp;
+    tx.contract_address = ev.contractAddress;
+    tx.block_number = ev.block;
+    tx.block_timestamp = ev.timestamp;
     tx.type = ev.type;
     tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
-    tx.coinAmount = getCoinAmount(logs, tx, true);
-    tx.userAddress = emergencyFrom.toHexString();
-    tx.fromAddress = emergencyFrom;
-    tx.toAddress = Address.zero();
+    tx.coin_amount = getCoinAmount(logs, tx, true);
+    tx.user_address = emergencyFrom.toHexString();
+    tx.from_address = emergencyFrom;
+    tx.to_address = Address.zero();
     tx.token = emergencyToken;
     const pricePerShare = getPricePerShare(emergencyToken);
-    tx.usdAmount = (tx.coinAmount.times(pricePerShare)).truncate(DECIMALS);
+    tx.usd_amount = (tx.coin_amount.times(pricePerShare)).truncate(DECIMALS);
     tx.factor = (emergencyToken === 'pwrd')
         ? getStoredFactor(emergencyToken)
         : getFactor(emergencyToken);
-    tx.poolId = ev.poolId;
+    tx.pool_id = ev.poolId;
     tx.save();
     return tx;
 }
@@ -88,19 +88,19 @@ export const setStakerDepoWithdrawTx = (
 ): TransferTx => {
     const token = getTokenByPoolId(ev.poolId);
     let tx = new TransferTx(ev.id);
-    tx.contractAddress = ev.contractAddress;
-    tx.block = ev.block;
-    tx.timestamp = ev.timestamp;
+    tx.contract_address = ev.contractAddress;
+    tx.block_number = ev.block;
+    tx.block_timestamp = ev.timestamp;
     tx.token = token
     tx.type = ev.type;
     tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
-    tx.userAddress = ev.userAddress;
-    tx.fromAddress = ev.fromAddress;
-    tx.toAddress = ev.toAddress;
-    tx.coinAmount = tokenToDecimal(ev.coinAmount, 18, DECIMALS);
-    tx.usdAmount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
+    tx.user_address = ev.userAddress;
+    tx.from_address = ev.fromAddress;
+    tx.to_address = ev.toAddress;
+    tx.coin_amount = tokenToDecimal(ev.coinAmount, 18, DECIMALS);
+    tx.usd_amount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
     tx.factor = getFactor(token); //TODO: needed?
-    tx.poolId = ev.poolId;
+    tx.pool_id = ev.poolId;
     tx.save();
     return tx;
 }
@@ -134,10 +134,11 @@ export function getCoinAmount(
         }
     }
     showLog.error(
-        '{} coin amount not found from Transfer event through tx {}', [
-        tx.token,
-        tx.hash.toHexString()
-    ]);
+        'getCoinAmount():{} coin amount not found from Transfer event through tx {} in /setters/depowithdraw.ts',
+        [
+            tx.token,
+            tx.hash.toHexString()
+        ]);
     return NUM.ZERO;
 }
 

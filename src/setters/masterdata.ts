@@ -8,9 +8,9 @@ export const initMD = (): MasterData => {
 	if (!md) {
 		md = new MasterData('0x');
 		md.status = 'ok';
-		md.networkId = i32(1);
-		md.networkName = 'mainnet';
-		md.launchTimestamp = i32(TS_LAUNCH);
+		md.network_id = i32(1);
+		md.network_name = 'mainnet';
+		md.launch_timestamp = i32(TS_LAUNCH);
 		md.gro_per_block = NUM.ZERO;
 		md.total_alloc = NUM.ZERO;
 		md.total_locked_amount = NUM.ZERO;

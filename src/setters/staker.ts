@@ -3,7 +3,6 @@ import { initMD } from './masterdata';
 import { tokenToDecimal } from '../utils/tokens';
 import { StakerData } from '../../generated/schema';
 import {
-    log as showLog,
     BigInt,
     ethereum,
     BigDecimal,
@@ -85,7 +84,6 @@ export const updateStakerAllocation = (
     let allocPoint = alloc_point.toBigDecimal();
     let totalAlloc = NUM.ZERO;
     let staker: StakerData[] = [];
-
     // update alloc_point on target pool & calc the totalAlloc
     for (let i = 0; i <= 6; i++) {
         staker[i] = initStakerData(i);
@@ -96,12 +94,10 @@ export const updateStakerAllocation = (
             totalAlloc = totalAlloc.plus(staker[i].alloc_point);
         }
     }
-
     // update total_alloc in MD 
     let md = initMD();
     md.total_alloc = totalAlloc;
     md.save();
-
     // update pool_share on each pool
     for (let i = 0; i <= 6; i++) {
         staker[i].pool_share = (totalAlloc.equals(NUM.ZERO))

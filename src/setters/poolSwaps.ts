@@ -19,15 +19,15 @@ export const setPoolSwap = (
     let swap = PoolSwap.load(tx);
     if (!swap) {
         swap = new PoolSwap(tx);
-        swap.poolId = poolId;
+        swap.pool_id = poolId;
         swap.block_timestamp = blockTimestamp;
         swap.block_number = blockNumber,
-        swap.fromAddress = fromAddress;
+        swap.from_address = fromAddress;
         swap.amount0_in = amount0In;
         swap.amount0_out = amount1In;
         swap.amount1_in = amount0Out;
         swap.amount1_out = amount1Out;
-        swap.toAddress = toAddress;
+        swap.to_address = toAddress;
         swap.virtual_price = virtualPrice;
     }
     swap.save();

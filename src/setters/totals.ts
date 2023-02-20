@@ -11,7 +11,7 @@ export const initTotals = (
     let total = Totals.load(userAddress);
     if (!total) {
         total = new Totals(userAddress);
-        total.userAddress = userAddress;
+        total.user_address = userAddress;
         total.amount_added_gvt = NUM.ZERO;
         total.amount_added_pwrd = NUM.ZERO;
         total.amount_removed_gvt = NUM.ZERO;

@@ -33,8 +33,8 @@ export const manageCoreWithdrawal = (
         tx.type,
         token,
         ev.userAddress,
-        tx.coinAmount,
-        tx.usdAmount,
+        tx.coin_amount,
+        tx.usd_amount,
         tx.factor,
     );
 
@@ -46,7 +46,7 @@ export const manageCoreWithdrawal = (
     // Update total supply
     updateTotalSupply(
         'withdrawal',
-        tx.coinAmount,
+        tx.coin_amount,
         token,
     );
 

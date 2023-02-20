@@ -124,14 +124,14 @@ export const setGVaultHarvest = (
     let harvest = GVaultHarvest.load(id);
     if (!harvest) {
         harvest = new GVaultHarvest(id);
-        harvest.strategyAddress = strategyAddress;
+        harvest.strategy_address = strategyAddress;
         harvest.gain = gain;
         harvest.loss = loss;
-        harvest.debtPaid = debtPaid;
-        harvest.debtAdded = debtAdded;
-        harvest.lockedProfit = lockedProfit;
-        harvest.excessLoss = excessLoss;
-        harvest.timestamp = timestamp.toI32();
+        harvest.debt_paid = debtPaid;
+        harvest.debt_added = debtAdded;
+        harvest.locked_profit = lockedProfit;
+        harvest.excess_loss = excessLoss;
+        harvest.block_timestamp = timestamp.toI32();
         harvest.save();
     }
     return harvest;

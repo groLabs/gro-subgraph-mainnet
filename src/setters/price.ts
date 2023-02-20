@@ -51,7 +51,7 @@ export const initPrice = (): Price => {
         price.dai = NUM.ZERO;
         price.usdc = NUM.ZERO;
         price.usdt = NUM.ZERO;
-        price.threeCrv = NUM.ZERO;
+        price.three_crv = NUM.ZERO;
         price.balancer_gro_weth = NUM.ZERO;
         price.uniswap_gvt_gro = NUM.ZERO;
         price.uniswap_gro_usdc = NUM.ZERO;
@@ -75,12 +75,11 @@ export const set3CrvPrice = (): void => {
     } else {
         const crvPrice = tokenToDecimal(virtualPrice.value, 18, DECIMALS);
         let price = initPrice();
-        price.threeCrv = crvPrice;
+        price.three_crv = crvPrice;
         price.save();
     }
 }
 
-// TODO: update gro price as well (knowing gvt price, we can update gro)
 export const setUniswapGvtGroPrice = (): void => {
     const contract = UniswapV2Pair.bind(uni2GvtGroAddress);
     const reserves = contract.try_getReserves();
@@ -93,7 +92,6 @@ export const setUniswapGvtGroPrice = (): void => {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
         const gvtReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, DECIMALS);
         const groReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, DECIMALS);
-
         // update Pool data
         updatePoolData(
             1,
@@ -102,10 +100,8 @@ export const setUniswapGvtGroPrice = (): void => {
             groReserve,
             totalSupply,
         );
-
-        // update GRO price
+        // TODO: update GRO price (knowing gvt price, we can update gro)
         // TODO: chainlink to calc the USD price of USDC.
-
         // update lpToken price
         const price = initPrice();
         const oneGvt = (NUM.ONE.div(totalSupply)).times(gvtReserve);
@@ -115,17 +111,6 @@ export const setUniswapGvtGroPrice = (): void => {
         const oneLpValue = oneGvtValue.plus(oneGroValue);
         price.uniswap_gvt_gro = oneLpValue.truncate(DECIMALS);
         price.save();
-
-        // log.error(`HELLLOOO on setUniswapGvtGroPrice !!!(): oneGvt {} oneGro {} gvt price {} gro price {} oneGvtValue {} oneGroValue {} oneLpValue {}`,
-        // [
-        //     oneGvt.toString(),
-        //     oneGro.toString(),
-        //     price.gvt.toString(),
-        //     price.gro.toString(),
-        //     oneGvtValue.toString(),
-        //     oneGroValue.toString(),
-        //     oneLpValue.toString(),
-        // ]);
     }
 }
 
@@ -141,7 +126,6 @@ export const setUniswapGroUsdcPrice = (): void => {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
         const groReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, DECIMALS);
         const usdcReserve = tokenToDecimal(reserves.value.get_reserve1(), 6, DECIMALS);
-
         // update Pool data
         updatePoolData(
             2,
@@ -150,13 +134,11 @@ export const setUniswapGroUsdcPrice = (): void => {
             usdcReserve,
             totalSupply,
         );
-
         // update GRO price
         const price = initPrice();
         const usdReserve = usdcReserve.times(price.usdc)
         const groPricePerShare = usdReserve.div(groReserve).truncate(DECIMALS);
         price.gro = groPricePerShare;
-
         // update lpToken price
         const oneGroAmount = (NUM.ONE.div(totalSupply)).times(groReserve);
         const oneUsdcAmount = (NUM.ONE.div(totalSupply)).times(usdcReserve);
@@ -183,7 +165,6 @@ export const setCurvePwrd3crvPrice = (): void => {
         const total_supply = tokenToDecimal(totalSupply.value, 18, 12);
         const crv_reserve = tokenToDecimal(reserves.value[0], 18, DECIMALS);
         const pwrd_reserve = tokenToDecimal(reserves.value[1], 18, DECIMALS);
-
         // update Pool data
         updatePoolData(
             4,
@@ -192,7 +173,6 @@ export const setCurvePwrd3crvPrice = (): void => {
             pwrd_reserve,
             total_supply,
         );
-
         // update lpToken price
         const price = initPrice();
         const lpPricePerShare = tokenToDecimal(virtualPrice.value, 18, DECIMALS);
@@ -234,7 +214,6 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
         } else {
             const groReserve = reserves[0];
             const wethReserve = reserves[1];
-
             // update Pool data
             updatePoolData(
                 5,
@@ -243,7 +222,6 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
                 wethReserve,
                 totalSupply,
             );
-
             // update lpToken price
             const price = initPrice();
             const oneGro = (NUM.ONE.div(totalSupply)).times(groReserve);
@@ -265,7 +243,7 @@ export const setWethPrice = (): void => {
     } else {
         const usdcReserve = tokenToDecimal(reserves.value.get_reserve0(), 6, DECIMALS);
         const wethReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, DECIMALS);
-        // update WETH price
+        // TODO: update WETH price
         // TODO: chainlink to calc the USD price of USDC.
         const price = initPrice();
         price.weth = usdcReserve.div(wethReserve).truncate(DECIMALS);

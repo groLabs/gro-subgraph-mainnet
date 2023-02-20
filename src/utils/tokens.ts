@@ -116,7 +116,7 @@ export const amountToUsd = (
             : (coin == 'usdt')
                 ? _price.usdt
                 : (coin == '3crv')
-                    ? _price.threeCrv
+                    ? _price.three_crv
                     : NUM.ZERO;
     return amount.times(price).truncate(DECIMALS);
 }
@@ -139,6 +139,5 @@ export const getUSDAmountOfShare = (
     } else if (tokenIndex == 3) {
         usdAmount = amountToUsd('3crv', coinAmount);
     }
-
     return BigInt.fromString(usdAmount.truncate(0).toString());
 }

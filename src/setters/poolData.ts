@@ -11,7 +11,7 @@ const initPoolData = (
     let poolData = PoolData.load(id);
     if (!poolData) {
         poolData = new PoolData(id);
-        poolData.poolAddress = contractAddress;
+        poolData.pool_address = contractAddress;
         poolData.reserve0 = NUM.ZERO;
         poolData.reserve1 = NUM.ZERO;
         poolData.total_supply = NUM.ZERO;

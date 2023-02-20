@@ -61,7 +61,7 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     // } else {
     //     lockedProfit = harvest.lockedProfit;
     // }
-    lockedProfit = harvest.lockedProfit;
+    lockedProfit = harvest.locked_profit;
 
     // update GVault lockedProfit
     setGVaultLockedProfit(

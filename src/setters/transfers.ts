@@ -30,19 +30,19 @@ export const setTransferTx = (
     const coinAmount = tokenToDecimal(ev.value, 18, DECIMALS);
     const pricePerShare = getPricePerShare(token);
 
-    tx.contractAddress = ev.contractAddress;
-    tx.block = ev.block.toI32();
-    tx.timestamp = ev.timestamp.toI32();
+    tx.contract_address = ev.contractAddress;
+    tx.block_number = ev.block.toI32();
+    tx.block_timestamp = ev.timestamp.toI32();
     tx.token = token;
     tx.type = type;
     tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
-    tx.userAddress = userAddress;
-    tx.fromAddress = ev.fromAddress;
-    tx.toAddress = ev.toAddress;
-    tx.coinAmount = coinAmount;
-    tx.usdAmount = (coinAmount.times(pricePerShare)).truncate(DECIMALS);
+    tx.user_address = userAddress;
+    tx.from_address = ev.fromAddress;
+    tx.to_address = ev.toAddress;
+    tx.coin_amount = coinAmount;
+    tx.usd_amount = (coinAmount.times(pricePerShare)).truncate(DECIMALS);
     tx.factor = getFactor(token);
-    tx.poolId = NO_POOL;
+    tx.pool_id = NO_POOL;
     tx.save();
     return tx;
 }

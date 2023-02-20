@@ -20,16 +20,16 @@ export const setApprovalTx = (
     const coinAmount = tokenToDecimal(ev.value, base, DECIMALS);
     const pricePerShare = getPricePerShare(token);
 
-    tx.ownerAddress = ev.ownerAddress;
-    tx.contractAddress = ev.contractAddress;
-    tx.block = ev.block.toI32();
-    tx.timestamp = ev.timestamp.toI32();
+    tx.owner_address = ev.ownerAddress;
+    tx.contract_address = ev.contractAddress;
+    tx.block_number = ev.block.toI32();
+    tx.block_timestamp = ev.timestamp.toI32();
     tx.token = token;
     tx.type = 'approval';
     tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
-    tx.coinAmount = coinAmount;
-    tx.usdAmount = coinAmount.times(pricePerShare);
-    tx.spenderAddress = ev.spenderAddress;
+    tx.coin_amount = coinAmount;
+    tx.usd_amount = coinAmount.times(pricePerShare);
+    tx.spender_address = ev.spenderAddress;
     tx.save();
     return tx;
 }

@@ -19,8 +19,8 @@ const initPool = (
     let pool = Pool.load(id);
     if (!pool) {
         pool = new Pool(id);
-        pool.userAddress = userAddress;
-        pool.poolId = poolId;
+        pool.user_address = userAddress;
+        pool.pool_id = poolId;
         pool.net_reward = NUM.ZERO;
         pool.reward_debt = NUM.ZERO;
         pool.balance = NUM.ZERO;
@@ -39,18 +39,15 @@ export const setPools = (
 ): void => {
     let pool = initPool(userAddress, poolId);
     const amount = tokenToDecimal(coinAmount, 18, DECIMALS);
-
     // Retrieve rewards debt from function userInfo() in staker contract
-    // when there is any deposit, withdrawal or claim
+    // when there is a deposit, withdrawal or claim
     const currentRewardDebt = getRewardDebt(
         contractAddress,
         userAddress,
         poolId
     );
-
     // Reward = current reward from deposit/withdrawal/claim - last reward from deposit/withdrawal/claim
     const currentNetReward = currentRewardDebt.minus(pool.reward_debt);
-
     if (type === 'claim' || type === 'multiclaim') {
         pool.net_reward = pool.net_reward.plus(currentNetReward);
     } else if (type === 'staker_deposit') {
@@ -58,7 +55,6 @@ export const setPools = (
     } else if (type === 'staker_withdrawal') {
         pool.balance = pool.balance.minus(amount);
     }
-
     pool.reward_debt = currentRewardDebt;
     pool.save();
 }
