@@ -21,7 +21,7 @@ const noGVaultStrategy = (): GVaultStrategy => {
     strat.strat_display_name = 'unknown';
     strat.vault_name = 'unknown';
     strat.vault_display_name = 'unknown';
-    strat.vault_address = Address.zero();
+    strat.vault_address ='0x';
     strat.strategy_debt = NUM.ZERO;
     strat.block_strategy_reported = 0;
     strat.block_strategy_withdraw = 0;
@@ -41,7 +41,7 @@ export const initAllGVaultStrategies = (): void => {
             strat.strat_display_name = str.strat_display_name;
             strat.vault_name = str.vault_name;
             strat.vault_display_name = str.vault_display_name;
-            strat.vault_address = Address.fromString(str.vault);
+            strat.vault_address = str.vault;
             strat.strategy_debt = NUM.ZERO;
             strat.block_strategy_reported = 0;
             strat.block_strategy_withdraw = 0;
@@ -65,7 +65,7 @@ export const initGVaultStrategy = (stratAddress: string): GVaultStrategy => {
                 strat.strat_display_name = str.strat_display_name;
                 strat.vault_name = str.vault_name;
                 strat.vault_display_name = str.vault_display_name;
-                strat.vault_address = Address.fromString(str.vault);
+                strat.vault_address = str.vault;
                 strat.strategy_debt = NUM.ZERO;
                 strat.block_strategy_reported = 0;
                 strat.block_strategy_withdraw = 0;

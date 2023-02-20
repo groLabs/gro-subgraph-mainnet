@@ -89,6 +89,7 @@ type GVault @entity {
   release_factor: Int!
   locked_profit: BigDecimal!
   locked_profit_timestamp: Int!
+  strategies: [GVaultStrategy!] @derivedFrom(field: "vault_address")
 }
 
 # G2 strategy
@@ -101,7 +102,7 @@ type GVaultStrategy @entity {
   strat_display_name: String!
   vault_name: String!
   vault_display_name: String!
-  vault_address: Bytes!
+  vault_address: GVault!
   strategy_debt: BigDecimal!
   block_strategy_reported: Int!
   block_strategy_withdraw: Int!
