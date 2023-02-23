@@ -26,7 +26,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     setGvtPrice();
     updateFactors();
 
-    // store swap
+    // store articifical Balancer swap to update the price
     handleBalancerSwap(
         event.block.timestamp.toI32(),
         event.block.number.toI32(),
