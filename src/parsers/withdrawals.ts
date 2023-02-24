@@ -9,7 +9,7 @@ import {
 
 
 // parse core withdrawal events
-function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
+export function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -26,7 +26,7 @@ function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
+export function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
     const shareAmount = ev.params.calcAmount;
     const tokenIndex = ev.params.tokenIndex.toI32();
     const usdAmount = getUSDAmountOfShare(tokenIndex, shareAmount.toBigDecimal());
@@ -47,7 +47,7 @@ function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
 }
 
 // parse core withdrawal events
-function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
+export function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     const event = new DepoWithdrawEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -65,7 +65,7 @@ function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
 }
 
 // parse staker withdrawal events
-function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
+export function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     const poolId = (ev.params.pid)
         ? ev.params.pid.toI32()
         : NO_POOL;
@@ -83,11 +83,4 @@ function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         poolId,                         // poolId
     )
     return event;
-}
-
-export {
-    parseCoreWithdrawalEvent,
-    parseStakerWithdrawalEvent,
-    parseCoreEmergencyWithdrawalEvent,
-    parseGRouterWithdrawEvent
 }

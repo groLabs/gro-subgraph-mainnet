@@ -16,7 +16,7 @@
     "deploy:mainnet:test:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
     "deploy:mainnet:prod:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-prod-eth",
     "deploy:mainnet:g2:hosted:prerelease": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
-    "deploy:mainnet:g2:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-test-eth",
+    "deploy:mainnet:g2:hosted": "graph deploy --node https://api.thegraph.com/deploy/ sjuanati/gro-prod-eth",
     "deploy:mainnet:test:studio": "graph deploy --studio gro-mainnet-test",
     "deploy:mainnet:prod:studio": "graph deploy --studio gro-mainnet",
     "deploy:mainnet:test:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sjuanati/gro-test-eth",

@@ -2,7 +2,7 @@
 import { Log } from '../types/log';
 
 
-function parseLogEvent<T>(ev: T[]): Log[] {
+export function parseLogEvent<T>(ev: T[]): Log[] {
     let logs = new Array<Log>(0);
     for (let i=0; i<ev.length; i++) {
         const log = new Log(
@@ -21,8 +21,4 @@ function parseLogEvent<T>(ev: T[]): Log[] {
         logs.push(log);
     }
     return logs;
-}
-
-export {
-    parseLogEvent
 }

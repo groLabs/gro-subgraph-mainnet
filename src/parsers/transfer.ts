@@ -2,7 +2,7 @@
 import { TransferEvent } from '../types/transfer';
 
 
-function parseTransferEvent<T>(ev: T): TransferEvent {
+export function parseTransferEvent<T>(ev: T): TransferEvent {
     const event = new TransferEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number,
@@ -13,8 +13,4 @@ function parseTransferEvent<T>(ev: T): TransferEvent {
         ev.params.value,
     )
     return event;
-}
-
-export {
-    parseTransferEvent
 }

@@ -3,7 +3,7 @@ import { ApprovalEvent } from '../types/approval';
 
 
 //TODO: Careful, DAI has different fields!
-function parseApprovalEvent<T>(ev: T): ApprovalEvent {
+export function parseApprovalEvent<T>(ev: T): ApprovalEvent {
     const event = new ApprovalEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number,
@@ -16,7 +16,7 @@ function parseApprovalEvent<T>(ev: T): ApprovalEvent {
     return event;
 }
 
-function parseDaiApprovalEvent<T>(ev: T): ApprovalEvent {
+export function parseDaiApprovalEvent<T>(ev: T): ApprovalEvent {
     const event = new ApprovalEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number,
@@ -27,9 +27,4 @@ function parseDaiApprovalEvent<T>(ev: T): ApprovalEvent {
         ev.params.wad,
     )
     return event;
-}
-
-export {
-    parseApprovalEvent,
-    parseDaiApprovalEvent,
 }
