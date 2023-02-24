@@ -20,23 +20,21 @@ export function handleLogDeposit(event: LogDeposit): void {
         [],
         token,
     );
-    // update GToken's factor and price
     updateFactors();
     setGvtPrice();
 }
 
-// @dev: disabled. For any potential integration with Gro Protocol
+// @dev: Currently disabled. To be used for potential integrations with Gro Protocol
 export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
-    // const ev = parseGRouterDepositEvent(event);
-    // const token = getGroToken(event.params.tranche);
-    // manageCoreDeposit(
-    //     ev,
-    //     [],
-    //     token,
-    // );
-    // // update GToken's factor and price
-    // updateFactors();
-    // setGvtPrice();
+    const ev = parseGRouterDepositEvent(event);
+    const token = getGroToken(event.params.tranche);
+    manageCoreDeposit(
+        ev,
+        [],
+        token,
+    );
+    updateFactors();
+    setGvtPrice();
 }
 
 export function handleLogWithdrawal(event: LogWithdrawal): void {
@@ -47,7 +45,6 @@ export function handleLogWithdrawal(event: LogWithdrawal): void {
         [],
         token,
     );
-    // update GToken's factor and price
     updateFactors();
     setGvtPrice();
 }

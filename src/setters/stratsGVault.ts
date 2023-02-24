@@ -118,7 +118,7 @@ export const setGVaultHarvest = (
     debtPaid: BigDecimal,
     debtAdded: BigDecimal,
     lockedProfit: BigDecimal,
-    excessLoss: BigDecimal,
+    lockedProfitBeforeLoss: BigDecimal,
     timestamp: BigInt,
 ): GVaultHarvest => {
     let harvest = GVaultHarvest.load(id);
@@ -130,7 +130,7 @@ export const setGVaultHarvest = (
         harvest.debt_paid = debtPaid;
         harvest.debt_added = debtAdded;
         harvest.locked_profit = lockedProfit;
-        harvest.excess_loss = excessLoss;
+        harvest.locked_profit_before_loss = lockedProfitBeforeLoss;
         harvest.block_timestamp = timestamp.toI32();
         harvest.save();
     }

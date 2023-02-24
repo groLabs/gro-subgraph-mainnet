@@ -896,12 +896,72 @@ dataSources:
           handler: handleHarvested
       file: ./src/mappings/convexStrategies3Crv.ts
   - kind: ethereum/contract
-    name: ConvexStrategyMim
+    name: ConvexStrategyLusd
     network: {{network}}
     source:
-      address: "{{ConvexStrategyMimAddress}}"
+      address: "{{ConvexStrategyLusdAddress}}"
       abi: ConvexStrategy
-      startBlock: {{ConvexStrategyMimStartBlock}}
+      startBlock: {{ConvexStrategyLusdStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - GVaultStrategy
+      abis:
+        - name: ConvexStrategy
+          file: ./abis/ethereum/ConvexStrategy3Crv.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvested
+      file: ./src/mappings/convexStrategies3Crv.ts
+  - kind: ethereum/contract
+    name: ConvexStrategyGusd
+    network: {{network}}
+    source:
+      address: "{{ConvexStrategyGusdAddress}}"
+      abi: ConvexStrategy
+      startBlock: {{ConvexStrategyGusdStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - GVaultStrategy
+      abis:
+        - name: ConvexStrategy
+          file: ./abis/ethereum/ConvexStrategy3Crv.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvested
+      file: ./src/mappings/convexStrategies3Crv.ts
+  - kind: ethereum/contract
+    name: ConvexStrategyOusd
+    network: {{network}}
+    source:
+      address: "{{ConvexStrategyOusdAddress}}"
+      abi: ConvexStrategy
+      startBlock: {{ConvexStrategyOusdStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - GVaultStrategy
+      abis:
+        - name: ConvexStrategy
+          file: ./abis/ethereum/ConvexStrategy3Crv.json
+      eventHandlers:
+        - event: Harvested(uint256,uint256,uint256,uint256)
+          handler: handleHarvested
+      file: ./src/mappings/convexStrategies3Crv.ts
+  - kind: ethereum/contract
+    name: ConvexStrategyTusd
+    network: {{network}}
+    source:
+      address: "{{ConvexStrategyTusdAddress}}"
+      abi: ConvexStrategy
+      startBlock: {{ConvexStrategyTusdStartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

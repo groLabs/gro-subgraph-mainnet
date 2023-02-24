@@ -361,7 +361,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "excessLoss",
+        "name": "lockedProfitBeforeLoss",
         "type": "uint256"
       }
     ],

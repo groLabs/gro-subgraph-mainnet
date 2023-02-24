@@ -6,7 +6,7 @@ import { ClaimEvent } from '../types/claim';
 // @dev: parsing functions must be different per event type; otherwise, AssemblyScript
 //       will complain on non-existing functions from an event
 
-function parseClaimV1Event<T>(ev: T): ClaimEvent {
+export function parseClaimV1Event<T>(ev: T): ClaimEvent {
     const event = new ClaimEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -21,7 +21,7 @@ function parseClaimV1Event<T>(ev: T): ClaimEvent {
     return event;
 }
 
-function parseClaimV2Event<T>(ev: T): ClaimEvent {
+export function parseClaimV2Event<T>(ev: T): ClaimEvent {
     const event = new ClaimEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -36,7 +36,7 @@ function parseClaimV2Event<T>(ev: T): ClaimEvent {
     return event;
 }
 
-function parseMultiClaimV2Event<T>(ev: T): ClaimEvent {
+export function parseMultiClaimV2Event<T>(ev: T): ClaimEvent {
     const event = new ClaimEvent(
         ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
         ev.block.number.toI32(),
@@ -49,10 +49,4 @@ function parseMultiClaimV2Event<T>(ev: T): ClaimEvent {
         ev.params.amount,
     )
     return event;
-}
-
-export {
-    parseClaimV1Event,
-    parseClaimV2Event,
-    parseMultiClaimV2Event,
 }
