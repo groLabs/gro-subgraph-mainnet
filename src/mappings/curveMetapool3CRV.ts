@@ -22,37 +22,45 @@ import {
 
 
 export function handleTokenExchange(event: TokenExchange): void {
-    setCurvePwrd3crvPrice();
-    setPoolSwap(
-        event.block.timestamp.toString() + '-4',
-        4,
-        event.block.timestamp.toI32(),
-        event.block.number.toI32(),
-        event.params.buyer,
-        NUM.ZERO,
-        tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
-        NUM.ZERO,
-        tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
-        Address.zero(),
-        getVirtualPrice()
-    );
+    const currentBlock = event.block.number.toI32();
+    // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
+    if (currentBlock >= 16588464) {
+        setCurvePwrd3crvPrice();
+        setPoolSwap(
+            event.block.timestamp.toString() + '-4',
+            4,
+            event.block.timestamp.toI32(),
+            event.block.number.toI32(),
+            event.params.buyer,
+            NUM.ZERO,
+            tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
+            NUM.ZERO,
+            tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
+            Address.zero(),
+            getVirtualPrice()
+        );
+    }
 }
 
 export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): void {
-    setCurvePwrd3crvPrice();
-    setPoolSwap(
-        event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
-        4,
-        event.block.timestamp.toI32(),
-        event.block.number.toI32(),
-        event.params.buyer,
-        NUM.ZERO,
-        tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
-        NUM.ZERO,
-        tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
-        Address.zero(),
-        getVirtualPrice(),
-    );
+    const currentBlock = event.block.number.toI32();
+    // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
+    if (currentBlock >= 16588464) {
+        setCurvePwrd3crvPrice();
+        setPoolSwap(
+            event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+            4,
+            event.block.timestamp.toI32(),
+            event.block.number.toI32(),
+            event.params.buyer,
+            NUM.ZERO,
+            tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
+            NUM.ZERO,
+            tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
+            Address.zero(),
+            getVirtualPrice(),
+        );
+    }
 }
 
 const getVirtualPrice = (): BigDecimal => {

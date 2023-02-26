@@ -1,34 +1,31 @@
-import { handleBalancerSwap } from './balancerGroWeth';
-import { updateFactors } from '../setters/factors';
-import { AnswerUpdated } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 import {
-    setGvtPrice,
     set3CrvPrice,
-    setStableCoinPrice
+    setBalancerGroWethPrice,
 } from '../setters/price';
-import {
-    chainlinkDaiUsdAddress,
-    chainlinkUsdcUsdAddress,
-    chainlinkUsdtUsdAddress,
-} from '../utils/contracts';
+import { getTxData } from '../utils/tx';
+import { handleBalancerSwap } from './balancerGroWeth';
+import { AnswerUpdated } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 
 
+// @dev:
+//      - this function is triggered every hour
+//      - new Date(timestamp) returns incorrect dates, but works to get the midnight event
+//      - starting from G2 genesis block
 export function handleAnswerUpdated(event: AnswerUpdated): void {
-    // update stablecoin prices (used in Uniswap V2 price calculation)
-    setStableCoinPrice(chainlinkDaiUsdAddress);
-    setStableCoinPrice(chainlinkUsdcUsdAddress);
-    setStableCoinPrice(chainlinkUsdtUsdAddress);
-
-    // update 3crv price
-    set3CrvPrice();
-
-    // update GVT & PWRD factor and price
-    setGvtPrice();
-    updateFactors();
-
-    // store articifical Balancer swap to update the price
-    handleBalancerSwap(
-        event.block.timestamp.toI32(),
-        event.block.number.toI32(),
-    );
+    const currentBlockNumber = event.block.number.toI32();
+    // Execute statements only once a day - (midnight)
+    const currentBlockTimestamp = event.block.timestamp.toI32();
+    const now = new Date(currentBlockTimestamp * 1000);
+    if (now.getUTCHours() === 0) {
+        // update 3crv price
+        set3CrvPrice();
+        // store artificial Balancer swap to update the virtual price
+        // only if current time is midnight
+        handleBalancerSwap(
+            currentBlockTimestamp,
+            currentBlockNumber,
+        );
+        // update balancer_gro_weth price
+        setBalancerGroWethPrice(getTxData(event));
+    }
 }

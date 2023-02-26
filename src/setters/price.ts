@@ -2,13 +2,14 @@ import { Tx } from '../types/tx';
 import { updatePoolData } from './poolData';
 import { Price } from '../../generated/schema';
 import {
+    tokenToDecimal,
+    getWethPrice,
     getPricePerShare,
-    tokenToDecimal
+    getStablecoinUsdPrice,
 } from '../utils/tokens';
 import {
     log,
     BigInt,
-    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 import {
@@ -21,13 +22,9 @@ import {
     threePoolAddress,
     uni2GvtGroAddress,
     uni2GroUsdcAddress,
-    uni2UsdcWethAddress,
     curveMetapoolAddress,
     balGroWethVaultAddress,
     balGroWethPoolAddress,
-    chainlinkDaiUsdAddress,
-    chainlinkUsdcUsdAddress,
-    chainlinkUsdtUsdAddress,
 } from '../utils/contracts';
 // contracts
 import { ThreePool } from '../../generated/ChainlinkAggregator/ThreePool';
@@ -35,9 +32,6 @@ import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair
 import { Vault as BalancerGroWethVault } from '../../generated/BalancerGroWethVault/Vault';
 import { WeightedPool as BalancerGroWethPool } from '../../generated/BalancerGroWethPool/WeightedPool';
 import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
-import {
-    AccessControlledOffchainAggregator as ChainlinkAggregator
-} from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
 
 
 export const initPrice = (): Price => {
@@ -47,10 +41,6 @@ export const initPrice = (): Price => {
         price.pwrd = NUM.ONE;
         price.gvt = NUM.ZERO;
         price.gro = NUM.ZERO;
-        price.weth = NUM.ZERO;
-        price.dai = NUM.ZERO;
-        price.usdc = NUM.ZERO;
-        price.usdt = NUM.ZERO;
         price.three_crv = NUM.ZERO;
         price.balancer_gro_weth = NUM.ZERO;
         price.uniswap_gvt_gro = NUM.ZERO;
@@ -114,6 +104,8 @@ export const setUniswapGvtGroPrice = (): void => {
     }
 }
 
+//@dev: Gro token was circulating before this pool creation,
+//      so any tx before won't have gro price
 export const setUniswapGroUsdcPrice = (): void => {
     const contract = UniswapV2Pair.bind(uni2GroUsdcAddress);
     const reserves = contract.try_getReserves();
@@ -136,14 +128,17 @@ export const setUniswapGroUsdcPrice = (): void => {
         );
         // update GRO price
         const price = initPrice();
-        const usdReserve = usdcReserve.times(price.usdc)
+        const priceUSDC = getStablecoinUsdPrice('usdc');
+        // const usdReserve = usdcReserve.times(price.usdc)
+        const usdReserve = usdcReserve.times(priceUSDC);
         const groPricePerShare = usdReserve.div(groReserve).truncate(DECIMALS);
         price.gro = groPricePerShare;
         // update lpToken price
         const oneGroAmount = (NUM.ONE.div(totalSupply)).times(groReserve);
         const oneUsdcAmount = (NUM.ONE.div(totalSupply)).times(usdcReserve);
         const oneGroValue = oneGroAmount.times(price.gro);
-        const oneUsdcValue = oneUsdcAmount.times(price.usdc);
+        // const oneUsdcValue = oneUsdcAmount.times(price.usdc);
+        const oneUsdcValue = oneUsdcAmount.times(priceUSDC);
         const lpPricePerShare = oneGroValue.plus(oneUsdcValue);
         price.uniswap_gro_usdc = lpPricePerShare.truncate(DECIMALS);
         price.save();
@@ -181,8 +176,6 @@ export const setCurvePwrd3crvPrice = (): void => {
     }
 }
 
-//@dev: Gro token was circulating before the GRO/WETH pool creation,
-//      so any tx before this creation must be ignored
 export const setBalancerGroWethPrice = (tx: Tx): void => {
     const contractVault = BalancerGroWethVault.bind(balGroWethVaultAddress);
     const contractPool = BalancerGroWethPool.bind(balGroWethPoolAddress);
@@ -224,56 +217,14 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
             );
             // update lpToken price
             const price = initPrice();
+            const priceWeth = getWethPrice();
             const oneGro = (NUM.ONE.div(totalSupply)).times(groReserve);
             const oneWeth = (NUM.ONE.div(totalSupply)).times(wethReserve);
             const oneGroValue = oneGro.times(price.gro);
-            const oneWethValue = oneWeth.times(price.weth);
+            const oneWethValue = oneWeth.times(priceWeth);
             const lpPricePerShare = oneGroValue.plus(oneWethValue);
             price.balancer_gro_weth = lpPricePerShare.truncate(DECIMALS);
             price.save();
         }
     }
 }
-
-export const setWethPrice = (): void => {
-    const contract = UniswapV2Pair.bind(uni2UsdcWethAddress);
-    const reserves = contract.try_getReserves();
-    if (reserves.reverted) {
-        log.error('setWethPrice(): try_getReserves() reverted in /setters/price.ts', []);
-    } else {
-        const usdcReserve = tokenToDecimal(reserves.value.get_reserve0(), 6, DECIMALS);
-        const wethReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, DECIMALS);
-        // TODO: update WETH price
-        // TODO: chainlink to calc the USD price of USDC.
-        const price = initPrice();
-        price.weth = usdcReserve.div(wethReserve).truncate(DECIMALS);
-        price.save();
-    }
-}
-
-export const setStableCoinPrice = (
-    contractAddress: Address,
-): void => {
-    const contract = ChainlinkAggregator.bind(contractAddress);
-    const latestRound = contract.try_latestRoundData();
-    if (latestRound.reverted) {
-        log.error('setStableCoinPrice(): try_latestRoundData() reverted in /setters/price.ts', []);
-    } else {
-        const usdPrice = tokenToDecimal(latestRound.value.getAnswer(), 8, DECIMALS);
-        const price = initPrice();
-        if (contractAddress == chainlinkDaiUsdAddress) {
-            price.dai = usdPrice;
-        } else if (contractAddress == chainlinkUsdcUsdAddress) {
-            price.usdc = usdPrice;
-        } else if (contractAddress == chainlinkUsdtUsdAddress) {
-            price.usdt = usdPrice;
-        } else {
-            log.error(
-                'setStableCoinPrice(): unknown chainlink feed address {} in /setters/price.ts',
-                [contractAddress.toHexString()]
-            );
-        }
-        price.save();
-    }
-}
-

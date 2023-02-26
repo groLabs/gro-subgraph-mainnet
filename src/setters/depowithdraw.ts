@@ -99,7 +99,7 @@ export const setStakerDepoWithdrawTx = (
     tx.to_address = ev.toAddress;
     tx.coin_amount = tokenToDecimal(ev.coinAmount, 18, DECIMALS);
     tx.usd_amount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
-    tx.factor = getFactor(token); //TODO: needed?
+    tx.factor = getFactor(token);
     tx.pool_id = ev.poolId;
     tx.save();
     return tx;

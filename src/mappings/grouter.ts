@@ -1,6 +1,5 @@
 import { getGroToken } from '../utils/tokens';
 import { setGvtPrice } from '../setters/price';
-import { updateFactors } from '../setters/factors';
 import { manageCoreDeposit } from '../managers/deposit';
 import { parseGRouterDepositEvent } from '../parsers/deposit';
 import { manageCoreWithdrawal } from '../managers/withdrawal';
@@ -10,7 +9,23 @@ import {
     LogWithdrawal,
     LogLegacyDeposit,
 } from '../../generated/GRouter/GRouter';
+import {
+    setGvtFactor,
+    setPwrdFactor
+} from '../setters/factors';
 
+
+const updateFactor = (token: string): void => {
+    // Update factor
+    if (token === 'pwrd') {
+        setPwrdFactor();
+    } else if (token === 'gvt') {
+        setGvtFactor();
+    }
+    // Update price
+    if (token === 'gvt')
+        setGvtPrice();
+}
 
 export function handleLogDeposit(event: LogDeposit): void {
     const ev = parseGRouterDepositEvent(event);
@@ -20,8 +35,7 @@ export function handleLogDeposit(event: LogDeposit): void {
         [],
         token,
     );
-    updateFactors();
-    setGvtPrice();
+    updateFactor(token);
 }
 
 // @dev: Currently disabled. To be used for potential integrations with Gro Protocol
@@ -33,8 +47,7 @@ export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
         [],
         token,
     );
-    updateFactors();
-    setGvtPrice();
+    updateFactor(token);
 }
 
 export function handleLogWithdrawal(event: LogWithdrawal): void {
@@ -45,6 +58,5 @@ export function handleLogWithdrawal(event: LogWithdrawal): void {
         [],
         token,
     );
-    updateFactors();
-    setGvtPrice();
+    updateFactor(token);
 }

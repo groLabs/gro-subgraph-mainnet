@@ -10,10 +10,10 @@ import {
 
 // Blocks
 export const GENESIS_POOL_GRO_WETH = 13355180;  // Oct-04-2021 10:03:33 PM
+export const G2_START_BLOCK = 16697425  // Feb-24-2023 09:51:35 AM
 
 // Timestamps
 export const TS_LAUNCH = 1622204347;    // Friday 28 May 2021 12:19:07
-export const G2_START_BLOCK = 16038962  // The start block number that G2 works
 
 // Numbers
 export const DECIMALS = 7;

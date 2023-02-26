@@ -27,6 +27,8 @@ dataSources:
       abis:
         - name: AccessControlledOffchainAggregator
           file: ./abis/ethereum/ChainlinkAggregatorProxy.json
+        - name: Vault
+          file: ./abis/ethereum/BalancerGroWethVault.json
         - name: WeightedPool
           file: ./abis/ethereum/BalancerGroWethPool.json
         - name: ThreePool
@@ -35,6 +37,8 @@ dataSources:
           file: ./abis/ethereum/Gvt.json
         - name: Pwrd
           file: ./abis/ethereum/Pwrd.json
+        - name: UniswapV2Pair
+          file: ./abis/ethereum/UniswapV2Pair.json
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
@@ -505,6 +509,9 @@ dataSources:
       abis:
         - name: UniswapV2Pair
           file: ./abis/ethereum/UniswapV2Pair.json
+        # to handle USD price of USDC
+        - name: AccessControlledOffchainAggregator
+          file: ./abis/ethereum/ChainlinkAggregatorProxy.json
       eventHandlers:
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
           handler: handleSwapGroUsdc
@@ -560,10 +567,9 @@ dataSources:
         - name: UniswapV2Pair
           file: ./abis/ethereum/UniswapV2Pair.json
       eventHandlers:
-        - event: PoolBalanceChanged(indexed bytes32,indexed address,address[],int256[],uint256[])
-          handler: handlePoolBalanceChanged
-        # - event: Swap(indexed bytes32,indexed address,indexed address,uint256,uint256)
-        #   handler: handleSwap
+        # vault is only used to do contract calls, so no need to listen for events
+        - event: AuthorizerChanged(indexed address)
+          handler: handleAuthorizerChanged
       file: ./src/mappings/balancerGroWeth.ts
   # Pool 5 : Balancer Vault 80% GRO - 20% WETH [POOL]
   - kind: ethereum/contract
@@ -745,6 +751,9 @@ dataSources:
           file: ./abis/ethereum/Gvt.json
         - name: Pwrd
           file: ./abis/ethereum/Pwrd.json
+        # to handle USD price of USDC
+        - name: AccessControlledOffchainAggregator
+          file: ./abis/ethereum/ChainlinkAggregatorProxy.json
       eventHandlers:
         - event: LogDeposit(indexed address,uint256,uint256,bool,uint256,uint256)
           handler: handleLogDeposit

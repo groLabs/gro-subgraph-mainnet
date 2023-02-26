@@ -64,10 +64,6 @@ type Price @entity {
   pwrd: BigDecimal!
   gvt: BigDecimal!
   gro: BigDecimal!
-  weth: BigDecimal!
-  dai: BigDecimal!
-  usdc: BigDecimal!
-  usdt: BigDecimal!
   three_crv: BigDecimal!
   balancer_gro_weth: BigDecimal!
   uniswap_gvt_gro: BigDecimal!
