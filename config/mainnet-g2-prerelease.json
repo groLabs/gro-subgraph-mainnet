@@ -105,5 +105,11 @@
     "ConvexStrategyTusdAddress": "0xd849d8551ec988a59d4e411b1ed7b5b40bf97159",
     "ConvexStrategyTusdStartBlock": 16697789,
     "ThreePoolAddress": "0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7",
-    "ThreePoolStartBlock": 16697200
+    "ThreePoolStartBlock": 16697200,
+    "AirdropV1Address": "0x6b1bff72f00cc147b5dc7a5b156fe7a6fd206dda",
+    "AirdropV1StartBlock": 16697200,
+    "AirdropV2Address": "0xf3d39a7feba9be0c1d18b355e7ed01070ee2c561",
+    "AirdropV2StartBlock": 16697200,
+    "GMerkleVestorAddress": "0x02c133B9fBffb8D2E8cb7B7a94C7c880b331c720",
+    "GMerkleVestorStartBlock": 16697200
 }

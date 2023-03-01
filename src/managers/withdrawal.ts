@@ -5,7 +5,6 @@ import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { updateTotalSupply } from '../setters/coreData';
-import { initVestingBonus } from '../setters/vestingBonus';
 import {
     setGvtFactor,
     setPwrdFactor
@@ -25,10 +24,10 @@ export const manageCoreWithdrawal = (
     // Step 1: Manage User
     setUser(ev.userAddress);
 
-    //Step 2: Manage Transaction
+    // Step 2: Manage Transaction
     const tx = setDepoWithdrawTx(ev, logs, token);
 
-    //Step 3: Manage Totals
+    // Step 3: Manage Totals
     setTotals(
         tx.type,
         token,
@@ -37,11 +36,6 @@ export const manageCoreWithdrawal = (
         tx.usd_amount,
         tx.factor,
     );
-
-    // Step 4: Create VestingBonus
-    initVestingBonus(ev.userAddress, true);
-
-    // initCoreData(true);
 
     // Update total supply
     updateTotalSupply(
@@ -78,7 +72,4 @@ export const manageStakerWithdrawal = (
 
     // Step 4: Create Totals for Staker-only users
     initTotals(ev.userAddress, true);
-
-    // Step 5: Create VestingBonus
-    initVestingBonus(ev.userAddress, true);
 }

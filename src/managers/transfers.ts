@@ -4,7 +4,6 @@ import { Address } from '@graphprotocol/graph-ts';
 import { TransferEvent } from '../types/transfer';
 import { initCoreData } from '../setters/coreData';
 import { setTransferTx } from '../setters/transfers';
-import { initVestingBonus } from '../setters/vestingBonus';
 
 
 function buildTransfer(
@@ -16,7 +15,7 @@ function buildTransfer(
     // Step 1: Manage User
     setUser(userAddress);
 
-    //Step 2: Manage Transaction
+    // Step 2: Manage Transaction
     const tx = setTransferTx(
         ev,
         userAddress,
@@ -24,7 +23,7 @@ function buildTransfer(
         token,
     );
 
-    //Step 3: Manage Totals
+    // Step 3: Manage Totals
     setTotals(
         type,
         token,
@@ -33,9 +32,6 @@ function buildTransfer(
         tx.usd_amount,
         tx.factor,
     );
-
-    // Step 4: Create VestingBonus
-    initVestingBonus(userAddress, true);
 
     initCoreData(true);
 }

@@ -78,6 +78,15 @@ type Factor @entity {
   gvt: BigDecimal!
 }
 
+# Airdrops
+type Airdrop @entity {
+  id: ID! # hash-logIndex
+  contract_address: Bytes!
+  tranche_id: Int!
+  merkle_root: String!
+  total_amount: BigDecimal!
+}
+
 # G2 gvault
 type GVault @entity {
   id: ID! # vault address
@@ -173,6 +182,8 @@ type User @entity {
   totals: Totals! @derivedFrom(field: "user_address")
   pools: [Pool!] @derivedFrom(field: "user_address")
   vestingBonus: VestingBonus! @derivedFrom(field: "user_address")
+  vestingAirdrop: VestingAirdrop! @derivedFrom(field: "user_address")
+  airdrop_claims: [AirdropClaimTx!] @derivedFrom(field: "user_address")
 }
 
 # aggregated amounts for personal stats
@@ -214,6 +225,15 @@ type VestingBonus @entity {
   latest_start_time: Int!
 }
 
+# UST vesting airdrop
+type VestingAirdrop @entity {
+  id: ID! # userAddress
+  user_address: User! # FK to User
+  claim_initialized: Boolean
+  total_claim_amount: BigDecimal!
+  claimed_amount: BigDecimal!
+}
+
 # staker pools
 type Pool @entity {
   id: ID! # userAddress-poolId
@@ -227,6 +247,7 @@ type Pool @entity {
 }
 
 # gro protocol deposits, withdrawals & transfers
+# g2 deposits, withdrawals & transfers
 # staker deposits & withdrawals
 type TransferTx @entity {
   id: ID! # hash-logIndex(-in|-out)
@@ -261,6 +282,7 @@ type ApprovalTx @entity {
 }
 
 # staker claims
+# TODO: change to StakerClaimTx
 type ClaimTx @entity {
   id: ID! # hash-logIndex
   contract_address: Bytes!
@@ -271,5 +293,18 @@ type ClaimTx @entity {
   user_address: User! # FK to User
   pool_id: [Int!]!
   vest: Boolean
+  amount: BigDecimal!
+}
+
+# airdrop claims
+type AirdropClaimTx @entity {
+  id: ID! # hash-logIndex
+  contract_address: Bytes!
+  block_number: Int!
+  block_timestamp: Int!
+  hash: Bytes!
+  user_address: User! # FK to User
+  vest: Boolean
+  tranche_id: Int!
   amount: BigDecimal!
 }

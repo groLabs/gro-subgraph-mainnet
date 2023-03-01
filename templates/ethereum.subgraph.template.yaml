@@ -724,6 +724,77 @@ dataSources:
           handler: StoppedVesting
       file: ./src/mappings/vestingTeam.ts
 # *******************************************************************************************
+# ***********   A I R D R O P S   ***********************************************************
+# *******************************************************************************************
+  - kind: ethereum/contract
+    name: AirdropV1
+    network: {{network}}
+    source:
+      address: "{{AirdropV1Address}}"
+      abi: Airdrop
+      startBlock: {{AirdropV1StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Airdrop
+        - AirdropClaimTx
+      abis:
+        - name: Airdrop
+          file: ./abis/ethereum/AirdropV1.json
+      eventHandlers:
+        - event: LogClaim(indexed address,uint256,uint128)
+          handler: handleLogClaimV1
+        - event: LogNewDrop(uint256,bytes32,uint128)
+          handler: handleLogNewDropV1
+      file: ./src/mappings/airdrop.ts
+  - kind: ethereum/contract
+    name: AirdropV2
+    network: {{network}}
+    source:
+      address: "{{AirdropV2Address}}"
+      abi: Airdrop
+      startBlock: {{AirdropV2StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Airdrop
+        - AirdropClaimTx
+      abis:
+        - name: Airdrop
+          file: ./abis/ethereum/AirdropV2.json
+      eventHandlers:
+        - event: LogClaim(indexed address,bool,uint256,uint128)
+          handler: handleLogClaimV2
+        - event: LogNewDrop(uint256,bytes32,uint128)
+          handler: handleLogNewDropV2
+      file: ./src/mappings/airdrop.ts
+  - kind: ethereum/contract
+    name: GMerkleVestor
+    network: {{network}}
+    source:
+      address: "{{GMerkleVestorAddress}}"
+      abi: GMerkleVestor
+      startBlock: {{GMerkleVestorStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TBC
+      abis:
+        - name: GMerkleVestor
+          file: ./abis/ethereum/GMerkleVestor.json
+      eventHandlers:
+        - event: LogClaim(indexed address,uint256)
+          handler: handleUstClaim
+        - event: LogInitialClaim(indexed address,uint256,uint256)
+          handler: handleUstInitialClaim
+      file: ./src/mappings/airdrop.ts
+# *******************************************************************************************
 # ***********   G R O U T E R   *************************************************************
 # *******************************************************************************************
   - kind: ethereum/contract

@@ -118,4 +118,10 @@ export class Contracts {
     public ConvexStrategyTusdStartBlock: number;
     public ThreePoolAddress: string;
     public ThreePoolStartBlock: number;
+    public AirdropV1Address: string;
+    public AirdropV1StartBlock: number;
+    public AirdropV2Address: string;
+    public AirdropV2StartBlock: number;
+    public GMerkleVestorAddress: string;
+    public GMerkleVestorStartBlock: number;
 }

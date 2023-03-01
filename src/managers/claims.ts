@@ -1,9 +1,8 @@
-import { setUser } from '../setters/users'
-import { setClaimTx } from '../setters/claims';
+import { setUser } from '../setters/users';
 import { setPools } from '../setters/pools';
 import { ClaimEvent } from '../types/claim';
 import { initTotals } from '../setters/totals';
-import { initVestingBonus } from '../setters/vestingBonus';
+import { setClaimTx } from '../setters/claims';
 import { initCoreData } from '../setters/coreData';
 
 
@@ -15,10 +14,10 @@ export const manageClaim = (
     // Step 1: Manage User
     setUser(ev.userAddress);
 
-    //Step 2: Manage Transaction
+    // Step 2: Manage Transaction
     setClaimTx(ev);
 
-    //Step 3: Manage Pools
+    // Step 3: Manage Pools
     for (let i = 0; i < ev.pid.length; i++) {
         setPools(
             ev.type,
@@ -31,9 +30,6 @@ export const manageClaim = (
 
     // Step 4: Create Totals for staker-only users
     initTotals(ev.userAddress, true);
-
-    // Step 5: Create VestingBonus
-    initVestingBonus(ev.userAddress, true);
 
     initCoreData(true);
 }

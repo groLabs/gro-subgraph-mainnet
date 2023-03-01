@@ -1,9 +1,8 @@
-import { setUser } from '../setters/users'
-import { setApprovalTx } from '../setters/approvals';
-import { ApprovalEvent } from '../types/approval';
+import { setUser } from '../setters/users';
 import { initTotals } from '../setters/totals';
-import { initVestingBonus } from '../setters/vestingBonus';
+import { ApprovalEvent } from '../types/approval';
 import { initCoreData } from '../setters/coreData';
+import { setApprovalTx } from '../setters/approvals';
 
 
 export const manageApproval = (
@@ -14,14 +13,11 @@ export const manageApproval = (
     // Step 1: Manage User
     setUser(ev.ownerAddress);
 
-    //Step 2: Manage Transaction
+    // Step 2: Manage Transaction
     setApprovalTx(ev, token);
 
-    // Step 3: Create Totals for Approval-only users
+    // Step 3: Create Totals
     initTotals(ev.ownerAddress, true);
-
-    // Step 4: Create VestingBonus for Approval-only users
-    initVestingBonus(ev.ownerAddress, true);
 
     initCoreData(true);
 }
