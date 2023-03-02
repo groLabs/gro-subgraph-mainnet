@@ -1,310 +1,310 @@
 # Enums
 
 enum Token {
-  unknown
-  pwrd
-  gvt
-  gro
-  dai
-  usdc
-  usdt
-  uniswap_gvt_gro
-  uniswap_gro_usdc
-  curve_pwrd3crv
-  balancer_gro_weth
+    unknown
+	pwrd
+	gvt
+	gro
+	dai
+	usdc
+	usdt
+	uniswap_gvt_gro
+	uniswap_gro_usdc
+	curve_pwrd3crv
+	balancer_gro_weth
 }
 
 enum TxType {
-  core_deposit
-  core_withdrawal
-  staker_deposit
-  staker_withdrawal
-  transfer_in
-  transfer_out
-  claim
-  multiclaim
-  vest
-  approval
+	core_deposit
+	core_withdrawal
+	staker_deposit
+	staker_withdrawal
+	transfer_in
+	transfer_out
+	claim
+	multiclaim
+	vest
+	approval
 }
 
 enum Status {
-  ok
-  error
+	ok
+	error
 }
 
 enum NetworkName {
-  mainnet
-  avalanche
+	mainnet
+	avalanche
 }
 
 # Entities
 
 # master data
 type MasterData @entity {
-  id: ID! # 0x
-  status: Status!
-  network_id: Int!
-  network_name: NetworkName!
-  launch_timestamp: Int!
-  gro_per_block: BigDecimal!
-  total_alloc: BigDecimal!
-  total_locked_amount: BigDecimal!
-  total_bonus: BigDecimal!
-  total_bonus_in: BigDecimal!
-  total_bonus_out: BigDecimal!
-  init_unlocked_percent: BigDecimal!
-  global_start_time: Int!
-  util_ratio: BigDecimal!
-  util_ratio_limit: BigDecimal!
+	id: ID! # 0x
+	status: Status!
+	network_id: Int!
+	network_name: NetworkName!
+	launch_timestamp: Int!
+	gro_per_block: BigDecimal!
+	total_alloc: BigDecimal!
+	total_locked_amount: BigDecimal!
+	total_bonus: BigDecimal!
+	total_bonus_in: BigDecimal!
+	total_bonus_out: BigDecimal!
+	init_unlocked_percent: BigDecimal!
+	global_start_time: Int!
+	util_ratio: BigDecimal!
+	util_ratio_limit: BigDecimal!
 }
 
 # latest token price
 type Price @entity {
-  id: ID! # 0x
-  pwrd: BigDecimal!
-  gvt: BigDecimal!
-  gro: BigDecimal!
-  three_crv: BigDecimal!
-  balancer_gro_weth: BigDecimal!
-  uniswap_gvt_gro: BigDecimal!
-  uniswap_gro_usdc: BigDecimal!
-  curve_pwrd3crv: BigDecimal!
+	id: ID! # 0x
+	pwrd: BigDecimal!
+	gvt: BigDecimal!
+	gro: BigDecimal!
+	three_crv: BigDecimal!
+	balancer_gro_weth: BigDecimal!
+	uniswap_gvt_gro: BigDecimal!
+	uniswap_gro_usdc: BigDecimal!
+	curve_pwrd3crv: BigDecimal!
 }
 
 # latest factor
 type Factor @entity {
-  id: ID! # 0x
-  pwrd: BigDecimal!
-  gvt: BigDecimal!
+	id: ID! # 0x
+	pwrd: BigDecimal!
+	gvt: BigDecimal!
 }
 
-# Airdrops
-type Airdrop @entity {
-  id: ID! # hash-logIndex
-  contract_address: Bytes!
-  tranche_id: Int!
-  merkle_root: String!
-  total_amount: BigDecimal!
+# airdrops
+type Airdrop @entity(immutable: true) {
+	id: ID! # hash-logIndex
+	contract_address: Bytes!
+	tranche_id: Int!
+	merkle_root: String!
+	total_amount: BigDecimal!
 }
 
 # G2 gvault
 type GVault @entity {
-  id: ID! # vault address
-  release_factor: Int!
-  locked_profit: BigDecimal!
-  locked_profit_timestamp: Int!
-  strategies: [GVaultStrategy!] @derivedFrom(field: "vault_address")
+	id: ID! # vault address
+	release_factor: Int!
+	locked_profit: BigDecimal!
+	locked_profit_timestamp: Int!
+	strategies: [GVaultStrategy!] @derivedFrom(field: "vault_address")
 }
 
 # G2 strategy
 type GVaultStrategy @entity {
-  id: ID! # strategy address
-  coin: String!
-  metacoin: String!
-  protocol: String!
-  strat_name: String!
-  strat_display_name: String!
-  vault_name: String!
-  vault_display_name: String!
-  vault_address: GVault!
-  strategy_debt: BigDecimal!
-  block_strategy_reported: Int!
-  block_strategy_withdraw: Int!
-  harvests: [GVaultHarvest!] @derivedFrom(field: "strategy_address")
+	id: ID! # strategy address
+	coin: String!
+	metacoin: String!
+	protocol: String!
+	strat_name: String!
+	strat_display_name: String!
+	vault_name: String!
+	vault_display_name: String!
+	vault_address: GVault!
+	strategy_debt: BigDecimal!
+	block_strategy_reported: Int!
+	block_strategy_withdraw: Int!
+	harvests: [GVaultHarvest!] @derivedFrom(field: "strategy_address")
 }
 
 # G2 strategy harvest (from GVault)
-type GVaultHarvest @entity {
-  id: ID! # hash-logIndex
-  strategy_address: GVaultStrategy!
-  gain: BigDecimal!
-  loss: BigDecimal!
-  debt_paid: BigDecimal!
-  debt_added: BigDecimal!
-  locked_profit: BigDecimal!
-  locked_profit_before_loss: BigDecimal!
-  block_timestamp: Int!
+type GVaultHarvest @entity(immutable: true) {
+	id: ID! # hash-logIndex
+	strategy_address: GVaultStrategy!
+	gain: BigDecimal!
+	loss: BigDecimal!
+	debt_paid: BigDecimal!
+	debt_added: BigDecimal!
+	locked_profit: BigDecimal!
+	locked_profit_before_loss: BigDecimal!
+	block_timestamp: Int!
 }
 
 # pool data
 type PoolData @entity {
-  id: ID! # pool id
-  pool_address: Bytes!
-  reserve0: BigDecimal!
-  reserve1: BigDecimal!
-  total_supply: BigDecimal!
+	id: ID! # pool id
+	pool_address: Bytes!
+	reserve0: BigDecimal!
+	reserve1: BigDecimal!
+	total_supply: BigDecimal!
 }
 
 # staker data
 type StakerData @entity {
-  id: ID! # poolId
-  lp_supply: BigDecimal!
-  acc_gro_per_share: BigDecimal!
-  alloc_point: BigDecimal!
-  pool_share: BigDecimal!
-  block_number: Int!
-  block_timestamp: Int!
+	id: ID! # poolId
+	lp_supply: BigDecimal!
+	acc_gro_per_share: BigDecimal!
+	alloc_point: BigDecimal!
+	pool_share: BigDecimal!
+	block_number: Int!
+	block_timestamp: Int!
 }
 
 # pool swaps
-type PoolSwap @entity {
-  id: ID! # timestamp-poolId
-  pool_id: Int!
-  block_timestamp: Int!
-  block_number: Int!
-  from_address: Bytes!
-  amount0_in: BigDecimal!
-  amount1_in: BigDecimal!
-  amount0_out: BigDecimal!
-  amount1_out: BigDecimal!
-  to_address: Bytes!
-  virtual_price: BigDecimal!
+type PoolSwap @entity(immutable: true) {
+	id: ID! # timestamp-poolId
+	pool_id: Int!
+	block_timestamp: Int!
+	block_number: Int!
+	from_address: Bytes!
+	amount0_in: BigDecimal!
+	amount1_in: BigDecimal!
+	amount0_out: BigDecimal!
+	amount1_out: BigDecimal!
+	to_address: Bytes!
+	virtual_price: BigDecimal!
 }
 
 # core protocol data
 type CoreData @entity {
-  id: ID! # 0x
-  total_supply_gvt: BigDecimal!
-  total_supply_pwrd_based: BigDecimal!
-  total_supply_gro: BigDecimal!
-  total_supply_uniswap_gvt_gro: BigDecimal!
-  total_supply_uniswap_gro_usdc: BigDecimal!
-  total_supply_curve_pwrd3crv: BigDecimal!
-  total_supply_balancer_gro_weth: BigDecimal!
+	id: ID! # 0x
+	total_supply_gvt: BigDecimal!
+	total_supply_pwrd_based: BigDecimal!
+	total_supply_gro: BigDecimal!
+	total_supply_uniswap_gvt_gro: BigDecimal!
+	total_supply_uniswap_gro_usdc: BigDecimal!
+	total_supply_curve_pwrd3crv: BigDecimal!
+	total_supply_balancer_gro_weth: BigDecimal!
 }
 
 # user
 type User @entity {
-  id: ID! # userAddress
-  transfers: [TransferTx!] @derivedFrom(field: "user_address")
-  approvals: [ApprovalTx!] @derivedFrom(field: "owner_address")
-  claims: [ClaimTx!] @derivedFrom(field: "user_address")
-  totals: Totals! @derivedFrom(field: "user_address")
-  pools: [Pool!] @derivedFrom(field: "user_address")
-  vestingBonus: VestingBonus! @derivedFrom(field: "user_address")
-  vestingAirdrop: VestingAirdrop! @derivedFrom(field: "user_address")
-  airdrop_claims: [AirdropClaimTx!] @derivedFrom(field: "user_address")
+	id: ID! # userAddress
+	transfers: [TransferTx!] @derivedFrom(field: "user_address")
+	approvals: [ApprovalTx!] @derivedFrom(field: "owner_address")
+	claims: [ClaimTx!] @derivedFrom(field: "user_address")
+	totals: Totals! @derivedFrom(field: "user_address")
+	pools: [Pool!] @derivedFrom(field: "user_address")
+	vestingBonus: VestingBonus! @derivedFrom(field: "user_address")
+	vestingAirdrop: VestingAirdrop! @derivedFrom(field: "user_address")
+	airdrop_claims: [AirdropClaimTx!] @derivedFrom(field: "user_address")
 }
 
 # aggregated amounts for personal stats
 type Totals @entity {
-  id: ID! # userAddress
-  user_address: User! # FK to User
-  amount_added_pwrd: BigDecimal!
-  amount_added_gvt: BigDecimal!
-  amount_removed_pwrd: BigDecimal!
-  amount_removed_gvt: BigDecimal!
-  amount_added_gro: BigDecimal!
-  amount_removed_gro: BigDecimal!
-  amount_total_gro: BigDecimal!
-  amount_added_gro_team: BigDecimal!
-  amount_removed_gro_team: BigDecimal!
-  amount_total_gro_team: BigDecimal!
-  value_added_pwrd: BigDecimal!
-  value_added_gvt: BigDecimal!
-  value_added_total: BigDecimal!
-  value_removed_pwrd: BigDecimal!
-  value_removed_gvt: BigDecimal!
-  value_removed_total: BigDecimal!
-  net_value_pwrd: BigDecimal!
-  net_value_gvt: BigDecimal!
-  net_value_total: BigDecimal!
-  net_amount_gvt: BigDecimal!
-  net_based_amount_pwrd: BigDecimal!
+	id: ID! # userAddress
+	user_address: User! # FK to User
+	amount_added_pwrd: BigDecimal!
+	amount_added_gvt: BigDecimal!
+	amount_removed_pwrd: BigDecimal!
+	amount_removed_gvt: BigDecimal!
+	amount_added_gro: BigDecimal!
+	amount_removed_gro: BigDecimal!
+	amount_total_gro: BigDecimal!
+	amount_added_gro_team: BigDecimal!
+	amount_removed_gro_team: BigDecimal!
+	amount_total_gro_team: BigDecimal!
+	value_added_pwrd: BigDecimal!
+	value_added_gvt: BigDecimal!
+	value_added_total: BigDecimal!
+	value_removed_pwrd: BigDecimal!
+	value_removed_gvt: BigDecimal!
+	value_removed_total: BigDecimal!
+	net_value_pwrd: BigDecimal!
+	net_value_gvt: BigDecimal!
+	net_value_total: BigDecimal!
+	net_amount_gvt: BigDecimal!
+	net_based_amount_pwrd: BigDecimal!
 }
 
 # vesting bonus
 type VestingBonus @entity {
-  id: ID! # userAddress
-  user_address: User! # FK to User
-  locked_gro: BigDecimal!
-  net_reward: BigDecimal!
-  claim_now: BigDecimal!
-  vest_all: BigDecimal!
-  vesting_gro: BigDecimal!
-  latest_start_time: Int!
+	id: ID! # userAddress
+	user_address: User! # FK to User
+	locked_gro: BigDecimal!
+	net_reward: BigDecimal!
+	claim_now: BigDecimal!
+	vest_all: BigDecimal!
+	vesting_gro: BigDecimal!
+	latest_start_time: Int!
 }
 
 # UST vesting airdrop
 type VestingAirdrop @entity {
-  id: ID! # userAddress
-  user_address: User! # FK to User
-  claim_initialized: Boolean
-  total_claim_amount: BigDecimal!
-  claimed_amount: BigDecimal!
+	id: ID! # userAddress
+	user_address: User! # FK to User
+	claim_initialized: Boolean
+	total_claim_amount: BigDecimal!
+	claimed_amount: BigDecimal!
 }
 
 # staker pools
 type Pool @entity {
-  id: ID! # userAddress-poolId
-  user_address: User! # FK to User
-  pool_id: Int!
-  net_reward: BigDecimal!
-  reward_debt: BigDecimal!
-  balance: BigDecimal! # rename to coinBalance
-  claim_now: BigDecimal!
-  vest_all: BigDecimal!
+	id: ID! # userAddress-poolId
+	user_address: User! # FK to User
+	pool_id: Int!
+	net_reward: BigDecimal!
+	reward_debt: BigDecimal!
+	balance: BigDecimal! # rename to coinBalance
+	claim_now: BigDecimal!
+	vest_all: BigDecimal!
 }
 
 # gro protocol deposits, withdrawals & transfers
 # g2 deposits, withdrawals & transfers
 # staker deposits & withdrawals
-type TransferTx @entity {
-  id: ID! # hash-logIndex(-in|-out)
-  contract_address: Bytes!
-  block_number: Int!
-  block_timestamp: Int!
-  hash: Bytes!
-  type: TxType!
-  token: Token!
-  user_address: User! # FK to User
-  from_address: Bytes!
-  to_address: Bytes!
-  coin_amount: BigDecimal!
-  usd_amount: BigDecimal!
-  pool_id: Int
-  factor: BigDecimal!
+type TransferTx @entity(immutable: true) {
+	id: ID! # hash-logIndex(-in|-out)
+	contract_address: Bytes!
+	block_number: Int!
+	block_timestamp: Int!
+	hash: Bytes!
+	type: TxType!
+	token: Token!
+	user_address: User! # FK to User
+	from_address: Bytes!
+	to_address: Bytes!
+	coin_amount: BigDecimal!
+	usd_amount: BigDecimal!
+	pool_id: Int
+	factor: BigDecimal!
 }
 
 # gro protocol approvals
-type ApprovalTx @entity {
-  id: ID! # hash-logIndex
-  contract_address: Bytes!
-  block_number: Int!
-  block_timestamp: Int!
-  hash: Bytes!
-  type: TxType!
-  token: Token!
-  owner_address: User! # FK to User
-  spender_address: Bytes
-  coin_amount: BigDecimal!
-  usd_amount: BigDecimal!
+type ApprovalTx @entity(immutable: true) {
+	id: ID! # hash-logIndex
+	contract_address: Bytes!
+	block_number: Int!
+	block_timestamp: Int!
+	hash: Bytes!
+	type: TxType!
+	token: Token!
+	owner_address: User! # FK to User
+	spender_address: Bytes
+	coin_amount: BigDecimal!
+	usd_amount: BigDecimal!
 }
 
 # staker claims
 # TODO: change to StakerClaimTx
-type ClaimTx @entity {
-  id: ID! # hash-logIndex
-  contract_address: Bytes!
-  block_number: Int!
-  block_timestamp: Int!
-  hash: Bytes!
-  type: TxType!
-  user_address: User! # FK to User
-  pool_id: [Int!]!
-  vest: Boolean
-  amount: BigDecimal!
+type ClaimTx @entity(immutable: true) {
+	id: ID! # hash-logIndex
+	contract_address: Bytes!
+	block_number: Int!
+	block_timestamp: Int!
+	hash: Bytes!
+	type: TxType!
+	user_address: User! # FK to User
+	pool_id: [Int!]!
+	vest: Boolean
+	amount: BigDecimal!
 }
 
 # airdrop claims
-type AirdropClaimTx @entity {
-  id: ID! # hash-logIndex
-  contract_address: Bytes!
-  block_number: Int!
-  block_timestamp: Int!
-  hash: Bytes!
-  user_address: User! # FK to User
-  vest: Boolean
-  tranche_id: Int!
-  amount: BigDecimal!
+type AirdropClaimTx @entity(immutable: true) {
+	id: ID! # hash-logIndex
+	contract_address: Bytes!
+	block_number: Int!
+	block_timestamp: Int!
+	hash: Bytes!
+	user_address: User! # FK to User
+	vest: Boolean
+	tranche_id: Int!
+	amount: BigDecimal!
 }
