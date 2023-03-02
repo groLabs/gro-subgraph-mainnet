@@ -3,7 +3,6 @@ import { setPools } from '../setters/pools';
 import { ClaimEvent } from '../types/claim';
 import { initTotals } from '../setters/totals';
 import { setClaimTx } from '../setters/claims';
-import { initCoreData } from '../setters/coreData';
 
 
 // Claim from Staker
@@ -30,6 +29,4 @@ export const manageClaim = (
 
     // Step 4: Create Totals for staker-only users
     initTotals(ev.userAddress, true);
-
-    initCoreData(true);
 }

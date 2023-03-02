@@ -1,7 +1,6 @@
 import { setUser } from '../setters/users';
 import { initTotals } from '../setters/totals';
 import { ApprovalEvent } from '../types/approval';
-import { initCoreData } from '../setters/coreData';
 import { setApprovalTx } from '../setters/approvals';
 
 
@@ -18,6 +17,4 @@ export const manageApproval = (
 
     // Step 3: Create Totals
     initTotals(ev.ownerAddress, true);
-
-    initCoreData(true);
 }

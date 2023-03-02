@@ -2,7 +2,6 @@ import { setUser } from '../setters/users';
 import { setTotals } from '../setters/totals';
 import { Address } from '@graphprotocol/graph-ts';
 import { TransferEvent } from '../types/transfer';
-import { initCoreData } from '../setters/coreData';
 import { setTransferTx } from '../setters/transfers';
 
 
@@ -32,8 +31,6 @@ function buildTransfer(
         tx.usd_amount,
         tx.factor,
     );
-
-    initCoreData(true);
 }
 
 export const manageTransfer = (

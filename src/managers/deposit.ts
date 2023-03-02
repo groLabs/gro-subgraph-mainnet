@@ -4,10 +4,7 @@ import { setPools } from '../setters/pools';
 import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
 import { DepoWithdraw } from '../types/depowithdraw';
-import {
-    initCoreData,
-    updateTotalSupply,
-} from '../setters/coreData';
+import { updateTotalSupply } from '../setters/coreData';
 import {
     setDepoWithdrawTx,
     setStakerDepoWithdrawTx,
@@ -64,6 +61,4 @@ export const manageStakerDeposit = (
 
     // Step 4: Create Totals for Staker-only users
     initTotals(ev.userAddress, true);
-
-    initCoreData(true);
 }
