@@ -1,11 +1,14 @@
 import { NUM } from '../utils/constants';
 import { Totals } from '../../generated/schema';
-import { BigDecimal } from '@graphprotocol/graph-ts';
+import {
+    Bytes,
+    BigDecimal,
+} from '@graphprotocol/graph-ts';
 
 
 //@dev: <save> used to initialised totals for only-staker users, etc
 export const initTotals = (
-    userAddress: string,
+    userAddress: Bytes,
     save: boolean,
 ): Totals => {
     let total = Totals.load(userAddress);
@@ -42,7 +45,7 @@ export const initTotals = (
 export const setTotals = (
     type: string,
     coin: string,
-    userAddress: string,
+    userAddress: Bytes,
     coinAmount: BigDecimal,
     usdAmount: BigDecimal,
     factor: BigDecimal,

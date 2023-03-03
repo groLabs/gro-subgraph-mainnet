@@ -1,19 +1,22 @@
 import { initGVault } from './gvault';
-import { NUM } from '../utils/constants';
+import {
+    NUM,
+    ADDR,
+} from '../utils/constants';
 import { getGVaultStrategies } from '../utils/strats';
 import {
     GVaultHarvest,
     GVaultStrategy
 } from '../../generated/schema';
 import {
+    Bytes,
     BigInt,
-    Address,
     BigDecimal
 } from '@graphprotocol/graph-ts';
 
 
 const noGVaultStrategy = (): GVaultStrategy => {
-    let strat = new GVaultStrategy('0x');
+    let strat = new GVaultStrategy(ADDR.ZERO);
     strat.coin = 'unknown';
     strat.metacoin = 'unknown';
     strat.protocol = 'unknown';
@@ -21,7 +24,7 @@ const noGVaultStrategy = (): GVaultStrategy => {
     strat.strat_display_name = 'unknown';
     strat.vault_name = 'unknown';
     strat.vault_display_name = 'unknown';
-    strat.vault_address ='0x';
+    strat.vault_address = ADDR.ZERO;
     strat.strategy_debt = NUM.ZERO;
     strat.block_strategy_reported = 0;
     strat.block_strategy_withdraw = 0;
@@ -50,7 +53,7 @@ export const initAllGVaultStrategies = (): void => {
     }
 }
 
-export const initGVaultStrategy = (stratAddress: string): GVaultStrategy => {
+export const initGVaultStrategy = (stratAddress: Bytes): GVaultStrategy => {
     let strat = GVaultStrategy.load(stratAddress);
     if (!strat) {
         const strats = getGVaultStrategies();
@@ -78,13 +81,12 @@ export const initGVaultStrategy = (stratAddress: string): GVaultStrategy => {
 }
 
 export const setGVaultDebt = (
-    strategyAddress: Address,
+    strategyAddress: Bytes,
     eventType: string,
     strategyDebt: BigDecimal,
     blockTs: BigInt,
 ): void => {
-    const id = strategyAddress.toHexString();
-    let strat = initGVaultStrategy(id);
+    let strat = initGVaultStrategy(strategyAddress);
     if (eventType == 'withdrawal') {
         // Based on event <LogWithdrawalFromStrategy>
         strat.strategy_debt = strategyDebt;
@@ -99,7 +101,7 @@ export const setGVaultDebt = (
 
 // @dev: triggered by GVault->`LogStrategyHarvestReport`
 export const setGVaultLockedProfit = (
-    vaultAddress: Address,
+    vaultAddress: Bytes,
     lockedProfit: BigDecimal,
     block: BigInt,
 ): void => {
@@ -111,8 +113,8 @@ export const setGVaultLockedProfit = (
 
 // @dev: triggered by GVault->`LogStrategyHarvestReport`
 export const setGVaultHarvest = (
-    id: string,
-    strategyAddress: string,
+    id: Bytes,
+    strategyAddress: Bytes,
     gain: BigDecimal,
     loss: BigDecimal,
     debtPaid: BigDecimal,

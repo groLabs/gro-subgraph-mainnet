@@ -2,14 +2,15 @@
 import { ApprovalEvent } from '../types/approval';
 
 
-//TODO: Careful, DAI has different fields!
 export function parseApprovalEvent<T>(ev: T): ApprovalEvent {
+    const logIndex = ev.logIndex.toI32();
     const event = new ApprovalEvent(
-        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.transaction.hash.concatI32(logIndex),
         ev.block.number,
         ev.block.timestamp,
+        ev.transaction.hash,
         ev.address,
-        ev.params.owner.toHexString(),  // links with User.id
+        ev.params.owner,  // links with User.id
         ev.params.spender,
         ev.params.value,
     )
@@ -17,12 +18,14 @@ export function parseApprovalEvent<T>(ev: T): ApprovalEvent {
 }
 
 export function parseDaiApprovalEvent<T>(ev: T): ApprovalEvent {
+    const logIndex = ev.logIndex.toI32();
     const event = new ApprovalEvent(
-        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.transaction.hash.concatI32(logIndex),
         ev.block.number,
         ev.block.timestamp,
+        ev.transaction.hash,
         ev.address,
-        ev.params.src.toHexString(),  // links with User.id
+        ev.params.src,  // links with User.id
         ev.params.guy,
         ev.params.wad,
     )

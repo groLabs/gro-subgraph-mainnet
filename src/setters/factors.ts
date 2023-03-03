@@ -1,8 +1,11 @@
-import { NUM } from '../utils/constants';
 import { Gvt } from '../../generated/Gvt/Gvt';
 import { Factor } from '../../generated/schema';
 import { tokenToDecimal } from '../utils/tokens';
 import { Pwrd } from '../../generated/Pwrd/Pwrd';
+import {
+    NUM,
+    ADDR,
+} from '../utils/constants';
 import {
     gvtAddress,
     pwrdAddress,
@@ -14,9 +17,9 @@ import {
 
 
 const initFactor = (save: boolean): Factor => {
-    let factor = Factor.load('0x');
+    let factor = Factor.load(ADDR.ZERO);
     if (!factor) {
-        factor = new Factor('0x');
+        factor = new Factor(ADDR.ZERO);
         factor.pwrd = NUM.PWRD_START_FACTOR;
         factor.gvt = NUM.GVT_START_FACTOR;
         if (save)

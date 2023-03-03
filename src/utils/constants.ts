@@ -1,6 +1,8 @@
-
-import { Num } from '../types/constants';
 import { contracts } from '../../addresses';
+import {
+    Num,
+    Addr,
+} from '../types/constants';
 import {
     Bytes,
     Address,
@@ -27,8 +29,13 @@ export const NUM: Num = {
     PWRD_START_FACTOR: BigDecimal.fromString('1'),
 }
 
+// Addresses
+export const ADDR: Addr = {
+    ZERO: Bytes.fromHexString('0x0000000000000000000000000000000000000000'),
+}
+
 // Default addresses
-export const NO_ADDR = Bytes.empty();
+export const NO_ADDR = Bytes.empty();   // TO BE REPLACED BY ADDR
 
 // Pool ids
 export const BALANCER_GRO_WETH_POOLID = Bytes.fromHexString(

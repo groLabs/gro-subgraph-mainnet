@@ -7,13 +7,15 @@ import { ClaimEvent } from '../types/claim';
 //       will complain on non-existing functions from an event
 
 export function parseClaimV1Event<T>(ev: T): ClaimEvent {
+    const logIndex = ev.logIndex.toI32();
     const event = new ClaimEvent(
-        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.transaction.hash.concatI32(logIndex),
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
+        ev.transaction.hash,
         ev.address,
         'claim',
-        ev.params.user.toHexString(),  // links with User.id,
+        ev.params.user,  // links with User.id,
         false,
         [ev.params.pid.toI32()],
         ev.params.amount,
@@ -22,13 +24,15 @@ export function parseClaimV1Event<T>(ev: T): ClaimEvent {
 }
 
 export function parseClaimV2Event<T>(ev: T): ClaimEvent {
+    const logIndex = ev.logIndex.toI32();
     const event = new ClaimEvent(
-        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.transaction.hash.concatI32(logIndex),
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
+        ev.transaction.hash,
         ev.address,
         'claim',
-        ev.params.user.toHexString(),  // links with User.id,
+        ev.params.user,  // links with User.id,
         ev.params.vest,
         [ev.params.pid.toI32()],
         ev.params.amount,
@@ -37,13 +41,15 @@ export function parseClaimV2Event<T>(ev: T): ClaimEvent {
 }
 
 export function parseMultiClaimV2Event<T>(ev: T): ClaimEvent {
+    const logIndex = ev.logIndex.toI32();
     const event = new ClaimEvent(
-        ev.transaction.hash.toHex() + "-" + ev.logIndex.toString(),
+        ev.transaction.hash.concatI32(logIndex),
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
+        ev.transaction.hash,
         ev.address,
         'multiclaim',
-        ev.params.user.toHexString(),  // links with User.id,
+        ev.params.user,  // links with User.id,
         ev.params.vest,
         ev.params.pids.map<i32>((pid: BigInt): i32 => pid.toI32()),
         ev.params.amount,

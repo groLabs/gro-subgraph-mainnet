@@ -12,14 +12,16 @@ import {
 } from '../utils/contracts';
 import {
     log,
+    Bytes,
+    BigInt,
     Address,
     BigDecimal,
-    BigInt
+
 } from '@graphprotocol/graph-ts';
 
 
 export const initVestingBonus = (
-    userAddress: string,
+    userAddress: Bytes,
     save: boolean,
 ): VestingBonus => {
     const id = userAddress;
@@ -41,7 +43,7 @@ export const initVestingBonus = (
 
 // Event <BonusClaimed> from GROHodler
 export const updateNetReward = (
-    userAddress: string,
+    userAddress: Bytes,
     _amount: BigDecimal,
     vest: boolean,
 ): void => {
@@ -55,7 +57,7 @@ export const updateNetReward = (
 
 // Event <LogVest> from GROVesting
 export const updateVest = (
-    userAddress: string,
+    userAddress: Bytes,
     amount: BigDecimal,
     latestStartTime: BigInt,
 ): void => {
@@ -66,7 +68,7 @@ export const updateVest = (
 }
 
 export const updateStartTime = (
-    userAddress: string,
+    userAddress: Bytes,
     latestStartTime: BigInt,
 ): void => {
     const vestingBonus = initVestingBonus(userAddress, false);
@@ -108,11 +110,11 @@ export const updateTotalBonus = (
 // Event <LogVest>, <LogExit>, <LogInstantExit> & <LogExtend> from GROVesting
 export const updateGlobalTimeStamp = (
     md: MasterData,
-    vestingAddress: Address,
+    vestingAddress: Bytes,
     save: boolean,
 ): MasterData => {
     if (vestingAddress == vesting1Address) {
-        const contract = GROVestingV1.bind(vestingAddress);
+        const contract = GROVestingV1.bind(Address.fromBytes(vestingAddress));
         const globalStartTime = contract.try_globalStartTime();
         if (globalStartTime.reverted) {
             log.error(
@@ -123,7 +125,7 @@ export const updateGlobalTimeStamp = (
             md.global_start_time = globalStartTime.value.toI32();
         }
     } else if (vestingAddress == vesting2Address) {
-        const contract = GROVestingV2.bind(vestingAddress);
+        const contract = GROVestingV2.bind(Address.fromBytes(vestingAddress));
         const globalStartTime = contract.try_globalStartTime();
         if (globalStartTime.reverted) {
             log.error(
@@ -147,8 +149,8 @@ export const updateGlobalTimeStamp = (
 // Events <LogExit> & <LogInstantExit> from GROVesting
 // TODO: perhaps do it through managers?
 export const updateExit = (
-    userAddress: string,
-    vestingAddress: Address,
+    userAddress: Bytes,
+    vestingAddress: Bytes,
     vestingAmount: BigDecimal,
     totalLockedAmount: BigDecimal,
     penaltyAmount: BigDecimal,
@@ -156,7 +158,7 @@ export const updateExit = (
 ): void => {
     // Step 0: load entities
     let md = initMD();
-    let vestingBonus = initVestingBonus(userAddress, false);
+    let vestingBonus = initVestingBonus(Address.fromBytes(userAddress), false);
     // Step 1: update total_bonus
     // call function
     md = updateTotalBonus(

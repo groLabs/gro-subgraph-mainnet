@@ -1,10 +1,13 @@
 import { NUM } from '../utils/constants';
 import { VestingAirdrop } from '../../generated/schema';
-import { BigDecimal } from '@graphprotocol/graph-ts';
+import { 
+    Bytes,
+    BigDecimal,
+} from '@graphprotocol/graph-ts';
 
 
 export const initVestingAirdrop = (
-    userAddress: string,
+    userAddress: Bytes,
     save: boolean,
 ): VestingAirdrop => {
     const id = userAddress;
@@ -22,7 +25,7 @@ export const initVestingAirdrop = (
 }
 
 export const setInitialClaim = (
-    userAddress: string,
+    userAddress: Bytes,
     totalClaim: BigDecimal,
     claimAmount: BigDecimal,
 ): void => {
@@ -34,7 +37,7 @@ export const setInitialClaim = (
 }
 
 export const setClaim = (
-    userAddress: string,
+    userAddress: Bytes,
     claimAmount: BigDecimal,
 ): void => {
     let vestingAirdrop = initVestingAirdrop(userAddress, false);

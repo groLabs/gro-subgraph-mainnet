@@ -3,8 +3,8 @@ import { setGvtPrice } from '../setters/price';
 import { parseLogEvent } from '../parsers/log';
 import { LogPnLExecution } from '../../generated/PnL/PnL';
 import {
+	setGvtFactor,
 	setPwrdFactor,
-	setGvtFactor
 } from '../setters/factors';
 import {
 	LOG_WITHDRAWAL_SIG_V1,

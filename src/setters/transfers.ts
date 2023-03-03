@@ -14,28 +14,25 @@ import {
 
 export const setTransferTx = (
     ev: TransferEvent,
-    userAddress: string,
+    userAddress: Bytes,
     type: string,
     token: string,
 ): TransferTx => {
     const transfer_tag = (type == 'transfer_in')
-        ? '-in'
+        ? 0
         : (type == 'transfer_out')
-            ? '-out'
-            : '';
-    let tx = new TransferTx(
-        ev.id + transfer_tag
-    );
-
+            ? 1
+            : 2;
+    const id = ev.id.concatI32(transfer_tag);  
+    let tx = new TransferTx(id);
     const coinAmount = tokenToDecimal(ev.value, 18, DECIMALS);
     const pricePerShare = getPricePerShare(token);
-
     tx.contract_address = ev.contractAddress;
     tx.block_number = ev.block.toI32();
     tx.block_timestamp = ev.timestamp.toI32();
     tx.token = token;
     tx.type = type;
-    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.hash = ev.hash;
     tx.user_address = userAddress;
     tx.from_address = ev.fromAddress;
     tx.to_address = ev.toAddress;

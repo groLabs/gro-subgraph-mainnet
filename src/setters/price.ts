@@ -14,6 +14,7 @@ import {
 } from '@graphprotocol/graph-ts';
 import {
     NUM,
+    ADDR,
     DECIMALS,
     GENESIS_POOL_GRO_WETH,
     BALANCER_GRO_WETH_POOLID,
@@ -35,9 +36,9 @@ import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapo
 
 
 export const initPrice = (): Price => {
-    let price = Price.load('0x');
+    let price = Price.load(ADDR.ZERO);
     if (!price) {
-        price = new Price('0x');
+        price = new Price(ADDR.ZERO);
         price.pwrd = NUM.ONE;
         price.gvt = NUM.ZERO;
         price.gro = NUM.ZERO;

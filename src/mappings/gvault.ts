@@ -1,11 +1,12 @@
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, Bytes } from '@graphprotocol/graph-ts';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
 import { updateFactors } from '../setters/factors';
 import {
     NUM,
+    ADDR,
     DECIMALS,
 } from '../utils/constants';
 import {
@@ -26,29 +27,30 @@ import {
 } from '../../generated/GVault/GVault';
 
 
-export function handleStrategyAdded(event: LogStrategyAdded): void {
-    initGVault(event.address);
+export function handleStrategyAdded(ev: LogStrategyAdded): void {
+    initGVault(ev.address);
 }
 
-export function handleLogNewReleaseFactor(event: LogNewReleaseFactor): void {
+export function handleLogNewReleaseFactor(ev: LogNewReleaseFactor): void {
     setNewReleaseFactor(
-        event.address,
-        event.params.factor.toI32(),
+        ev.address,
+        ev.params.factor.toI32(),
     );
 }
 
-export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): void {
+export function handleStrategyHarvestReport(ev: LogStrategyHarvestReport): void {
     // save HarvestReport
+    const logIndex = ev.logIndex.toI32();
     const harvest = setGVaultHarvest(
-        event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
-        event.params.strategy.toHexString(),
-        tokenToDecimal(event.params.gain, 18, DECIMALS),
-        tokenToDecimal(event.params.loss, 18, DECIMALS),
-        tokenToDecimal(event.params.debtPaid, 18, DECIMALS),
-        tokenToDecimal(event.params.debtAdded, 18, DECIMALS),
-        tokenToDecimal(event.params.lockedProfit, 18, DECIMALS),
-        tokenToDecimal(event.params.lockedProfitBeforeLoss, 18, DECIMALS),
-        event.block.timestamp,
+        ev.transaction.hash.concatI32(logIndex),
+        ev.params.strategy,
+        tokenToDecimal(ev.params.gain, 18, DECIMALS),
+        tokenToDecimal(ev.params.loss, 18, DECIMALS),
+        tokenToDecimal(ev.params.debtPaid, 18, DECIMALS),
+        tokenToDecimal(ev.params.debtAdded, 18, DECIMALS),
+        tokenToDecimal(ev.params.lockedProfit, 18, DECIMALS),
+        tokenToDecimal(ev.params.lockedProfitBeforeLoss, 18, DECIMALS),
+        ev.block.timestamp,
     );
 
     // calc lockedProfit
@@ -65,9 +67,9 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
 
     // update GVault lockedProfit
     setGVaultLockedProfit(
-        event.address,
+        ev.address,
         harvest.locked_profit,
-        event.block.timestamp,
+        ev.block.timestamp,
     );
 
     // update factor
@@ -80,23 +82,23 @@ export function handleStrategyHarvestReport(event: LogStrategyHarvestReport): vo
     setUtilizationRatio(NUM.ZERO);
 }
 
-export function handleWithdrawalFromStrategy(event: LogWithdrawalFromStrategy): void {
-    const strategyAddress = getStrategyAddressByQueueId(event.params.strategyId.toI32());
-    if (strategyAddress != Address.zero())
+export function handleWithdrawalFromStrategy(ev: LogWithdrawalFromStrategy): void {
+    const strategyAddress = getStrategyAddressByQueueId(ev.params.strategyId.toI32());
+    if (strategyAddress != ADDR.ZERO)
         setGVaultDebt(
             strategyAddress,
             'withdrawal',
-            tokenToDecimal(event.params.strategyDebt, 18, DECIMALS),
-            event.block.number,
+            tokenToDecimal(ev.params.strategyDebt, 18, DECIMALS),
+            ev.block.number,
         );
 }
 
-export function handleStrategyTotalChanges(event: LogStrategyTotalChanges): void {
+export function handleStrategyTotalChanges(ev: LogStrategyTotalChanges): void {
     // update GVault strategy
     setGVaultDebt(
-        event.params.strategy,
+        ev.params.strategy,
         'total_changes',
-        tokenToDecimal(event.params.totalDebt, 18, DECIMALS),
-        event.block.number,
+        tokenToDecimal(ev.params.totalDebt, 18, DECIMALS),
+        ev.block.number,
     );
 }

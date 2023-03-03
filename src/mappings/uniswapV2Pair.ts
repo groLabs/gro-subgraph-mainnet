@@ -20,15 +20,16 @@ import {
 
 
 export function handleSwapGvtGro(event: SwapEventGvtGro): void {
-    const currentBlock = event.block.number.toI32();
+    const blockNumber = event.block.number.toI32();
+    const blockTimestamp = event.block.timestamp.toI32();
     // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (currentBlock >= 16600000) {
+    if (blockNumber >= 16600000) {
         setUniswapGvtGroPrice();
         setPoolSwap(
-            event.block.timestamp.toString() + '-1',
+            event.params.sender.concatI32(blockTimestamp).concatI32(1),
             1,
-            event.block.timestamp.toI32(),
-            event.block.number.toI32(),
+            blockTimestamp,
+            blockNumber,
             event.params.sender,
             tokenToDecimal(event.params.amount0In, 18, DECIMALS),
             tokenToDecimal(event.params.amount1In, 18, DECIMALS),
@@ -41,15 +42,16 @@ export function handleSwapGvtGro(event: SwapEventGvtGro): void {
 }
 
 export function handleSwapGroUsdc(event: SwapEventGroUsdc): void {
-    const currentBlock = event.block.number.toI32();
+    const blockNumber = event.block.number.toI32();
+    const blockTimestamp = event.block.timestamp.toI32();
     // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (currentBlock >= 16600000) {
+    if (blockNumber >= 16600000) {
         setUniswapGroUsdcPrice(); // This is updating GRO price
         setPoolSwap(
-            event.block.timestamp.toString() + '-2',
+            event.params.sender.concatI32(blockTimestamp).concatI32(2),
             2,
-            event.block.timestamp.toI32(),
-            event.block.number.toI32(),
+            blockTimestamp,
+            blockNumber,
             event.params.sender,
             tokenToDecimal(event.params.amount0In, 18, DECIMALS),
             tokenToDecimal(event.params.amount1In, 6, DECIMALS),

@@ -1,32 +1,34 @@
 import {
-    Address,
+    Bytes,
     BigInt,
 } from '@graphprotocol/graph-ts';
 
 
 // Core deposit or withdrawal
 export class DepoWithdraw {
-    id: string
+    id: Bytes
     block: i32
     timestamp: i32
-    contractAddress: Address
+    hash: Bytes
+    contractAddress: Bytes
     type: string
-    userAddress: string
-    fromAddress: Address
-    toAddress: Address
+    userAddress: Bytes
+    fromAddress: Bytes
+    toAddress: Bytes
     coinAmount: BigInt
     usdAmount: BigInt
     poolId: i32
 
     constructor(
-        id: string,
+        id: Bytes,
         block: i32,
         timestamp: i32,
-        contractAddress: Address,
+        hash: Bytes,
+        contractAddress: Bytes,
         type: string,
-        userAddress: string,
-        fromAddress: Address,
-        toAddress: Address,
+        userAddress: Bytes,
+        fromAddress: Bytes,
+        toAddress: Bytes,
         coinAmount: BigInt,
         usdAmount: BigInt,
         poolId: i32,
@@ -34,6 +36,7 @@ export class DepoWithdraw {
         this.id = id
         this.block = block
         this.timestamp = timestamp
+        this.hash = hash
         this.contractAddress = contractAddress
         this.type = type
         this.userAddress = userAddress

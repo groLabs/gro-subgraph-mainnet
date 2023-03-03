@@ -8,14 +8,14 @@ import { AuthorizerChanged } from '../../generated/BalancerGroWethVault/Vault';
 import { WeightedPool as BalancerPool } from '../../generated/BalancerGroWethPool/WeightedPool';
 import { setBalancerGroWethPrice } from '../setters/price';
 import {
-    NUM,
-    DECIMALS,
-} from '../utils/constants';
-import {
     log,
-    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
+import {
+    NUM,
+    ADDR,
+    DECIMALS,
+} from '../utils/constants';
 
 
 export function handleAuthorizerChanged(event: AuthorizerChanged): void {
@@ -45,16 +45,16 @@ export function handleBalancerSwap(
     const now = new Date(_now * 1000);
     if (now.getUTCHours() === 0) {
         setPoolSwap(
-            _now.toString() + '-5',
+            ADDR.ZERO.concatI32(_now).concatI32(5),
             5,
             _now,
             blockNumber,
-            Address.zero(),
+            ADDR.ZERO,
             NUM.ZERO,
             NUM.ZERO,
             NUM.ZERO,
             NUM.ZERO,
-            Address.zero(),
+            ADDR.ZERO,
             getVirtualPrice(),
         );
     }

@@ -2,8 +2,8 @@ import { Pool } from '../../generated/schema';
 import { getRewardDebt } from '../utils/staker';
 import { tokenToDecimal } from '../utils/tokens';
 import {
+    Bytes,
     BigInt,
-    Address,
 } from '@graphprotocol/graph-ts';
 import {
     NUM,
@@ -12,10 +12,10 @@ import {
 
 
 const initPool = (
-    userAddress: string,
+    userAddress: Bytes,
     poolId: i32,
 ): Pool => {
-    const id = userAddress + '-' + poolId.toString();
+    const id = userAddress.toHexString() + '-' + poolId.toString();
     let pool = Pool.load(id);
     if (!pool) {
         pool = new Pool(id);
@@ -32,9 +32,9 @@ const initPool = (
 
 export const setPools = (
     type: string,
-    userAddress: string,
+    userAddress: Bytes,
     poolId: i32,
-    contractAddress: Address,
+    contractAddress: Bytes,
     coinAmount: BigInt,
 ): void => {
     let pool = initPool(userAddress, poolId);

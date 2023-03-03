@@ -1,12 +1,11 @@
+import { DECIMALS } from '../utils/constants';
+import { tokenToDecimal } from '../utils/tokens';
 import { AirdropClaimEvent } from '../types/airdropClaim';
 import { AirdropNewDropEvent } from '../types/airdropNewDrop';
-import { DECIMALS } from '../utils/constants';
-import { Bytes } from '@graphprotocol/graph-ts';
 import {
     Airdrop,
     AirdropClaimTx,
 } from '../../generated/schema';
-import { tokenToDecimal } from '../utils/tokens';
 
 
 export const setAirdropClaimTx = (
@@ -17,7 +16,7 @@ export const setAirdropClaimTx = (
     tx.contract_address = ev.contractAddress;
     tx.block_number = ev.block;
     tx.block_timestamp = ev.timestamp;
-    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.hash = ev.hash;
     tx.user_address = ev.userAddress;
     tx.vest = ev.vest;
     tx.tranche_id = ev.tranche_id;

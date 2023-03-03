@@ -12,6 +12,7 @@ import {
 } from '../utils/contracts';
 import {
     log,
+    Bytes,
     BigInt,
     Address,
     BigDecimal,
@@ -20,38 +21,39 @@ import {
 
 const showError = (
     version: string,
-    userAddress: string,
+    userAddress: Bytes,
     poolId: i32
 ): void => {
     const data = `on userAddress: {}, poolId: {}`;
     log.error(
         `getRewardDebt(): try_userInfo reverted for Staker${version} ${data} in /utils/staker.ts`,
-        [userAddress, poolId.toString()]
+        [userAddress.toHexString(), poolId.toString()]
     );
 }
 
+// TODO: review Address conversions
 export function getRewardDebt(
-    contractAddress: Address,
-    userAddress: string,
+    contractAddress: Bytes,
+    userAddress: Bytes,
     poolId: i32,
 ): BigDecimal {
     let currentRewardDebt = NUM.ZERO;
-    if (contractAddress == staker1Address) {
-        const contract = StakerV1.bind(contractAddress);
+    if (Address.fromBytes(contractAddress) == staker1Address) {
+        const contract = StakerV1.bind(Address.fromBytes(contractAddress));
         const userInfo = contract.try_userInfo(
             BigInt.fromI32(poolId),
-            Address.fromString(userAddress)
+            Address.fromBytes(userAddress)
         );
         if (userInfo.reverted) {
             showError('V1', userAddress, poolId);
         } else {
             currentRewardDebt = tokenToDecimal(userInfo.value.getRewardDebt(), 18, DECIMALS);
         }
-    } else if (contractAddress == staker2Address) {
-        const contract = StakerV2.bind(contractAddress);
+    } else if (Address.fromBytes(contractAddress) == staker2Address) {
+        const contract = StakerV2.bind(Address.fromBytes(contractAddress));
         const userInfo = contract.try_userInfo(
             BigInt.fromI32(poolId),
-            Address.fromString(userAddress)
+            Address.fromBytes(userAddress)
         );
         if (userInfo.reverted) {
             showError('V2', userAddress, poolId);

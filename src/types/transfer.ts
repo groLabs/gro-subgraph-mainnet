@@ -1,30 +1,33 @@
 import {
-    Address,
+    Bytes,
     BigInt,
 } from '@graphprotocol/graph-ts';
 
 
 export class TransferEvent {
-    id: string
+    id: Bytes
     block: BigInt
     timestamp: BigInt
-    contractAddress: Address
-    fromAddress: Address
-    toAddress: Address
+    hash: Bytes
+    contractAddress: Bytes
+    fromAddress: Bytes
+    toAddress: Bytes
     value: BigInt
 
     constructor(
-        id: string,
+        id: Bytes,
         block: BigInt,
         timestamp: BigInt,
-        contractAddress: Address,
-        fromAddress: Address,
-        toAddress: Address,
+        hash: Bytes,
+        contractAddress: Bytes,
+        fromAddress: Bytes,
+        toAddress: Bytes,
         value: BigInt,
     ) {
         this.id = id
         this.block = block
         this.timestamp = timestamp
+        this.hash = hash
         this.contractAddress = contractAddress
         this.fromAddress = fromAddress
         this.toAddress = toAddress

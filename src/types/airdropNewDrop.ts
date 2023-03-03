@@ -1,21 +1,21 @@
 import {
-    Address,
+    Bytes,
     BigInt,
 } from '@graphprotocol/graph-ts';
 
 
 export class AirdropNewDropEvent {
-    id: string
-    contractAddress: Address
+    id: Bytes
+    contractAddress: Bytes
     tranche_id: i32
-    merkle_root: string
+    merkle_root: Bytes
     amount: BigInt
 
     constructor(
-        id: string,
-        contractAddress: Address,
+        id: Bytes,
+        contractAddress: Bytes,
         tranche_id: i32,
-        merkle_root: string,
+        merkle_root: Bytes,
         amount: BigInt,
     ) {
         this.id = id

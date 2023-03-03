@@ -3,7 +3,6 @@ import { contracts } from '../../addresses';
 import { TransferTx } from '../../generated/schema';
 import { DepoWithdraw } from '../types/depowithdraw';
 import {
-    Bytes,
     Address,
     ethereum,
     BigDecimal,
@@ -20,6 +19,7 @@ import {
 } from '../setters/factors';
 import {
     NUM,
+    ADDR,
     DECIMALS,
     ERC20_TRANSFER_SIG,
     G2_START_BLOCK
@@ -27,7 +27,7 @@ import {
 
 // global vars to manage emergency <token> and <from>
 let emergencyToken = '';
-let emergencyFrom = Address.zero();
+let emergencyFrom = ADDR.ZERO;
 
 
 // core deposits & withdrawals
@@ -42,7 +42,7 @@ export const setDepoWithdrawTx = (
     tx.block_timestamp = ev.timestamp;
     tx.token = token;
     tx.type = ev.type;
-    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.hash = ev.hash;
     tx.user_address = ev.userAddress;
     tx.from_address = ev.fromAddress;
     tx.to_address = ev.toAddress;
@@ -66,9 +66,9 @@ export const setEmergencyWithdrawTx = (
     tx.block_number = ev.block;
     tx.block_timestamp = ev.timestamp;
     tx.type = ev.type;
-    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.hash = ev.hash;
     tx.coin_amount = getCoinAmount(logs, tx, true);
-    tx.user_address = emergencyFrom.toHexString();
+    tx.user_address = emergencyFrom;
     tx.from_address = emergencyFrom;
     tx.to_address = Address.zero();
     tx.token = emergencyToken;
@@ -93,7 +93,7 @@ export const setStakerDepoWithdrawTx = (
     tx.block_timestamp = ev.timestamp;
     tx.token = token
     tx.type = ev.type;
-    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.hash = ev.hash;
     tx.user_address = ev.userAddress;
     tx.from_address = ev.fromAddress;
     tx.to_address = ev.toAddress;

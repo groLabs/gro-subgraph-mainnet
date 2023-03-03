@@ -1,4 +1,6 @@
+import { ADDR } from '../utils/constants';
 import { initMD } from '../setters/masterdata';
+import { Bytes } from '@graphprotocol/graph-ts';
 import { initCoreData } from '../setters/coreData';
 import { initVestingBonus } from '../setters/vestingBonus';
 import { initVestingAirdrop } from '../setters/vestingAirdrop';
@@ -12,7 +14,7 @@ import {
 // TODO: ENHANCEMENT -> link this to the very first event in Gro Protocol (eg: transfer ownership)
 // However, when using test subgraph, this event won't exist 
 const initMasterDataOnce = (): void => {
-	let md = MasterData.load('0x');
+	let md = MasterData.load(ADDR.ZERO);
 	if (!md) {
 		md = initMD();
 		md.save;
@@ -21,7 +23,7 @@ const initMasterDataOnce = (): void => {
 	}
 }
 
-export const setUser = (userAddress: string): User => {
+export const setUser = (userAddress: Bytes): User => {
 	initMasterDataOnce();
 	let user = User.load(userAddress)
 	if (!user) {

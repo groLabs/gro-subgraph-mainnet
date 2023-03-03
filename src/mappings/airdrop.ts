@@ -1,10 +1,14 @@
 // @dev: setUser & initTotals in case it's an airdrop for a user
 //       without any previous interaction with Gro
+import { setUser } from '../setters/users';
+import { DECIMALS } from '../utils/constants';
+import { initTotals } from '../setters/totals';
+import { tokenToDecimal } from '../utils/tokens';
+import { parseAirdropNewDropEvent } from '../parsers/airdropNewDrop';
 import {
     parseAirdropClaimEventV1,
     parseAirdropClaimEventV2,
 } from '../parsers/airdropClaim';
-import { parseAirdropNewDropEvent } from '../parsers/airdropNewDrop';
 import {
     setNewAirdrop,
     setAirdropClaimTx
@@ -25,10 +29,6 @@ import {
     setClaim,
     setInitialClaim,
 } from '../setters/vestingAirdrop';
-import { setUser } from '../setters/users';
-import { initTotals } from '../setters/totals';
-import { tokenToDecimal } from '../utils/tokens';
-import { DECIMALS } from '../utils/constants';
 
 
 export function handleLogClaimV1(event: LogClaimV1): void {
@@ -56,7 +56,7 @@ export function handleLogNewDropV2(event: LogNewDropV2): void {
 }
 
 export function handleUstClaim(event: LogClaim): void {
-    const user = event.params.user.toHexString();
+    const user = event.params.user;
     setUser(user);
     initTotals(user, true);
     setClaim(
@@ -66,7 +66,7 @@ export function handleUstClaim(event: LogClaim): void {
 }
 
 export function handleUstInitialClaim(event: LogInitialClaim): void {
-    const user = event.params.user.toHexString();
+    const user = event.params.user;
     setUser(user);
     initTotals(user, true);
     setInitialClaim(

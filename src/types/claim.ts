@@ -1,27 +1,29 @@
 import {
-    Address,
+    Bytes,
     BigInt,
 } from '@graphprotocol/graph-ts';
 
 
 export class ClaimEvent {
-    id: string
+    id: Bytes
     block: i32
     timestamp: i32
-    contractAddress: Address
+    hash: Bytes
+    contractAddress: Bytes
     type: string
-    userAddress: string
+    userAddress: Bytes
     vest: boolean
     pid: i32[]
     amount: BigInt
 
     constructor(
-        id: string,
+        id: Bytes,
         block: i32,
         timestamp: i32,
-        contractAddress: Address,
+        hash: Bytes,
+        contractAddress: Bytes,
         type: string,
-        userAddress: string,
+        userAddress: Bytes,
         vest: boolean,
         pid: i32[],
         amount: BigInt,
@@ -29,6 +31,7 @@ export class ClaimEvent {
         this.id = id
         this.block = block
         this.timestamp = timestamp
+        this.hash = hash
         this.contractAddress = contractAddress
         this.type = type
         this.userAddress = userAddress

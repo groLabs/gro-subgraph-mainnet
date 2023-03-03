@@ -1,4 +1,7 @@
-import { DECIMALS } from '../utils/constants';
+import { 
+    ADDR,
+    DECIMALS,
+} from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
 import { Address } from '@graphprotocol/graph-ts';
 import { parseApprovalEvent } from '../parsers/approval';
@@ -29,13 +32,13 @@ export function handleTransfer(event: Transfer): void {
     )) {
         const ev = parseTransferEvent(event);
         manageTransfer(ev, 'gro');
-        if (from == Address.zero()) {
+        if (from == ADDR.ZERO) {
             updateTotalSupply(
                 'deposit',
                 value,
                 'gro',
             );
-        } else if (to == Address.zero()) {
+        } else if (to == ADDR.ZERO) {
             updateTotalSupply(
                 'withdrawal',
                 value,

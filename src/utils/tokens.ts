@@ -12,6 +12,7 @@ import {
 } from '../utils/contracts';
 import {
     NUM,
+    ADDR,
     DECIMALS,
 } from '../utils/constants';
 import {
@@ -25,9 +26,9 @@ import {
 // TEMPORARILY COPIED HERE (generates exception otherwise)
 import { Price } from '../../generated/schema';
 export const initPrice = (): Price => {
-    let price = Price.load('0x');
+    let price = Price.load(ADDR.ZERO);
     if (!price) {
-        price = new Price('0x');
+        price = new Price(ADDR.ZERO);
         price.pwrd = NUM.ONE;
         price.gvt = NUM.ZERO;
         price.gro = NUM.ZERO;

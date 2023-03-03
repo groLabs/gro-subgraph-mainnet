@@ -1,10 +1,11 @@
+import { getGroToken } from '../utils/tokens';
+import { parseLogEvent } from '../parsers/log';
+import { manageCoreDeposit } from '../managers/deposit';
+import { parseCoreDepositEvent } from '../parsers/deposit';
 import { LogNewDeposit as  LogNewDepositV1} from '../../generated/DepositHandlerV1/DepositHandler';
 import { LogNewDeposit as LogNewDepositV2 } from '../../generated/DepositHandlerV2/DepositHandler';
 import { LogNewDeposit as LogNewDepositV3 } from '../../generated/DepositHandlerV3/DepositHandler';
-import { parseCoreDepositEvent } from '../parsers/deposit';
-import { manageCoreDeposit } from '../managers/deposit';
-import { getGroToken } from '../utils/tokens';
-import { parseLogEvent } from '../parsers/log';
+
 
 // @dev: totalSupply can't be deduced from deposits only, as there are other transactions that
 //       mint GVT or PWRD not related to deposits

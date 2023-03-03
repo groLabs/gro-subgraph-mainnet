@@ -14,28 +14,30 @@ import {
 
 export function handleBonusClaimedV1(event: LogBonusClaimedV1): void {
     updateNetReward(
-        event.params.user.toHexString(),
+        event.params.user,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         true,
     );
     let md = initMD();
     updateTotalBonus(
         md,
-        tokenToDecimal(event.params.amount, 18, DECIMALS).times(NUM.MINUS_ONE),
+        tokenToDecimal(event.params.amount, 18, DECIMALS)
+            .times(NUM.MINUS_ONE),
         true,
     );
 }
 
 export function handleBonusClaimedV2(event: LogBonusClaimedV2): void {
     updateNetReward(
-        event.params.user.toHexString(),
+        event.params.user,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         event.params.vest,
     );
     let md = initMD();
     updateTotalBonus(
         md,
-        tokenToDecimal(event.params.amount, 18, DECIMALS).times(NUM.MINUS_ONE),
+        tokenToDecimal(event.params.amount, 18, DECIMALS)
+            .times(NUM.MINUS_ONE),
         true,
     );
 }

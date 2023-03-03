@@ -1,15 +1,14 @@
 import { NUM } from '../utils/constants';
 import { GVault } from '../../generated/schema';
-import { Address } from '@graphprotocol/graph-ts';
+import { Bytes } from '@graphprotocol/graph-ts';
 
 
 export const initGVault = (
-    vaultAddress: Address,
+    vaultAddress: Bytes,
 ): GVault => {
-    const id = vaultAddress.toHexString();
-    let vault = GVault.load(id);
+    let vault = GVault.load(vaultAddress);
     if (!vault) {
-        vault = new GVault(id);
+        vault = new GVault(vaultAddress);
         vault.release_factor = i32(86400);
         vault.locked_profit = NUM.ZERO;
         vault.locked_profit_timestamp = i32(0);
@@ -19,7 +18,7 @@ export const initGVault = (
 }
 
 export const setNewReleaseFactor = (
-    vaultAddress: Address,
+    vaultAddress: Bytes,
     value: i32,
 ): void => {
     let vault = initGVault(vaultAddress);

@@ -1,10 +1,10 @@
+import { getGroToken } from '../utils/tokens';
+import { parseLogEvent } from '../parsers/log';
+import { manageCoreWithdrawal } from '../managers/withdrawal';
+import { parseCoreWithdrawalEvent } from '../parsers/withdrawals';
 import { LogNewWithdrawal as LogNewWithdrawalV1 } from '../../generated/WithdrawHandlerV1/WithdrawHandler';
 import { LogNewWithdrawal as LogNewWithdrawalV2 } from '../../generated/WithdrawHandlerV2/WithdrawHandler';
 import { LogNewWithdrawal as LogNewWithdrawalV3 } from '../../generated/WithdrawHandlerV3/WithdrawHandler';
-import { parseCoreWithdrawalEvent } from '../parsers/withdrawals';
-import { manageCoreWithdrawal } from '../managers/withdrawal';
-import { getGroToken } from '../utils/tokens';
-import { parseLogEvent } from '../parsers/log';
 
 
 export function handleWithdrawalV1(event: LogNewWithdrawalV1): void {

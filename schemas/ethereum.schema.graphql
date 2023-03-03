@@ -41,7 +41,7 @@ enum NetworkName {
 
 # master data
 type MasterData @entity {
-	id: ID! # 0x
+	id: Bytes! # 0x
 	status: Status!
 	network_id: Int!
 	network_name: NetworkName!
@@ -60,7 +60,7 @@ type MasterData @entity {
 
 # latest token price
 type Price @entity {
-	id: ID! # 0x
+	id: Bytes! # 0x
 	pwrd: BigDecimal!
 	gvt: BigDecimal!
 	gro: BigDecimal!
@@ -73,23 +73,23 @@ type Price @entity {
 
 # latest factor
 type Factor @entity {
-	id: ID! # 0x
+	id: Bytes! # 0x
 	pwrd: BigDecimal!
 	gvt: BigDecimal!
 }
 
 # airdrops
 type Airdrop @entity(immutable: true) {
-	id: ID! # hash-logIndex
+	id: Bytes! # hash-logIndex
 	contract_address: Bytes!
 	tranche_id: Int!
-	merkle_root: String!
+	merkle_root: Bytes!
 	total_amount: BigDecimal!
 }
 
 # G2 gvault
 type GVault @entity {
-	id: ID! # vault address
+	id: Bytes! # vault address
 	release_factor: Int!
 	locked_profit: BigDecimal!
 	locked_profit_timestamp: Int!
@@ -98,7 +98,7 @@ type GVault @entity {
 
 # G2 strategy
 type GVaultStrategy @entity {
-	id: ID! # strategy address
+	id: Bytes! # strategy address
 	coin: String!
 	metacoin: String!
 	protocol: String!
@@ -115,7 +115,7 @@ type GVaultStrategy @entity {
 
 # G2 strategy harvest (from GVault)
 type GVaultHarvest @entity(immutable: true) {
-	id: ID! # hash-logIndex
+	id: Bytes! # hash-logIndex
 	strategy_address: GVaultStrategy!
 	gain: BigDecimal!
 	loss: BigDecimal!
@@ -148,7 +148,7 @@ type StakerData @entity {
 
 # pool swaps
 type PoolSwap @entity(immutable: true) {
-	id: ID! # timestamp-poolId
+	id: Bytes! # fromAddress-timestamp-poolId
 	pool_id: Int!
 	block_timestamp: Int!
 	block_number: Int!
@@ -163,7 +163,7 @@ type PoolSwap @entity(immutable: true) {
 
 # core protocol data
 type CoreData @entity {
-	id: ID! # 0x
+	id: Bytes! # 0x
 	total_supply_gvt: BigDecimal!
 	total_supply_pwrd_based: BigDecimal!
 	total_supply_gro: BigDecimal!
@@ -175,7 +175,7 @@ type CoreData @entity {
 
 # user
 type User @entity {
-	id: ID! # userAddress
+	id: Bytes! # userAddress
 	transfers: [TransferTx!] @derivedFrom(field: "user_address")
 	approvals: [ApprovalTx!] @derivedFrom(field: "owner_address")
 	claims: [ClaimTx!] @derivedFrom(field: "user_address")
@@ -188,7 +188,7 @@ type User @entity {
 
 # aggregated amounts for personal stats
 type Totals @entity {
-	id: ID! # userAddress
+	id: Bytes! # userAddress
 	user_address: User! # FK to User
 	amount_added_pwrd: BigDecimal!
 	amount_added_gvt: BigDecimal!
@@ -215,7 +215,7 @@ type Totals @entity {
 
 # vesting bonus
 type VestingBonus @entity {
-	id: ID! # userAddress
+	id: Bytes! # userAddress
 	user_address: User! # FK to User
 	locked_gro: BigDecimal!
 	net_reward: BigDecimal!
@@ -227,7 +227,7 @@ type VestingBonus @entity {
 
 # UST vesting airdrop
 type VestingAirdrop @entity {
-	id: ID! # userAddress
+	id: Bytes! # userAddress
 	user_address: User! # FK to User
 	claim_initialized: Boolean
 	total_claim_amount: BigDecimal!
@@ -250,7 +250,7 @@ type Pool @entity {
 # g2 deposits, withdrawals & transfers
 # staker deposits & withdrawals
 type TransferTx @entity(immutable: true) {
-	id: ID! # hash-logIndex(-in|-out)
+	id: Bytes! # hash-logIndex(0|1) -> same tx generates two records, transfer in & transfer out
 	contract_address: Bytes!
 	block_number: Int!
 	block_timestamp: Int!
@@ -268,7 +268,7 @@ type TransferTx @entity(immutable: true) {
 
 # gro protocol approvals
 type ApprovalTx @entity(immutable: true) {
-	id: ID! # hash-logIndex
+	id: Bytes! # hash-logIndex
 	contract_address: Bytes!
 	block_number: Int!
 	block_timestamp: Int!
@@ -284,7 +284,7 @@ type ApprovalTx @entity(immutable: true) {
 # staker claims
 # TODO: change to StakerClaimTx
 type ClaimTx @entity(immutable: true) {
-	id: ID! # hash-logIndex
+	id: Bytes! # hash-logIndex
 	contract_address: Bytes!
 	block_number: Int!
 	block_timestamp: Int!
@@ -298,7 +298,7 @@ type ClaimTx @entity(immutable: true) {
 
 # airdrop claims
 type AirdropClaimTx @entity(immutable: true) {
-	id: ID! # hash-logIndex
+	id: Bytes! # hash-logIndex
 	contract_address: Bytes!
 	block_number: Int!
 	block_timestamp: Int!

@@ -1,12 +1,15 @@
-import { NUM } from '../utils/constants';
+import {
+	NUM,
+	ADDR,
+} from '../utils/constants';
 import { TS_LAUNCH } from '../utils/constants';
 import { MasterData } from '../../generated/schema';
 
 
 export const initMD = (): MasterData => {
-	let md = MasterData.load('0x');
+	let md = MasterData.load(ADDR.ZERO);
 	if (!md) {
-		md = new MasterData('0x');
+		md = new MasterData(ADDR.ZERO);
 		md.status = 'ok';
 		md.network_id = i32(1);
 		md.network_name = 'mainnet';

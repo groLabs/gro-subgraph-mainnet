@@ -7,6 +7,7 @@ import { setCurvePwrd3crvPrice } from '../setters/price';
 import { Vyper_contract as MetaPool } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import {
     log,
+    Bytes,
     Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
@@ -17,47 +18,59 @@ import {
 } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import {
     NUM,
+    ADDR,
     DECIMALS,
 } from '../utils/constants';
 
 
+export function handleTransfer(event: Transfer): void {
+    setTotalSupply(
+        event.params.sender,
+        event.params.receiver,
+        event.params.value,
+        'curve_pwrd3crv',
+    );
+}
+
 export function handleTokenExchange(event: TokenExchange): void {
-    const currentBlock = event.block.number.toI32();
+    const blockNumber = event.block.number.toI32();
+    const blockTimestamp = event.block.timestamp.toI32();
     // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (currentBlock >= 16588464) {
+    if (blockNumber >= 16588464) {
         setCurvePwrd3crvPrice();
         setPoolSwap(
-            event.block.timestamp.toString() + '-4',
+            event.params.buyer.concatI32(blockTimestamp).concatI32(4),
             4,
-            event.block.timestamp.toI32(),
-            event.block.number.toI32(),
+            blockTimestamp,
+            blockNumber,
             event.params.buyer,
             NUM.ZERO,
             tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
             NUM.ZERO,
             tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
-            Address.zero(),
+            ADDR.ZERO,
             getVirtualPrice()
         );
     }
 }
 
 export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): void {
-    const currentBlock = event.block.number.toI32();
+    const blockNumber = event.block.number.toI32();
+    const blockTimestamp = event.block.timestamp.toI32();
     // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (currentBlock >= 16588464) {
+    if (blockNumber >= 16588464) {
         setCurvePwrd3crvPrice();
         setPoolSwap(
-            event.transaction.hash.toHex() + "-" + event.logIndex.toString(),
+            event.params.buyer.concatI32(blockTimestamp).concatI32(4),
             4,
-            event.block.timestamp.toI32(),
-            event.block.number.toI32(),
+            blockTimestamp,
+            blockNumber,
             event.params.buyer,
             NUM.ZERO,
             tokenToDecimal(event.params.tokens_bought, 18, DECIMALS),
             NUM.ZERO,
             tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
-            Address.zero(),
+            ADDR.ZERO,
             getVirtualPrice(),
         );
     }
@@ -75,11 +88,3 @@ const getVirtualPrice = (): BigDecimal => {
     return NUM.ZERO;
 }
 
-export function handleTransfer(event: Transfer): void {
-    setTotalSupply(
-        event.params.sender,
-        event.params.receiver,
-        event.params.value,
-        'curve_pwrd3crv',
-    );
-}

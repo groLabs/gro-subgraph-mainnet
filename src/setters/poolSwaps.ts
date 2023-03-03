@@ -1,24 +1,26 @@
-
 import { PoolSwap } from '../../generated/schema';
-import { BigDecimal, Address } from '@graphprotocol/graph-ts';
+import {
+    Bytes,
+    BigDecimal
+} from '@graphprotocol/graph-ts';
 
 
 export const setPoolSwap = (
-    tx: string,
+    id: Bytes,
     poolId: i32,
     blockTimestamp: i32,
     blockNumber: i32,
-    fromAddress: Address,
+    fromAddress: Bytes,
     amount0In: BigDecimal,
     amount1In: BigDecimal,
     amount0Out: BigDecimal,
     amount1Out: BigDecimal,
-    toAddress: Address,
+    toAddress: Bytes,
     virtualPrice: BigDecimal,
 ): void => {
-    let swap = PoolSwap.load(tx);
+    let swap = PoolSwap.load(id);
     if (!swap) {
-        swap = new PoolSwap(tx);
+        swap = new PoolSwap(id);
         swap.pool_id = poolId;
         swap.block_timestamp = blockTimestamp;
         swap.block_number = blockNumber,

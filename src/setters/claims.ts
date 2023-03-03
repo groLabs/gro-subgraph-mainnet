@@ -1,6 +1,5 @@
 import { ClaimEvent } from '../types/claim';
 import { DECIMALS } from '../utils/constants';
-import { Bytes } from '@graphprotocol/graph-ts';
 import { ClaimTx } from '../../generated/schema';
 import { tokenToDecimal } from '../utils/tokens';
 
@@ -13,7 +12,7 @@ export const setClaimTx = (
     tx.contract_address = ev.contractAddress;
     tx.block_number = ev.block;
     tx.block_timestamp = ev.timestamp;
-    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.hash = ev.hash;
     tx.type = (ev.pid.length > 1)
         ? 'multiclaim'
         : 'claim';

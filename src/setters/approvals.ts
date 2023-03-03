@@ -1,5 +1,4 @@
 import { DECIMALS } from '../utils/constants';
-import { Bytes } from '@graphprotocol/graph-ts';
 import { ApprovalEvent } from '../types/approval';
 import { ApprovalTx } from '../../generated/schema';
 import {
@@ -13,20 +12,18 @@ export const setApprovalTx = (
     token: string,
 ): ApprovalTx => {
     let tx = new ApprovalTx(ev.id);
-
     const base = (token === 'usdc' || token === 'usdt')
         ? 6
         : 18;
     const coinAmount = tokenToDecimal(ev.value, base, DECIMALS);
     const pricePerShare = getPricePerShare(token);
-
     tx.owner_address = ev.ownerAddress;
     tx.contract_address = ev.contractAddress;
     tx.block_number = ev.block.toI32();
     tx.block_timestamp = ev.timestamp.toI32();
     tx.token = token;
     tx.type = 'approval';
-    tx.hash = Bytes.fromHexString(ev.id.split('-')[0]);
+    tx.hash = ev.hash;
     tx.coin_amount = coinAmount;
     tx.usd_amount = coinAmount.times(pricePerShare);
     tx.spender_address = ev.spenderAddress;

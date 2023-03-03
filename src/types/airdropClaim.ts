@@ -1,25 +1,27 @@
 import {
-    Address,
+    Bytes,
     BigInt,
 } from '@graphprotocol/graph-ts';
 
 
 export class AirdropClaimEvent {
-    id: string
+    id: Bytes
     block: i32
     timestamp: i32
-    contractAddress: Address
-    userAddress: string
+    hash: Bytes
+    contractAddress: Bytes
+    userAddress: Bytes
     vest: boolean
     tranche_id: i32
     amount: BigInt
 
     constructor(
-        id: string,
+        id: Bytes,
         block: i32,
         timestamp: i32,
-        contractAddress: Address,
-        userAddress: string,
+        hash: Bytes,
+        contractAddress: Bytes,
+        userAddress: Bytes,
         vest: boolean,
         tranche_id: i32,
         amount: BigInt,
@@ -27,6 +29,7 @@ export class AirdropClaimEvent {
         this.id = id
         this.block = block
         this.timestamp = timestamp
+        this.hash = hash
         this.contractAddress = contractAddress
         this.userAddress = userAddress
         this.vest = vest

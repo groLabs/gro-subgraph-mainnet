@@ -1,9 +1,12 @@
-import { BigDecimal } from '@graphprotocol/graph-ts';
+import {
+    Bytes,
+    BigDecimal,
+ } from '@graphprotocol/graph-ts';
 import { initTotals } from './totals';
 
 
 export const updateTeamVesting = (
-    userAddress: string,
+    userAddress: Bytes,
     amount: BigDecimal,
     add: boolean
 ): void => {

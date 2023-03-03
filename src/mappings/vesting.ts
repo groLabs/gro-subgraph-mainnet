@@ -29,7 +29,7 @@ import { initMD } from '../setters/masterdata';
 export function handleVestV1(event: LogVestV1): void {
     // TODO: check (event.params.vesting.length === 2)
     updateVest(
-        event.params.user.toHexString(),
+        event.params.user,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         event.params.vesting.startTime
     );
@@ -48,7 +48,7 @@ export function handleVestV1(event: LogVestV1): void {
 
 export function handleVestV2(event: LogVestV2): void {
     updateVest(
-        event.params.user.toHexString(),
+        event.params.user,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         event.params.vesting.startTime
     );
@@ -67,7 +67,7 @@ export function handleVestV2(event: LogVestV2): void {
 
 export function handleExitV1(event: LogExitV1): void {
     updateExit(
-        event.params.user.toHexString(),
+        event.params.user,
         event.address,
         tokenToDecimal(event.params.vesting, 18, DECIMALS),
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
@@ -78,7 +78,7 @@ export function handleExitV1(event: LogExitV1): void {
 
 export function handleExitV2(event: LogExitV2): void {
     updateExit(
-        event.params.user.toHexString(),
+        event.params.user,
         event.address,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
@@ -90,7 +90,7 @@ export function handleExitV2(event: LogExitV2): void {
 // @dev: no amount & totalLockedAmount in LogInstantExit
 export function handleInstantExitV2(event: LogInstantExitV2): void {
     updateExit(
-        event.params.user.toHexString(),
+        event.params.user,
         event.address,
         NUM.ZERO,
         NUM.ZERO,
@@ -107,7 +107,7 @@ export function handleExtendV1(event: LogExtendV1): void {
         true,
     );
     updateStartTime(
-        event.params.user.toHexString(),
+        event.params.user,
         event.params.newPeriod,
     );
 }
@@ -120,7 +120,7 @@ export function handleExtendV2(event: LogExtendV2): void {
         true,
     );
     updateStartTime(
-        event.params.user.toHexString(),
+        event.params.user,
         event.params.newPeriod,
     );
 }

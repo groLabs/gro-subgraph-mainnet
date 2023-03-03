@@ -10,7 +10,7 @@ import {
 
 export function handleClaimed(event: LogClaimed): void {
     updateTeamVesting(
-        event.params.contributor.toHexString(),
+        event.params.contributor,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         false,
     );
@@ -18,7 +18,7 @@ export function handleClaimed(event: LogClaimed): void {
 
 export function handleNewVest(event: LogNewVest): void {
     updateTeamVesting(
-        event.params.contributor.toHexString(),
+        event.params.contributor,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         true,
     );
