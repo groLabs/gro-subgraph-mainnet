@@ -10,6 +10,7 @@ import {
 import {
     NUM,
     DECIMALS,
+    NUM_POOLS,
     STAKER_ADDRESSES,
     LOG_DEPOSIT_STAKER_SIG,
     LOG_WITHDRAW_STAKER_SIG,
@@ -85,7 +86,7 @@ export const updateStakerAllocation = (
     let totalAlloc = NUM.ZERO;
     let staker: StakerData[] = [];
     // update alloc_point on target pool & calc the totalAlloc
-    for (let i = 0; i <= 6; i++) {
+    for (let i = 0; i < NUM_POOLS; i++) {
         staker[i] = initStakerData(i);
         if (i === poolId) {
             staker[i].alloc_point = allocPoint;
@@ -99,7 +100,7 @@ export const updateStakerAllocation = (
     md.total_alloc = totalAlloc;
     md.save();
     // update pool_share on each pool
-    for (let i = 0; i <= 6; i++) {
+    for (let i = 0; i < NUM_POOLS; i++) {
         staker[i].pool_share = (totalAlloc.equals(NUM.ZERO))
             ? NUM.ZERO
             : staker[i].alloc_point.div(totalAlloc).truncate(DECIMALS);

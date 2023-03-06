@@ -15,7 +15,7 @@ const initPool = (
     userAddress: Bytes,
     poolId: i32,
 ): Pool => {
-    const id = userAddress.toHexString() + '-' + poolId.toString();
+    const id = userAddress.concatI32(poolId);
     let pool = Pool.load(id);
     if (!pool) {
         pool = new Pool(id);

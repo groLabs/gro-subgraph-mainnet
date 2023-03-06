@@ -1,6 +1,9 @@
 import { NUM } from '../utils/constants';
 import { PoolData } from '../../generated/schema';
-import { BigDecimal, Address } from '@graphprotocol/graph-ts';
+import {
+    Address,
+    BigDecimal,
+} from '@graphprotocol/graph-ts';
 
 
 const initPoolData = (

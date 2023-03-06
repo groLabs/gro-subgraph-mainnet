@@ -113,7 +113,7 @@ type GVaultStrategy @entity {
 	harvests: [GVaultHarvest!] @derivedFrom(field: "strategy_address")
 }
 
-# G2 strategy harvest (from GVault)
+# G2 strategy harvest
 type GVaultHarvest @entity(immutable: true) {
 	id: Bytes! # hash-logIndex
 	strategy_address: GVaultStrategy!
@@ -126,7 +126,7 @@ type GVaultHarvest @entity(immutable: true) {
 	block_timestamp: Int!
 }
 
-# pool data
+# pool data (only for pools 1, 2, 4 & 5)
 type PoolData @entity {
 	id: ID! # pool id
 	pool_address: Bytes!
@@ -135,7 +135,7 @@ type PoolData @entity {
 	total_supply: BigDecimal!
 }
 
-# staker data
+# staker data (for pools 0 to 6)
 type StakerData @entity {
 	id: ID! # poolId
 	lp_supply: BigDecimal!
@@ -236,7 +236,7 @@ type VestingAirdrop @entity {
 
 # staker pools
 type Pool @entity {
-	id: ID! # userAddress-poolId
+	id: Bytes! # userAddress-poolId
 	user_address: User! # FK to User
 	pool_id: Int!
 	net_reward: BigDecimal!

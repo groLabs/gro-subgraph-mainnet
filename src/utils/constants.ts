@@ -20,6 +20,7 @@ export const TS_LAUNCH = 1622204347;    // Friday 28 May 2021 12:19:07
 // Numbers
 export const DECIMALS = 7;
 export const NO_POOL = -1;
+export const NUM_POOLS = 7;
 export const NUM: Num = {
     ZERO: BigDecimal.fromString('0'),
     ONE: BigDecimal.fromString('1'),
@@ -33,9 +34,6 @@ export const NUM: Num = {
 export const ADDR: Addr = {
     ZERO: Bytes.fromHexString('0x0000000000000000000000000000000000000000'),
 }
-
-// Default addresses
-export const NO_ADDR = Bytes.empty();   // TO BE REPLACED BY ADDR
 
 // Pool ids
 export const BALANCER_GRO_WETH_POOLID = Bytes.fromHexString(
