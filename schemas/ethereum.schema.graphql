@@ -178,7 +178,7 @@ type User @entity {
 	id: Bytes! # userAddress
 	transfers: [TransferTx!] @derivedFrom(field: "user_address")
 	approvals: [ApprovalTx!] @derivedFrom(field: "owner_address")
-	claims: [ClaimTx!] @derivedFrom(field: "user_address")
+	claims: [StakerClaimTx!] @derivedFrom(field: "user_address")
 	totals: Totals! @derivedFrom(field: "user_address")
 	pools: [Pool!] @derivedFrom(field: "user_address")
 	vestingBonus: VestingBonus! @derivedFrom(field: "user_address")
@@ -282,8 +282,7 @@ type ApprovalTx @entity(immutable: true) {
 }
 
 # staker claims
-# TODO: change to StakerClaimTx
-type ClaimTx @entity(immutable: true) {
+type StakerClaimTx @entity(immutable: true) {
 	id: Bytes! # hash-logIndex
 	contract_address: Bytes!
 	block_number: Int!

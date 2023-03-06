@@ -1,5 +1,5 @@
 import { parseLogEvent } from '../parsers/log';
-import { manageClaim } from '../managers/claims';
+import { manageClaim } from '../managers/stakerClaims';
 import { parseStakerDepositEvent } from '../parsers/deposit';
 import { parseStakerWithdrawalEvent } from '../parsers/withdrawals';
 import { manageStakerDeposit } from '../managers/deposit';
@@ -8,7 +8,7 @@ import {
     parseClaimV1Event,
     parseClaimV2Event,
     parseMultiClaimV2Event,
-} from '../parsers/claim';
+} from '../parsers/stakerClaim';
 import {
     updateStakerSupply,
     updateStakerAllocation,

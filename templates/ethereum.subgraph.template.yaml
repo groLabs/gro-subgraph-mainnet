@@ -396,7 +396,7 @@ dataSources:
       entities:
         - User
         - Pools
-        - ClaimTx
+        - StakerClaimTx
       abis:
         - name: LpTokenStaker
           file: ./abis/ethereum/LpTokenStakerV1.json
@@ -435,7 +435,7 @@ dataSources:
       entities:
         - User
         - Pools
-        - ClaimTx
+        - StakerClaimTx
         - DepositTx
         - WithdrawalTx
       abis:

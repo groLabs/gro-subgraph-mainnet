@@ -1,13 +1,13 @@
 import { setUser } from '../setters/users';
 import { setPools } from '../setters/pools';
-import { ClaimEvent } from '../types/claim';
+import { StakerClaimEvent } from '../types/stakerClaim';
 import { initTotals } from '../setters/totals';
-import { setClaimTx } from '../setters/claims';
+import { setClaimTx } from '../setters/staker';
 
 
 // Claim from Staker
 export const manageClaim = (
-    ev: ClaimEvent,
+    ev: StakerClaimEvent,
 ): void => {
 
     // Step 1: Manage User

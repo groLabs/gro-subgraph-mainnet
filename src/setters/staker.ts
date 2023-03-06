@@ -1,7 +1,11 @@
 import { Log } from '../types/log';
 import { initMD } from './masterdata';
 import { tokenToDecimal } from '../utils/tokens';
-import { StakerData } from '../../generated/schema';
+import { StakerClaimEvent } from '../types/stakerClaim';
+import {
+    StakerData,
+    StakerClaimTx,
+ } from '../../generated/schema';
 import {
     BigInt,
     ethereum,
@@ -115,4 +119,24 @@ export const updateStakerGroPerBlock = (
     const groPerBlock = tokenToDecimal(gro_per_block, 18, DECIMALS);
     md.gro_per_block = groPerBlock
     md.save();
+}
+
+export const setClaimTx = (
+    ev: StakerClaimEvent,
+): StakerClaimTx => {
+    let tx = new StakerClaimTx(ev.id);
+    const coinAmount = tokenToDecimal(ev.amount, 18, DECIMALS);
+    tx.contract_address = ev.contractAddress;
+    tx.block_number = ev.block;
+    tx.block_timestamp = ev.timestamp;
+    tx.hash = ev.hash;
+    tx.type = (ev.pid.length > 1)
+        ? 'multiclaim'
+        : 'claim';
+    tx.user_address = ev.userAddress;
+    tx.pool_id = ev.pid;
+    tx.vest = ev.vest;
+    tx.amount = coinAmount;
+    tx.save();
+    return tx;
 }

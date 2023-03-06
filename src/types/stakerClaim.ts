@@ -4,7 +4,7 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
-export class ClaimEvent {
+export class StakerClaimEvent {
     id: Bytes
     block: i32
     timestamp: i32

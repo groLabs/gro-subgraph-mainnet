@@ -1,14 +1,14 @@
 // @ts-nocheck
 import { BigInt } from '@graphprotocol/graph-ts';
-import { ClaimEvent } from '../types/claim';
+import { StakerClaimEvent } from '../types/stakerClaim';
 
 
 // @dev: parsing functions must be different per event type; otherwise, AssemblyScript
 //       will complain on non-existing functions from an event
 
-export function parseClaimV1Event<T>(ev: T): ClaimEvent {
+export function parseClaimV1Event<T>(ev: T): StakerClaimEvent {
     const logIndex = ev.logIndex.toI32();
-    const event = new ClaimEvent(
+    const event = new StakerClaimEvent(
         ev.transaction.hash.concatI32(logIndex),
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
@@ -23,9 +23,9 @@ export function parseClaimV1Event<T>(ev: T): ClaimEvent {
     return event;
 }
 
-export function parseClaimV2Event<T>(ev: T): ClaimEvent {
+export function parseClaimV2Event<T>(ev: T): StakerClaimEvent {
     const logIndex = ev.logIndex.toI32();
-    const event = new ClaimEvent(
+    const event = new StakerClaimEvent(
         ev.transaction.hash.concatI32(logIndex),
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),
@@ -40,9 +40,9 @@ export function parseClaimV2Event<T>(ev: T): ClaimEvent {
     return event;
 }
 
-export function parseMultiClaimV2Event<T>(ev: T): ClaimEvent {
+export function parseMultiClaimV2Event<T>(ev: T): StakerClaimEvent {
     const logIndex = ev.logIndex.toI32();
-    const event = new ClaimEvent(
+    const event = new StakerClaimEvent(
         ev.transaction.hash.concatI32(logIndex),
         ev.block.number.toI32(),
         ev.block.timestamp.toI32(),

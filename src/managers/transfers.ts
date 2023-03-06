@@ -46,11 +46,9 @@ export const manageTransfer = (
     // case A -> if from == 0x, deposit (mint)
     // case B -> if to == 0x, withdrawal (burn)
     // case C -> else, transfer between users (transfer_in & transfer_out)
-    // if (ev.fromAddress == Address.zero()) {
     if (ev.fromAddress == ADDR.ZERO) {
         userAddressIn = ev.toAddress;
         type = 'core_deposit';
-    // } else if (ev.toAddress == Address.zero()) {
     } else if (ev.toAddress == ADDR.ZERO) {
         userAddressOut = ev.fromAddress;
         type = 'core_withdrawal';
