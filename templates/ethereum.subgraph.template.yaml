@@ -315,6 +315,7 @@ dataSources:
           receipt: true
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
+          receipt: true
       file: ./src/mappings/gvt.ts
 # *******************************************************************************************
 # ***********   P W R D   *******************************************************************
@@ -346,6 +347,7 @@ dataSources:
           handler: handleTransfer
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
+          receipt: true
       file: ./src/mappings/pwrd.ts
 # *******************************************************************************************
 # ***********   G R O   *********************************************************************
