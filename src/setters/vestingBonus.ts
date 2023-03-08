@@ -29,7 +29,7 @@ export const initVestingBonus = (
     if (!vestingBonus) {
         vestingBonus = new VestingBonus(id);
         vestingBonus.user_address = userAddress;
-        vestingBonus.locked_gro = NUM.ZERO;
+        vestingBonus.locked_gro = NUM.ZERO;  //TODO: never updated -> to be removed
         vestingBonus.net_reward = NUM.ZERO;
         vestingBonus.claim_now = NUM.ZERO;
         vestingBonus.vest_all = NUM.ZERO;
@@ -147,20 +147,16 @@ export const updateGlobalTimeStamp = (
 }
 
 // Events <LogExit> & <LogInstantExit> from GROVesting
-// TODO: perhaps do it through managers?
 export const updateExit = (
     userAddress: Bytes,
     vestingAddress: Bytes,
-    vestingAmount: BigDecimal,
-    totalLockedAmount: BigDecimal,
-    penaltyAmount: BigDecimal,
+    vestingAmount: BigDecimal,      // amount
+    totalLockedAmount: BigDecimal,  // totalLockedAmount
+    penaltyAmount: BigDecimal,      // penalty
     isInstantExit: boolean,
 ): void => {
-    // Step 0: load entities
     let md = initMD();
-    let vestingBonus = initVestingBonus(Address.fromBytes(userAddress), false);
     // Step 1: update total_bonus
-    // call function
     md = updateTotalBonus(
         md,
         penaltyAmount,
@@ -176,12 +172,13 @@ export const updateExit = (
         false
     );
     // Step 4: update vesting_gro
-    // TODO: rename by total_gro?
-    if (!isInstantExit)
-        vestingBonus.vesting_gro = vestingBonus.vesting_gro.plus(vestingAmount);
-    // Step 5: Save changes to entities
+    if (!isInstantExit) {
+        let vestingBonus = initVestingBonus(userAddress, false);
+        vestingBonus.vesting_gro = vestingBonus.vesting_gro
+            .minus(vestingAmount);
+        vestingBonus.save();
+    }
     md.save();
-    vestingBonus.save();
 }
 
 export const updateInitUnlockedPercent = (
