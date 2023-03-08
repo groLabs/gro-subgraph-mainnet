@@ -48,15 +48,15 @@ export const manageStakerDeposit = (
     setUser(ev.userAddress);
 
     // Step 2: Manage Transaction
-    setStakerDepoWithdrawTx(ev);
+    const tx = setStakerDepoWithdrawTx(ev, false);
 
     // Step 3: Manage Pools
     setPools(
-        ev.type,
-        ev.userAddress,
-        ev.poolId,
-        ev.contractAddress,
-        ev.coinAmount,
+        tx.type,
+        tx.user_address,
+        tx.pool_id,
+        tx.contract_address,
+        tx.coin_amount,
     );
 
     // Step 4: Create Totals for Staker-only users

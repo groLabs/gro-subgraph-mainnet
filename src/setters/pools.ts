@@ -1,14 +1,10 @@
+import { NUM } from '../utils/constants';
 import { Pool } from '../../generated/schema';
 import { getRewardDebt } from '../utils/staker';
-import { tokenToDecimal } from '../utils/tokens';
 import {
     Bytes,
-    BigInt,
+    BigDecimal,
 } from '@graphprotocol/graph-ts';
-import {
-    NUM,
-    DECIMALS,
-} from '../utils/constants';
 
 
 const initPool = (
@@ -30,15 +26,15 @@ const initPool = (
     return pool;
 }
 
+// @dev: Reward = current reward from deposit/withdrawal/claim - last reward from deposit/withdrawal/claim
 export const setPools = (
     type: string,
     userAddress: Bytes,
     poolId: i32,
     contractAddress: Bytes,
-    coinAmount: BigInt,
+    coinAmount: BigDecimal,
 ): void => {
     let pool = initPool(userAddress, poolId);
-    const amount = tokenToDecimal(coinAmount, 18, DECIMALS);
     // Retrieve rewards debt from function userInfo() in staker contract
     // when there is a deposit, withdrawal or claim
     const currentRewardDebt = getRewardDebt(
@@ -46,14 +42,13 @@ export const setPools = (
         userAddress,
         poolId
     );
-    // Reward = current reward from deposit/withdrawal/claim - last reward from deposit/withdrawal/claim
     const currentNetReward = currentRewardDebt.minus(pool.reward_debt);
     if (type === 'claim' || type === 'multiclaim') {
         pool.net_reward = pool.net_reward.plus(currentNetReward);
     } else if (type === 'staker_deposit') {
-        pool.balance = pool.balance.plus(amount);
+        pool.balance = pool.balance.plus(coinAmount);
     } else if (type === 'staker_withdrawal') {
-        pool.balance = pool.balance.minus(amount);
+        pool.balance = pool.balance.minus(coinAmount);
     }
     pool.reward_debt = currentRewardDebt;
     pool.save();

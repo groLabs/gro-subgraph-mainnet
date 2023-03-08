@@ -22,6 +22,7 @@ import {
     LogSetPool as LogSetPoolV1,
     LogUpdatePool as LogUpdatePoolV1,
     LogGroPerBlock as LogGroPerBlockV1,
+    LogEmergencyWithdraw as LogEmergencyWithdrawV1
 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
 import {
     LogClaim as LogClaimV2,
@@ -32,6 +33,7 @@ import {
     LogSetPool as LogSetPoolV2,
     LogUpdatePool as LogUpdatePoolV2,
     LogGroPerBlock as LogGroPerBlockV2,
+    LogEmergencyWithdraw as LogEmergencyWithdrawV2,
 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
 
 
@@ -62,12 +64,22 @@ export function handleDepositV2(event: LogDepositV2): void {
 
 export function handleWithdrawV1(event: LogWithdrawV1): void {
     const ev = parseStakerWithdrawalEvent(event);
-    manageStakerWithdrawal(ev);
+    manageStakerWithdrawal(ev, false);
 }
 
 export function handleWithdrawV2(event: LogWithdrawV2): void {
     const ev = parseStakerWithdrawalEvent(event);
-    manageStakerWithdrawal(ev);
+    manageStakerWithdrawal(ev, false);
+}
+
+export function handleEmergencyWithdrawV1(event: LogEmergencyWithdrawV1): void {
+    const ev = parseStakerWithdrawalEvent(event);
+    manageStakerWithdrawal(ev, true);
+}
+
+export function handleEmergencyWithdrawV2(event: LogEmergencyWithdrawV2): void {
+    const ev = parseStakerWithdrawalEvent(event);
+    manageStakerWithdrawal(ev, true);
 }
 
 export function handleAddPoolV1(event: LogAddPoolV1): void {

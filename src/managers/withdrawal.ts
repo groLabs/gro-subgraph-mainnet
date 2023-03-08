@@ -54,20 +54,21 @@ export const manageCoreWithdrawal = (
 
 export const manageStakerWithdrawal = (
     ev: DepoWithdraw,
+    isEmergencyWithdrawal: boolean
 ): void => {
     // Step 1: Manage User
     setUser(ev.userAddress);
 
     //Step 2: Manage Transaction
-    setStakerDepoWithdrawTx(ev);
+    const tx = setStakerDepoWithdrawTx(ev, isEmergencyWithdrawal);
 
     //Step 3: Manage Pools
     setPools(
-        ev.type,
-        ev.userAddress,
-        ev.poolId,
-        ev.contractAddress,
-        ev.coinAmount,
+        tx.type,
+        tx.user_address,
+        tx.pool_id,
+        tx.contract_address,
+        tx.coin_amount,
     );
 
     // Step 4: Create Totals for Staker-only users

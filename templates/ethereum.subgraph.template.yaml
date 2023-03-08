@@ -413,6 +413,8 @@ dataSources:
           handler: handleDepositV1
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
           handler: handleWithdrawV1
+        - event: LogEmergencyWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleEmergencyWithdrawV1
         - event: LogAddPool(indexed uint256,uint256,indexed address)
           handler: handleAddPoolV1
         - event: LogSetPool(indexed uint256,uint256)
@@ -456,6 +458,8 @@ dataSources:
           handler: handleDepositV2
         - event: LogWithdraw(indexed address,indexed uint256,uint256)
           handler: handleWithdrawV2
+        - event: LogEmergencyWithdraw(indexed address,indexed uint256,uint256)
+          handler: handleEmergencyWithdrawV1
         - event: LogAddPool(indexed uint256,uint256,indexed address)
           handler: handleAddPoolV2
         - event: LogSetPool(indexed uint256,uint256)

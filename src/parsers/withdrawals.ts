@@ -90,7 +90,7 @@ export function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.address,                     // from
         ev.params.user,                 // to
         ev.params.amount,               // coinAmount
-        BigInt.fromString('0'),         // usdAmount // TODO **************************
+        BigInt.fromString('0'),         // usdAmount // (not needed)
         poolId,                         // poolId
     )
     return event;

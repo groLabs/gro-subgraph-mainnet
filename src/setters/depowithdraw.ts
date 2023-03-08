@@ -83,10 +83,14 @@ export const setEmergencyWithdrawTx = (
 }
 
 // staker deposits & withdrawals
+// emergencyWithdrawals only affect PWRD: in this case, the factor needs to be applied
 export const setStakerDepoWithdrawTx = (
     ev: DepoWithdraw,
+    isEmergencyWithdrawal: boolean
 ): TransferTx => {
     const token = getTokenByPoolId(ev.poolId);
+    const factor = getFactor(token);
+    const cointAmount = tokenToDecimal(ev.coinAmount, 18, DECIMALS);
     let tx = new TransferTx(ev.id);
     tx.contract_address = ev.contractAddress;
     tx.block_number = ev.block;
@@ -97,9 +101,11 @@ export const setStakerDepoWithdrawTx = (
     tx.user_address = ev.userAddress;
     tx.from_address = ev.fromAddress;
     tx.to_address = ev.toAddress;
-    tx.coin_amount = tokenToDecimal(ev.coinAmount, 18, DECIMALS);
+    tx.coin_amount = isEmergencyWithdrawal
+        ? cointAmount.times(factor)
+        : cointAmount;
     tx.usd_amount = tokenToDecimal(ev.usdAmount, 18, DECIMALS);
-    tx.factor = getFactor(token);
+    tx.factor = factor;
     tx.pool_id = ev.poolId;
     tx.save();
     return tx;

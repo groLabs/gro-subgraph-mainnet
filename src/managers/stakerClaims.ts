@@ -14,16 +14,16 @@ export const manageClaim = (
     setUser(ev.userAddress);
 
     // Step 2: Manage Transaction
-    setClaimTx(ev);
+    const tx = setClaimTx(ev);
 
     // Step 3: Manage Pools
     for (let i = 0; i < ev.pid.length; i++) {
         setPools(
-            ev.type,
-            ev.userAddress,
+            tx.type,
+            tx.user_address,
             ev.pid[i],
-            ev.contractAddress,
-            ev.amount,
+            tx.contract_address,
+            tx.amount,
         );
     }
 
