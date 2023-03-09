@@ -2,9 +2,9 @@
   "name": "gro-subgraph-eth",
   "license": "UNLICENSED",
   "scripts": {
-    "eth-g2-prerelease-hosted": "SCOPE=g2-prerelease BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:hosted:prerelease",
-    "eth-g2-hosted": "SCOPE=g2 BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:hosted",
-    "eth-g2-pre-prod": "SCOPE=g2 BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:pre-prod",
+    "eth-test-hosted": "SCOPE=g2-prerelease BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:hosted:prerelease",
+    "eth-prod-hosted": "SCOPE=g2 BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:hosted",
+    "eth-pre-prod-hosted": "SCOPE=g2 BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:pre-prod",
     "eth-test-studio": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:studio",
     "eth-prod-studio": "SCOPE=g2 BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:g2:studio",
     "eth-test-local": "SCOPE=test BLOCKCHAIN=ethereum NETWORK=mainnet yarn prepare:subgraph && yarn deploy:mainnet:test:local",
