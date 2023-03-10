@@ -24,13 +24,13 @@ export const manageCoreWithdrawal = (
     logs: Log[],
     token: string
 ): void => {
-    // Creates user if not existing yet
+    // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
-    // Stores withdrawal tx
+    // Stores withdrawal tx in entity <TransferTx>
     const tx = setDepoWithdrawTx(ev, logs, token);
 
-    // Updates user totals
+    // Updates user totals in entity <Totals>
     setTotals(
         tx.type,
         token,
@@ -40,14 +40,14 @@ export const manageCoreWithdrawal = (
         tx.factor,
     );
 
-    // Updates total supply
+    // Updates total supply in entity <CoreData>
     updateTotalSupply(
         'withdrawal',
         tx.coin_amount,
         token,
     );
 
-    // Updates GToken factor
+    // Updates GToken factor in entity <Factor>
     if (token === 'pwrd') {
         setPwrdFactor();
     } else if (token === 'gvt') {
@@ -61,13 +61,13 @@ export const manageStakerWithdrawal = (
     ev: DepoWithdraw,
     isEmergencyWithdrawal: boolean
 ): void => {
-    // Creates user if not existing yet
+    // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
-    // Stores staker withdrawal tx
+    // Stores staker withdrawal tx in entity <TransferTx>
     const tx = setStakerDepoWithdrawTx(ev, isEmergencyWithdrawal);
 
-    // Updates user-related pool data
+    // Updates user-related pool data in entity <Pool>
     setPools(
         tx.type,
         tx.user_address,
@@ -76,7 +76,7 @@ export const manageStakerWithdrawal = (
         tx.coin_amount,
     );
 
-    // Creates user totals if not existing yet (e.g.: a user that didn't do
-    // any deposit or withdrawal before staking)
+    // Creates user totals if not existing yet in entity <Totals>
+    // (e.g.: a user that didn't do any deposit/withdrawal before staking)
     initTotals(ev.userAddress, true);
 }

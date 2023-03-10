@@ -10,14 +10,14 @@ import { setClaimTx } from '../setters/staker';
 export const manageClaim = (
     ev: StakerClaimEvent,
 ): void => {
-    // Creates user if not existing yet
+    // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
-    // Stores claim tx
+    // Stores claim tx in entity <StakerClaimTx>
     const tx = setClaimTx(ev);
 
-    // Updates user-related pool data (can be multiple pools in case
-    // of <LogMultiClaim> event)
+    // Updates user-related pool data in entity <Pool>
+    // (can be multiple pools in case of <LogMultiClaim> event)
     for (let i = 0; i < ev.pid.length; i++) {
         setPools(
             tx.type,
@@ -28,7 +28,7 @@ export const manageClaim = (
         );
     }
 
-    // Creates user totals if not existing yet (e.g.: a user that didn't do
-    // any deposit or withdrawal before claiming)
+    // Creates user totals if not existing yet in entity <Totals>
+    // (e.g.: a user that didn't do any deposit/withdrawal before claiming)
     initTotals(ev.userAddress, true);
 }

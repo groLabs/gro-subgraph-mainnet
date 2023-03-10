@@ -17,10 +17,10 @@ function buildTransfer(
     type: string,
     token: string,
 ): void {
-    // Creates user if not existing yet
+    // Creates user if not existing yet in entity <User>
     setUser(userAddress);
 
-    // Stores transfer tx
+    // Stores transfer tx in entity <TransferTx>
     const tx = setTransferTx(
         ev,
         userAddress,
@@ -28,7 +28,7 @@ function buildTransfer(
         token,
     );
 
-    // Updates user totals
+    // Updates user totals in entity <Totals>
     setTotals(
         type,
         token,

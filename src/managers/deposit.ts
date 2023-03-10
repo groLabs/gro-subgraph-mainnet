@@ -20,13 +20,13 @@ export const manageCoreDeposit = (
     logs: Log[],
     token: string
 ): void => {
-    // Creates user if not existing yet
+    // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
-    // Stores deposit tx
+    // Stores deposit tx in entity <TransferTx>
     const tx = setDepoWithdrawTx(ev, logs, token);
 
-    // Updates user totals
+    // Updates user totals in entity <Totals>
     setTotals(
         tx.type,
         token,
@@ -36,7 +36,7 @@ export const manageCoreDeposit = (
         tx.factor,
     );
 
-    // Updates total supply
+    // Updates total supply in entity <CoreData>
     updateTotalSupply(
         'deposit',
         tx.coin_amount,
@@ -49,13 +49,13 @@ export const manageCoreDeposit = (
 export const manageStakerDeposit = (
     ev: DepoWithdraw,
 ): void => {
-    // Creates user if not existing yet
+    // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
-    // Stores staker deposit tx
+    // Stores staker deposit tx in entity <TransferTx>
     const tx = setStakerDepoWithdrawTx(ev, false);
 
-    // Updates user-related pool data
+    // Updates user-related pool data in entity <Pool>
     setPools(
         tx.type,
         tx.user_address,
@@ -64,7 +64,7 @@ export const manageStakerDeposit = (
         tx.coin_amount,
     );
 
-    // Creates user totals if not existing yet (e.g.: a user that didn't do
-    // any deposit or withdrawal before staking)
+    // Creates user totals if not existing yet in entity <Totals>
+    // (e.g.: a user that didn't do any deposit/withdrawal before staking)
     initTotals(ev.userAddress, true);
 }

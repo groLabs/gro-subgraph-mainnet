@@ -16,10 +16,10 @@ export const manageEmergencyCoreWithdrawal = (
     ev: DepoWithdraw,
     logs: Log[],
 ): void => {
-    // Stores withdrawal tx
+    // Stores withdrawal tx in entity <TransferTx>
     const tx = setEmergencyWithdrawTx(ev, logs);
 
-    // Updates user totals
+    // Updates user totals in entity <Totals>
     setTotals(
         tx.type,
         tx.token,
@@ -29,14 +29,14 @@ export const manageEmergencyCoreWithdrawal = (
         tx.factor,
     );
 
-    // Updates total supply
+    // Updates total supply in entity <CoreData>
     updateTotalSupply(
         'withdrawal',
         tx.coin_amount,
         tx.token,
     );
 
-    // Updates GToken factor
+    // Updates GToken factor in entity <Factor>
     if (tx.token === 'pwrd') {
         setPwrdFactor();
     } else if (tx.token === 'gvt') {

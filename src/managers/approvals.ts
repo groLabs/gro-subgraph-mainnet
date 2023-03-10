@@ -13,12 +13,12 @@ export const manageApproval = (
     ev: ApprovalEvent,
     token: string
 ): void => {
-    // Creates user if not existing yet
+    // Creates user if not existing yet in entity <User>
     setUser(ev.ownerAddress);
 
-    // Stores approval tx
+    // Stores approval tx in entity <ApprovalTx>
     setApprovalTx(ev, token);
 
-    // Creates user totals if not existing yet
+    // Creates user totals if not existing yet in entity <Totals>
     initTotals(ev.ownerAddress, true);
 }
