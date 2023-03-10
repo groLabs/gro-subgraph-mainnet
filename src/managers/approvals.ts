@@ -4,17 +4,21 @@ import { ApprovalEvent } from '../types/approval';
 import { setApprovalTx } from '../setters/approvals';
 
 
+/// @notice Manages approval events 
+/// @param ev the approval event
+/// @param token the approval token (gro, gvt or pwrd)
+/// @dev only handles approvals confirmed by users, but not approval
+///      updates (e.g.: during deposits and withdrawals)
 export const manageApproval = (
     ev: ApprovalEvent,
     token: string
 ): void => {
-
-    // Step 1: Manage User
+    // Creates user if not existing yet
     setUser(ev.ownerAddress);
 
-    // Step 2: Manage Transaction
+    // Stores approval tx
     setApprovalTx(ev, token);
 
-    // Step 3: Create Totals
+    // Creates user totals if not existing yet
     initTotals(ev.ownerAddress, true);
 }

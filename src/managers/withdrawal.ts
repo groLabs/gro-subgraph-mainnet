@@ -15,19 +15,22 @@ import {
 } from '../setters/depowithdraw';
 
 
-// Manage core withdrawals
+/// @notice Manages core withdrawals from WithdrawtHandler (pre-G2) and GRouter (post-G2)
+/// @param ev the parsed withdrawal event
+/// @param logs the logs within the withdrawal transaction
+/// @param token the withdrawal token (gvt or pwrd)
 export const manageCoreWithdrawal = (
     ev: DepoWithdraw,
     logs: Log[],
     token: string
 ): void => {
-    // Step 1: Manage User
+    // Creates user if not existing yet
     setUser(ev.userAddress);
 
-    // Step 2: Manage Transaction
+    // Stores withdrawal tx
     const tx = setDepoWithdrawTx(ev, logs, token);
 
-    // Step 3: Manage Totals
+    // Updates user totals
     setTotals(
         tx.type,
         token,
@@ -37,14 +40,14 @@ export const manageCoreWithdrawal = (
         tx.factor,
     );
 
-    // Update total supply
+    // Updates total supply
     updateTotalSupply(
         'withdrawal',
         tx.coin_amount,
         token,
     );
 
-    // Update factor
+    // Updates GToken factor
     if (token === 'pwrd') {
         setPwrdFactor();
     } else if (token === 'gvt') {
@@ -52,17 +55,19 @@ export const manageCoreWithdrawal = (
     }
 }
 
+/// @notice Manages staker withdrawals
+/// @param ev the parsed withdrawal event
 export const manageStakerWithdrawal = (
     ev: DepoWithdraw,
     isEmergencyWithdrawal: boolean
 ): void => {
-    // Step 1: Manage User
+    // Creates user if not existing yet
     setUser(ev.userAddress);
 
-    //Step 2: Manage Transaction
+    // Stores staker withdrawal tx
     const tx = setStakerDepoWithdrawTx(ev, isEmergencyWithdrawal);
 
-    //Step 3: Manage Pools
+    // Updates user-related pool data
     setPools(
         tx.type,
         tx.user_address,
@@ -71,6 +76,7 @@ export const manageStakerWithdrawal = (
         tx.coin_amount,
     );
 
-    // Step 4: Create Totals for Staker-only users
+    // Creates user totals if not existing yet (e.g.: a user that didn't do
+    // any deposit or withdrawal before staking)
     initTotals(ev.userAddress, true);
 }

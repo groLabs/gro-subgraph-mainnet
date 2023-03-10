@@ -11,19 +11,22 @@ import {
 } from '../setters/depowithdraw';
 
 
-// Manage core deposit
+/// @notice Manages core deposits from DepositHandler (pre-G2) and GRouter (post-G2)
+/// @param ev the parsed deposit event
+/// @param logs the logs within the deposit transaction
+/// @param token the deposit token (gvt or pwrd)
 export const manageCoreDeposit = (
     ev: DepoWithdraw,
     logs: Log[],
     token: string
 ): void => {
-    // Step 1: Manage User
+    // Creates user if not existing yet
     setUser(ev.userAddress);
 
-    // Step 2: Manage Transaction
+    // Stores deposit tx
     const tx = setDepoWithdrawTx(ev, logs, token);
 
-    // Step 3: Manage Totals
+    // Updates user totals
     setTotals(
         tx.type,
         token,
@@ -33,7 +36,7 @@ export const manageCoreDeposit = (
         tx.factor,
     );
 
-    // Step 4: Update total supply
+    // Updates total supply
     updateTotalSupply(
         'deposit',
         tx.coin_amount,
@@ -41,16 +44,18 @@ export const manageCoreDeposit = (
     );
 }
 
+/// @notice Manages staker deposits
+/// @param ev the parsed deposit event
 export const manageStakerDeposit = (
     ev: DepoWithdraw,
 ): void => {
-    // Step 1: Manage User
+    // Creates user if not existing yet
     setUser(ev.userAddress);
 
-    // Step 2: Manage Transaction
+    // Stores staker deposit tx
     const tx = setStakerDepoWithdrawTx(ev, false);
 
-    // Step 3: Manage Pools
+    // Updates user-related pool data
     setPools(
         tx.type,
         tx.user_address,
@@ -59,6 +64,7 @@ export const manageStakerDeposit = (
         tx.coin_amount,
     );
 
-    // Step 4: Create Totals for Staker-only users
+    // Creates user totals if not existing yet (e.g.: a user that didn't do
+    // any deposit or withdrawal before staking)
     initTotals(ev.userAddress, true);
 }

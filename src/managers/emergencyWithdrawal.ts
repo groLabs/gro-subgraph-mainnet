@@ -9,16 +9,17 @@ import {
 } from '../setters/factors';
 
 
-// Manage core withdrawals
+/// @notice Manages emergency core withdrawals from EmergencytHandler (pre-G2)
+/// @param ev the parsed withdrawal event
+/// @param logs the logs within the withdrawal transaction
 export const manageEmergencyCoreWithdrawal = (
     ev: DepoWithdraw,
     logs: Log[],
 ): void => {
-
-    // Step 1: Manage Transaction
+    // Stores withdrawal tx
     const tx = setEmergencyWithdrawTx(ev, logs);
 
-    // Step 2: Manage Totals
+    // Updates user totals
     setTotals(
         tx.type,
         tx.token,
@@ -28,14 +29,14 @@ export const manageEmergencyCoreWithdrawal = (
         tx.factor,
     );
 
-    // Step 3: Update total supply
+    // Updates total supply
     updateTotalSupply(
         'withdrawal',
         tx.coin_amount,
         tx.token,
     );
 
-    // Step 4: Update factor
+    // Updates GToken factor
     if (tx.token === 'pwrd') {
         setPwrdFactor();
     } else if (tx.token === 'gvt') {

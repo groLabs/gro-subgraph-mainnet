@@ -5,18 +5,19 @@ import { initTotals } from '../setters/totals';
 import { setClaimTx } from '../setters/staker';
 
 
-// Claim from Staker
+/// @notice Manages staker claims
+/// @param ev the parsed claim event
 export const manageClaim = (
     ev: StakerClaimEvent,
 ): void => {
-
-    // Step 1: Manage User
+    // Creates user if not existing yet
     setUser(ev.userAddress);
 
-    // Step 2: Manage Transaction
+    // Stores claim tx
     const tx = setClaimTx(ev);
 
-    // Step 3: Manage Pools
+    // Updates user-related pool data (can be multiple pools in case
+    // of <LogMultiClaim> event)
     for (let i = 0; i < ev.pid.length; i++) {
         setPools(
             tx.type,
@@ -27,6 +28,7 @@ export const manageClaim = (
         );
     }
 
-    // Step 4: Create Totals for staker-only users
+    // Creates user totals if not existing yet (e.g.: a user that didn't do
+    // any deposit or withdrawal before claiming)
     initTotals(ev.userAddress, true);
 }

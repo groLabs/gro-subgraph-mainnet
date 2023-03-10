@@ -6,16 +6,21 @@ import { TransferEvent } from '../types/transfer';
 import { setTransferTx } from '../setters/transfers';
 
 
+/// @notice Builds the transfer tx
+/// @param ev the parsed transfer event
+/// @param userAddress the user address
+/// @param type the transfer type (deposit, withdrawal, transfer_in & transfer_out)
+/// @param token the transfer token (gvt, pwrd & gro)
 function buildTransfer(
     ev: TransferEvent,
     userAddress: Bytes,
     type: string,
     token: string,
 ): void {
-    // Step 1: Manage User
+    // Creates user if not existing yet
     setUser(userAddress);
 
-    // Step 2: Manage Transaction
+    // Stores transfer tx
     const tx = setTransferTx(
         ev,
         userAddress,
@@ -23,7 +28,7 @@ function buildTransfer(
         token,
     );
 
-    // Step 3: Manage Totals
+    // Updates user totals
     setTotals(
         type,
         token,
@@ -34,6 +39,12 @@ function buildTransfer(
     );
 }
 
+/// @notice Manages transfers
+/// @param ev the parsed transfer event
+/// @param token the transfer token (gvt, pwrd or gro)
+/// @dev this function mainly handles non deposit & withdrawal transfers,
+///      however, there are mint txs that create gvt out of a deposit tx
+///      i.e.: harvest event
 export const manageTransfer = (
     ev: TransferEvent,
     token: string
@@ -42,7 +53,7 @@ export const manageTransfer = (
     let userAddressIn = ADDR.ZERO;
     let userAddressOut = ADDR.ZERO;
 
-    // Determine event type (deposit, withdrawal or transfer):
+    // Determines event type (deposit, withdrawal or transfer):
     // case A -> if from == 0x, deposit (mint)
     // case B -> if to == 0x, withdrawal (burn)
     // case C -> else, transfer between users (transfer_in & transfer_out)
@@ -57,7 +68,7 @@ export const manageTransfer = (
         userAddressOut = ev.fromAddress;
     }
 
-    // Create one tx (mint OR burn) or two txs (transfer_in AND transfer_out)
+    // Creates one tx (mint OR burn) or two txs (transfer_in AND transfer_out)
     if (type !== '') {
         let userAddress = (type == 'core_deposit')
             ? userAddressIn
