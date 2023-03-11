@@ -1,3 +1,19 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Parses deposit events from DepositHandler, GRouter & Staker contracts
+///     - @ts-nocheck is enabled to handle different contract versions with same params
+
 // @ts-nocheck
 import { BigInt } from '@graphprotocol/graph-ts';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
@@ -7,7 +23,10 @@ import {
 } from '../utils/constants';
 
 
-// parse core deposit events
+/// @notice Parses <LogNewDeposit> events from DepositHandler v1, v2 & v3 contracts
+/// @dev ev.params.user is foreign key to User.id
+/// @param ev the deposit event
+/// @return parsed deposit in <DepoWithdrawEvent> class instance
 export function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
     const logIndex = ev.logIndex.toI32();
     const event = new DepoWithdrawEvent(
@@ -17,7 +36,7 @@ export function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.transaction.hash,
         ev.address,
         'core_deposit',
-        ev.params.user,                 // links with User.id,
+        ev.params.user,                 // FK to User.id,
         ADDR.ZERO,                      // from
         ev.params.user,                 // to
         BigInt.fromString('0'),         // coinAmount
@@ -27,7 +46,10 @@ export function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-// parse core G2 deposit events
+/// @notice Parses <LogDeposit> & <LogLegacyDeposit> events from GRouter contract
+/// @dev ev.params.sender is foreign key to User.id
+/// @param ev the deposit event
+/// @return parsed deposit in <DepoWithdrawEvent> class instance
 export function parseGRouterDepositEvent<T>(ev: T): DepoWithdrawEvent {
     const logIndex = ev.logIndex.toI32();
     const event = new DepoWithdrawEvent(
@@ -37,7 +59,7 @@ export function parseGRouterDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.transaction.hash,
         ev.address,
         'core_deposit',
-        ev.params.sender,               // links with User.id,
+        ev.params.sender,               // FK to User.id,
         ADDR.ZERO,                      // from
         ev.params.sender,               // to
         ev.params.trancheAmount,        // coinAmount
@@ -47,7 +69,10 @@ export function parseGRouterDepositEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-// parse staker deposit events
+/// @notice Parses <LogDeposit> events from Staker v1 & v2 contracts
+/// @dev ev.params.user is foreign key to User.id
+/// @param ev the deposit event
+/// @return parsed deposit in <DepoWithdrawEvent> class instance
 export function parseStakerDepositEvent<T>(ev: T): DepoWithdrawEvent {
     const logIndex = ev.logIndex.toI32();
     const poolId = (ev.params.pid)
@@ -60,11 +85,11 @@ export function parseStakerDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.transaction.hash,
         ev.address,
         'staker_deposit',
-        ev.params.user,                 // links with User.id,
+        ev.params.user,                 // FK to User.id,
         ev.params.user,                 // from
         ev.address,                     // to
         ev.params.amount,               // coinAmount
-        BigInt.fromString('0'),         // usdAmount // TODO *******
+        BigInt.fromString('0'),         // usdAmount (TODO)
         poolId,                         // poolId
     )
     return event;

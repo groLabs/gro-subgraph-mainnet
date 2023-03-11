@@ -1,3 +1,19 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Parses withdrawal events from WithdrawHandler, GRouter & Staker contracts
+///     - @ts-nocheck is enabled to handle different contract versions with same params
+
 // @ts-nocheck
 import {
     ADDR,
@@ -8,9 +24,10 @@ import { getUSDAmountOfShare } from '../utils/tokens';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
 
 
-
-// TODO: user duplicated
-// parse core withdrawal events
+/// @notice Parses <LogNewWithdrawal> events from WithdrawHandler v1, v2 & v3 contracts
+/// @dev ev.params.user is foreign key to User.id
+/// @param ev the withdrawal event
+/// @return parsed withdrawal in <DepoWithdrawEvent> class instance
 export function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     const logIndex = ev.logIndex.toI32();
     const event = new DepoWithdrawEvent(
@@ -20,7 +37,7 @@ export function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.transaction.hash,
         ev.address,
         'core_withdrawal',
-        ev.params.user,                 // links with User.id,
+        ev.params.user,                 // FK to User.id,
         ev.params.user,                 // from
         ADDR.ZERO,                      // to
         BigInt.fromString('0'),         // coinAmount
@@ -30,6 +47,10 @@ export function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
+/// @notice Parses <LogWithdrawal> events from GRouter contract
+/// @dev ev.params.sender is foreign key to User.id
+/// @param ev the withdrawal event
+/// @return parsed withdrawal in <DepoWithdrawEvent> class instance
 export function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
     const logIndex = ev.logIndex.toI32();
     const shareAmount = ev.params.calcAmount;
@@ -42,7 +63,7 @@ export function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
         ev.transaction.hash,
         ev.address,
         'core_withdrawal',
-        ev.params.sender,               // links with User.id,
+        ev.params.sender,               // FK to User.id,
         ev.params.sender,               // from
         ADDR.ZERO,                      // to
         ev.params.tokenAmount,          // coinAmount
@@ -52,8 +73,10 @@ export function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-// TODO: user duplicated
-// parse core withdrawal events
+/// @notice Parses <LogEmergencyWithdrawal> events from EmergencyHandler contract
+/// @dev Event is emitted without data- user is retrieved afterwards through tx logs
+/// @param ev the emergency withdrawal event
+/// @return parsed emergency withdrawal in <DepoWithdrawEvent> class instance
 export function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     const logIndex = ev.logIndex.toI32();
     const event = new DepoWithdrawEvent(
@@ -63,9 +86,9 @@ export function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.transaction.hash,
         ev.address,
         'core_withdrawal',
-        ADDR.ZERO,
-        ADDR.ZERO,
-        ADDR.ZERO,
+        ADDR.ZERO,                      // FK to User.id,
+        ADDR.ZERO,                      // from
+        ADDR.ZERO,                      // to
         BigInt.fromString('0'),         // coinAmount
         BigInt.fromString('0'),         // usdAmount
         NO_POOL,                        // poolId
@@ -73,7 +96,11 @@ export function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     return event;
 }
 
-// parse staker withdrawal events
+/// @notice Parses <LogWithdraw> & <LogEmergencyWithdraw> events from 
+///         Staker v1 & v2 contracts
+/// @dev ev.params.user is foreign key to User.id
+/// @param ev the withdrawal event
+/// @return parsed withdrawal in <DepoWithdrawEvent> class instance
 export function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
     const logIndex = ev.logIndex.toI32();
     const poolId = (ev.params.pid)
@@ -86,11 +113,11 @@ export function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.transaction.hash,
         ev.address,
         'staker_withdrawal',
-        ev.params.user,                 // links with User.id,
+        ev.params.user,                 // FK to User.id,
         ev.address,                     // from
         ev.params.user,                 // to
         ev.params.amount,               // coinAmount
-        BigInt.fromString('0'),         // usdAmount // (not needed)
+        BigInt.fromString('0'),         // usdAmount (not needed)
         poolId,                         // poolId
     )
     return event;
