@@ -1,3 +1,23 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Handles <Approval> & <Transfer> events from Gvt contract
+///     - Transfers from/to Staker contract are excluded
+///     - Deposits are excluded (already managed by DepositHandler & GRouter)
+///     - Withdrawals are excluded (already managed by WithdrawHandler & GRouter)
+/// @dev
+///     - Gvt: 0x3adb04e127b9c0a5d36094125669d4603ac52a0c
+
 import { contracts } from '../../addresses';
 import { parseLogEvent } from '../parsers/log';
 import { tokenToDecimal } from '../utils/tokens';
@@ -28,6 +48,10 @@ import {
 } from '../utils/constants';
 
 
+/// @notice Handles <Approval> events from gvt contract
+/// @param event the approval event
+/// @dev Handles only approvals confirmed by Users; therefore, excluding approval
+///      updates during deposits or withdrawals
 export function handleApproval(event: Approval): void {
     if (isUniqueApproval(event)) {
         const ev = parseApprovalEvent(event);
@@ -35,8 +59,8 @@ export function handleApproval(event: Approval): void {
     }
 }
 
-// Exclude Approval events that update the spend amount during Deposits or Withdrawals
-// From UX perspective, we want to see only Approvals requested by Users
+/// @return True if approval confirmed by User, so there are no other logs within
+///         the same approval transactions (i.e: LogDeposit, LogWithdrawal)
 const isUniqueApproval = (
     ev: Approval
 ): bool => {
@@ -49,8 +73,13 @@ const isUniqueApproval = (
     return true;
 }
 
-// Discard any deposit and withdrawal except if the minted amount belongs
-// to a non deposit handler event (i.e.: harvest event)
+/// @notice Handles <Transfer> events from gvt contract
+/// @param event the transfer event
+/// @dev
+///     - Excludes transfers from/to the Staker contract
+///     - Excludes deposits (already managed by DepositHandler or GRouter)
+///     - Excludes withdrawals (already managed by WithdrawalHandler or GRouter)
+///     - Includes minting transfers (i.e.: harvest events)
 export function handleTransfer(event: Transfer): void {
     const from = event.params.from;
     const to = event.params.to;
@@ -73,6 +102,17 @@ export function handleTransfer(event: Transfer): void {
     }
 }
 
+/// @notice Updates total supply if minting transfer from a harvest event
+/// @param event the transfer event (used to extract the transaction log)
+/// @param from the from address in the transfer event
+/// @param to the to address in the transfer event
+/// @param amount the amount in the transfer event
+/// @dev Considering that:
+///     - Deposits will always have a transfer event with from: 0x => mint
+///     - Withdrawals will always have a transfer event with to: 0x => burn
+///     then...
+/// @return True if burn transfer or mint transfer from DepositHandler or GRouter
+///         False otherwise
 const isDepositOrWithdrawalGVT = (
     event: Transfer,
     from: Address,
@@ -83,6 +123,7 @@ const isDepositOrWithdrawalGVT = (
     if (to == Address.zero()) {
         return true;
     } else if (from == Address.zero()) {
+        // Look for deposit signatures from DepositHandler or GRouter in tx logs
         if (receipt) {
             const logs = parseLogEvent(event.receipt!.logs);
             const gRouterAddress = Address.fromString(contracts.GRouterAddress);
@@ -102,7 +143,8 @@ const isDepositOrWithdrawalGVT = (
                     return true;
                 }
             }
-            // gvt minted out of deposit handler (aka harvest) -> update totalSupply
+            // Update total supply in entity <CoreData>
+            // Means gvt minted out of deposit handler (aka harvest) 
             updateTotalSupply(
                 'deposit',
                 tokenToDecimal(amount, 18, DECIMALS),

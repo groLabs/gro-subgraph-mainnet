@@ -1,3 +1,24 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Handles <LogClaim>, <LogDeposit>, <LogWithdraw>, <LogAddPool>, <LogSetPool>,
+///       <LogUpdatePool>, <LogGroPerBlock> & <LogEmergencyWithdraw> events from
+///       Staker v1 & v2 contracts
+///     - Handles <LogMultiClaim> events from Staker v2 contracts
+/// @dev
+///     - Staker v1: 0x001c249c09090d79dc350a286247479f08c7aad7
+///     - Staker v1: 0x2e32bad45a1c29c1ea27cf4dd588df9e68ed376c
+
 import { parseLogEvent } from '../parsers/log';
 import { manageClaim } from '../managers/stakerClaims';
 import { parseStakerDepositEvent } from '../parsers/deposit';
@@ -37,81 +58,119 @@ import {
 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
 
 
+/// @notice Handles <LogClaim> events from Staker v1 contract
+/// @param event the claim event
 export function handleClaimV1(event: LogClaimV1): void {
     const ev = parseClaimV1Event(event);
     manageClaim(ev);
 }
 
+/// @notice Handles <LogClaim> events from Staker v2 contract
+/// @param event the claim event
 export function handleClaimV2(event: LogClaimV2): void {
     const ev = parseClaimV2Event(event);
     manageClaim(ev);
 }
 
+/// @notice Handles <LogMultiClaim> events from Staker v2 contract
+/// @param event the multi-claim event
 export function handleMultiClaimV2(event: LogMultiClaimV2): void {
     const ev = parseMultiClaimV2Event(event);
     manageClaim(ev);
 }
 
+/// @notice Handles <LogDeposit> events from Staker v1 contract
+/// @param event the deposit event
 export function handleDepositV1(event: LogDepositV1): void {
     const ev = parseStakerDepositEvent(event);
     manageStakerDeposit(ev);
 }
 
+/// @notice Handles <LogDeposit> events from Staker v2 contract
+/// @param event the deposit event
 export function handleDepositV2(event: LogDepositV2): void {
     const ev = parseStakerDepositEvent(event);
     manageStakerDeposit(ev);
 }
 
+/// @notice Handles <LogWithdraw> events from Staker v1 contract
+/// @param event the withdrawal event
 export function handleWithdrawV1(event: LogWithdrawV1): void {
     const ev = parseStakerWithdrawalEvent(event);
     manageStakerWithdrawal(ev, false);
 }
 
+/// @notice Handles <LogWithdraw> events from Staker v2 contract
+/// @param event the withdrawal event
 export function handleWithdrawV2(event: LogWithdrawV2): void {
     const ev = parseStakerWithdrawalEvent(event);
     manageStakerWithdrawal(ev, false);
 }
 
+/// @notice Handles <LogEmergencyWithdraw> events from Staker v1 contract
+/// @param event the emergency withdrawal event
 export function handleEmergencyWithdrawV1(event: LogEmergencyWithdrawV1): void {
     const ev = parseStakerWithdrawalEvent(event);
     manageStakerWithdrawal(ev, true);
 }
 
+/// @notice Handles <LogEmergencyWithdraw> events from Staker v2 contract
+/// @param event the emergency withdrawal event
 export function handleEmergencyWithdrawV2(event: LogEmergencyWithdrawV2): void {
     const ev = parseStakerWithdrawalEvent(event);
     manageStakerWithdrawal(ev, true);
 }
 
+/// @notice Handles <LogAddPool> events from Staker v1 contract
+/// @param event the add pool event
 export function handleAddPoolV1(event: LogAddPoolV1): void {
+    // Updates allocation point & pool share in entity <StakerData>
+    // and total allocation in entity <MasterData>
     updateStakerAllocation(
         event.params.pid,
         event.params.allocPoint,
     );
 }
 
+/// @notice Handles <LogAddPool> events from Staker v2 contract
+/// @param event the add pool event
 export function handleAddPoolV2(event: LogAddPoolV2): void {
+    // Updates allocation point & pool share in entity <StakerData>
+    // and total allocation in entity <MasterData>
     updateStakerAllocation(
         event.params.pid,
         event.params.allocPoint,
     );
 }
 
+/// @notice Handles <LogSetPool> events from Staker v1 contract
+/// @param event the set pool event
 export function handleSetPoolV1(event: LogSetPoolV1): void {
+    // Updates allocation point & pool share in entity <StakerData>
+    // and total allocation in entity <MasterData>
     updateStakerAllocation(
         event.params.pid,
         event.params.allocPoint,
     );
 }
 
+/// @notice Handles <LogSetPool> events from Staker v2 contract
+/// @param event the set pool event
 export function handleSetPoolV2(event: LogSetPoolV2): void {
+    // Updates allocation point & pool share in entity <StakerData>
+    // and total allocation in entity <MasterData>
     updateStakerAllocation(
         event.params.pid,
         event.params.allocPoint,
     );
 }
 
+/// @notice Handles <LogUpdate> events from Staker v1 contract
+/// @param event the update pool event
 export function handleUpdatePoolV1(event: LogUpdatePoolV1): void {
     const logs = parseLogEvent(event.receipt!.logs);
+    // Updates lp supply, acc gro per share, block number
+    // and block timestamp in entity <StakerData>
     updateStakerSupply(
         event.params.pid,
         event.params.lpSupply,
@@ -122,8 +181,12 @@ export function handleUpdatePoolV1(event: LogUpdatePoolV1): void {
     );
 }
 
+/// @notice Handles <LogUpdate> events from Staker v2 contract
+/// @param event the update pool event
 export function handleUpdatePoolV2(event: LogUpdatePoolV2): void {
     const logs = parseLogEvent(event.receipt!.logs);
+    // Updates lp supply, acc gro per share, block number
+    // and block timestamp in entity <StakerData>
     updateStakerSupply(
         event.params.pid,
         event.params.lpSupply,
@@ -134,14 +197,16 @@ export function handleUpdatePoolV2(event: LogUpdatePoolV2): void {
     );
 }
 
+/// @notice Handles <LogGroPerBlock> events from Staker v1 contract
+/// @param event the gro per block event
 export function handleGroPerBlockV1(event: LogGroPerBlockV1): void {
-    updateStakerGroPerBlock(
-        event.params.newGro
-    );
+    // Updates gro per block in entity <MasterData>
+    updateStakerGroPerBlock(event.params.newGro);
 }
 
+/// @notice Handles <LogGroPerBlock> events from Staker v2 contract
+/// @param event the gro per block event
 export function handleGroPerBlockV2(event: LogGroPerBlockV2): void {
-    updateStakerGroPerBlock(
-        event.params.newGro
-    );
+    // Updates gro per block in entity <MasterData>
+    updateStakerGroPerBlock(event.params.newGro);
 }

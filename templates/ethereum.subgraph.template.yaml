@@ -911,31 +911,6 @@ dataSources:
           handler: LogNewTrancheBalance    
       file: ./src/mappings/gtranche.ts
 # *******************************************************************************************
-# ***********   P N L (G^2)   ***************************************************************
-# *******************************************************************************************
-  - kind: ethereum/contract
-    name: PnLG2
-    network: {{network}}
-    source:
-      address: "{{PnLG2Address}}"
-      abi: PnLFixedRate
-      startBlock: {{PnLG2StartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - TBC
-      abis:
-        - name: PnLFixedRate
-          file: ./abis/ethereum/PnLG2.json
-      eventHandlers:
-        - event: LogNewFixedRate(int64)
-          handler: handleLogNewFixedRate
-        - event: LogNewPendingFixedRate(int64)
-          handler: LogNewPendingFixedRate
-      file: ./src/mappings/pnlg2.ts
-# *******************************************************************************************
 # ***********   S T O P - L O S S  L O G I C   **********************************************
 # *******************************************************************************************
   - kind: ethereum/contract

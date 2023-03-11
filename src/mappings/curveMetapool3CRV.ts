@@ -1,29 +1,48 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Handles <Transfer>, <TokenExchange> & <TokenExchangeUnderlying> events
+///       from Curve Metapool contracts
+/// @dev
+///     - Curve Metapool 3CRVPWRD: 0xbcb91e689114b9cc865ad7871845c95241df4105
 
 import { contracts } from '../../addresses';
 import { tokenToDecimal } from '../utils/tokens';
 import { setPoolSwap } from '../setters/poolSwaps';
 import { setTotalSupply } from '../setters/coreData';
 import { setCurvePwrd3crvPrice } from '../setters/price';
-import { Vyper_contract as MetaPool } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import {
     log,
-    Bytes,
     Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
-import {
-    Transfer,
-    TokenExchange,
-    TokenExchangeUnderlying,
-} from '../../generated/CurveMetapool3CRV/Vyper_contract';
 import {
     NUM,
     ADDR,
     DECIMALS,
 } from '../utils/constants';
+import {
+    Transfer,
+    TokenExchange,
+    TokenExchangeUnderlying,
+    Vyper_contract as MetaPool
+} from '../../generated/CurveMetapool3CRV/Vyper_contract';
 
 
+/// @notice Handles <Transfer> events from Curve Metapool 3CRVPWRD contract
+/// @param event the transfer event
 export function handleTransfer(event: Transfer): void {
+    // Updates total supply in entity <CoreData>
     setTotalSupply(
         event.params.sender,
         event.params.receiver,
@@ -32,12 +51,18 @@ export function handleTransfer(event: Transfer): void {
     );
 }
 
+/// @notice Handles <TokenExchange> events from Curve Metapool 3CRVPWRD contract
+/// @param event the token exchange event
 export function handleTokenExchange(event: TokenExchange): void {
     const blockNumber = event.block.number.toI32();
     const blockTimestamp = event.block.timestamp.toI32();
     // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
     if (blockNumber >= 16588464) {
+        // Updates reserves & total supply in entity <PoolData>
+        // and curve_pwrd3crv price in entity <Price>
         setCurvePwrd3crvPrice();
+
+        // Stores swap in entity <PoolSwap>
         setPoolSwap(
             event.params.buyer.concatI32(blockTimestamp).concatI32(4),
             4,
@@ -54,12 +79,18 @@ export function handleTokenExchange(event: TokenExchange): void {
     }
 }
 
+/// @notice Handles <TokenExchangeUnderlying> events from Curve Metapool 3CRVPWRD contract
+/// @param event the token exchange underlying event
 export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): void {
     const blockNumber = event.block.number.toI32();
     const blockTimestamp = event.block.timestamp.toI32();
     // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
     if (blockNumber >= 16588464) {
+        // Updates reserves & total supply in entity <PoolData>
+        // and curve_pwrd3crv price in entity <Price>
         setCurvePwrd3crvPrice();
+
+        // Stores swap in entity <PoolSwap>
         setPoolSwap(
             event.params.buyer.concatI32(blockTimestamp).concatI32(4),
             4,
@@ -76,6 +107,7 @@ export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): v
     }
 }
 
+/// @return virtual price from Curve Metapool 3CRVPWRD contract or 0 if call is reverted
 const getVirtualPrice = (): BigDecimal => {
     const contractAddress = Address.fromString(contracts.CurveMetapool3CRVAddress);
     const contract = MetaPool.bind(contractAddress);

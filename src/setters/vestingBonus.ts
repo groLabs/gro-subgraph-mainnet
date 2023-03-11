@@ -92,10 +92,10 @@ export const updateTotalLockedAmount = (
 // Event <LogExit>, <LogInstantExit> from GROVesting
 // Event <LogBonusClaimed> from GROHodler
 export const updateTotalBonus = (
-    md: MasterData,
     bonusAmount: BigDecimal,
     save: boolean,
 ): MasterData => {
+    let md = initMD();
     md.total_bonus = md.total_bonus.plus(bonusAmount);
     if (bonusAmount.ge(NUM.ZERO)) {
         md.total_bonus_in = md.total_bonus_in.plus(bonusAmount);
@@ -155,16 +155,15 @@ export const updateExit = (
     penaltyAmount: BigDecimal,      // penalty
     isInstantExit: boolean,
 ): void => {
-    let md = initMD();
     // Step 1: update total_bonus
-    md = updateTotalBonus(
-        md,
+    let md = updateTotalBonus(
         penaltyAmount,
         false,
     );
     // Step 2: update total_locked_amount
     if (!isInstantExit && totalLockedAmount.ge(NUM.ZERO))
         md.total_locked_amount = totalLockedAmount;
+
     // Step 3: update global_start_time (Groove)
     md = updateGlobalTimeStamp(
         md,
