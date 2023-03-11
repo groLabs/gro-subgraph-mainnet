@@ -1,5 +1,8 @@
-import { NUM } from '../utils/constants';
 import { Totals } from '../../generated/schema';
+import {
+    NUM,
+    TOKEN as Token,
+} from '../utils/constants';
 import {
     Bytes,
     BigDecimal,
@@ -51,7 +54,7 @@ export const setTotals = (
     factor: BigDecimal,
 ): void => {
     let total = initTotals(userAddress, false);
-    if (coin === 'gro') {
+    if (coin === Token.GRO) {
         if (type === 'core_deposit' || type === 'transfer_in') {
             total.amount_added_gro = total.amount_added_gro.plus(coinAmount);
             total.amount_total_gro = total.amount_total_gro.plus(coinAmount);
@@ -60,12 +63,12 @@ export const setTotals = (
             total.amount_total_gro = total.amount_total_gro.minus(coinAmount);
         }
     } else if (type === 'core_deposit' || type === 'transfer_in') {
-        if (coin === 'gvt') {
+        if (coin === Token.GVT) {
             total.amount_added_gvt = total.amount_added_gvt.plus(coinAmount);
             total.value_added_gvt = total.value_added_gvt.plus(usdAmount);
             total.net_amount_gvt = total.net_amount_gvt.plus(coinAmount);
             total.net_value_gvt = total.net_value_gvt.plus(usdAmount);
-        } else if (coin === 'pwrd') {
+        } else if (coin === Token.PWRD) {
             const based_amount_pwrd = coinAmount.times(factor);
             total.amount_added_pwrd = total.amount_added_pwrd.plus(coinAmount);
             total.value_added_pwrd = total.value_added_pwrd.plus(usdAmount);
@@ -75,12 +78,12 @@ export const setTotals = (
         total.value_added_total = total.value_added_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.plus(usdAmount);
     } else if (type === 'core_withdrawal' || type === 'transfer_out') {
-        if (coin === 'gvt') {
+        if (coin === Token.GVT) {
             total.amount_removed_gvt = total.amount_removed_gvt.plus(coinAmount);
             total.value_removed_gvt = total.value_removed_gvt.plus(usdAmount);
             total.net_amount_gvt = total.net_amount_gvt.minus(coinAmount);
             total.net_value_gvt = total.net_value_gvt.minus(usdAmount);
-        } else if (coin === 'pwrd') {
+        } else if (coin === Token.PWRD) {
             total.amount_removed_pwrd = total.amount_removed_pwrd.plus(coinAmount);
             total.value_removed_pwrd = total.value_removed_pwrd.plus(usdAmount);
             const based_amount_pwrd = coinAmount.times(factor);

@@ -5,6 +5,7 @@ import { Pwrd } from '../../generated/Pwrd/Pwrd';
 import {
     NUM,
     ADDR,
+    TOKEN as Token,
 } from '../utils/constants';
 import {
     gvtAddress,
@@ -73,7 +74,7 @@ export const updateFactors = (): void => {
 
 // Retrieves gvt or pwrd factor at the time of tx
 export const getFactor = (token: string): BigDecimal => {
-    if (token === 'gvt') {
+    if (token === Token.GVT) {
         const contract = Gvt.bind(gvtAddress);
         const gvtFactor = contract.try_factor();
         if (gvtFactor.reverted) {
@@ -82,7 +83,7 @@ export const getFactor = (token: string): BigDecimal => {
         } else {
             return tokenToDecimal(gvtFactor.value, 18, 12);
         }
-    } else if (token === 'pwrd') {
+    } else if (token === Token.PWRD) {
         const contract = Pwrd.bind(pwrdAddress);
         const pwrdFactor = contract.try_factor();
         if (pwrdFactor.reverted) {
@@ -99,7 +100,7 @@ export const getFactor = (token: string): BigDecimal => {
 // Retrieves latest stored gvt or pwrd factor (before a tx)
 export const getStoredFactor = (token: string): BigDecimal => {
     const factor = initFactor(true);
-    return (token === 'pwrd')
+    return (token === Token.PWRD)
         ? factor.pwrd
         : factor.gvt;
 }

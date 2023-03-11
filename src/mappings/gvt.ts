@@ -40,6 +40,7 @@ import {
 } from '../utils/contracts';
 import {
     DECIMALS,
+    TOKEN as Token,
     LOG_DEPOSIT_SIG_V1,
     LOG_DEPOSIT_SIG_V23,
     LOG_GROUTER_DEPOSIT_SIG,
@@ -55,7 +56,7 @@ import {
 export function handleApproval(event: Approval): void {
     if (isUniqueApproval(event)) {
         const ev = parseApprovalEvent(event);
-        manageApproval(ev, 'gvt');
+        manageApproval(ev, Token.GVT);
     }
 }
 
@@ -98,7 +99,7 @@ export function handleTransfer(event: Transfer): void {
         && !isTransferToGRouter(to)
     ) {
         const ev = parseTransferEvent(event);
-        manageTransfer(ev, 'gvt');
+        manageTransfer(ev, Token.GVT);
     }
 }
 
@@ -148,7 +149,7 @@ const isDepositOrWithdrawalGVT = (
             updateTotalSupply(
                 'deposit',
                 tokenToDecimal(amount, 18, DECIMALS),
-                'gvt',
+                Token.GVT,
             )
             return false;
         } else {

@@ -30,6 +30,7 @@ import {
     NUM,
     ADDR,
     DECIMALS,
+    TOKEN as Token,
 } from '../utils/constants';
 import {
     Transfer,
@@ -47,7 +48,7 @@ export function handleTransfer(event: Transfer): void {
         event.params.sender,
         event.params.receiver,
         event.params.value,
-        'curve_pwrd3crv',
+        Token.CURVE_PWRD3CRV,
     );
 }
 

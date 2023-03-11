@@ -23,6 +23,7 @@ import { setTotalSupply } from '../setters/coreData';
 import {
     NUM,
     DECIMALS,
+    TOKEN as Token,
 } from '../utils/constants';
 import {
     setUniswapGvtGroPrice,
@@ -101,7 +102,7 @@ export function handleTransferGvtGro(event: TransferGvtGro): void {
         event.params.from,
         event.params.to,
         event.params.value,
-        'uniswap_gvt_gro',
+        Token.UNISWAP_GVT_GRO,
     );
 }
 
@@ -112,6 +113,6 @@ export function handleTransferGroUsdc(event: TransferGroUsdc): void {
         event.params.from,
         event.params.to,
         event.params.value,
-        'uniswap_gro_usdc',
+        Token.UNISWAP_GRO_USDC,
     );
 }

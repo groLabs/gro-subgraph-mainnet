@@ -19,6 +19,7 @@
 ///     - Pwrd: 0xf0a93d4994b3d98fb5e3a2f90dbc2d69073cb86b
 
 import { parseLogEvent } from '../parsers/log';
+import { TOKEN as Token } from '../utils/constants';
 import { manageApproval } from '../managers/approvals';
 import { manageTransfer } from '../managers/transfers';
 import { parseApprovalEvent } from '../parsers/approval';
@@ -41,7 +42,7 @@ import {
 export function handleApproval(event: Approval): void {
     if (isUniqueApproval(event)) {
         const ev = parseApprovalEvent(event);
-        manageApproval(ev, 'pwrd');
+        manageApproval(ev, Token.PWRD);
     }
 }
 
@@ -79,6 +80,6 @@ export function handleTransfer(event: Transfer): void {
         && !isTransferToGRouter(to)
     ) {
         const ev = parseTransferEvent(event);
-        manageTransfer(ev, 'pwrd');
+        manageTransfer(ev, Token.PWRD);
     }
 }

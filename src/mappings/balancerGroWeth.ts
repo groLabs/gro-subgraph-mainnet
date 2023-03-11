@@ -34,6 +34,7 @@ import {
     NUM,
     ADDR,
     DECIMALS,
+    TOKEN as Token,
 } from '../utils/constants';
 
 
@@ -55,7 +56,7 @@ export function handleTransfer(event: Transfer): void {
         event.params.from,
         event.params.to,
         event.params.value,
-        'balancer_gro_weth',
+        Token.BALANCER_GRO_WETH,
     );
 }
 

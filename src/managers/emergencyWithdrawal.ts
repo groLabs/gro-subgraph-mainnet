@@ -1,5 +1,6 @@
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
+import { TOKEN as Token } from '../utils/constants';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { updateTotalSupply } from '../setters/coreData';
 import { setEmergencyWithdrawTx } from '../setters/depowithdraw';
@@ -37,9 +38,9 @@ export const manageEmergencyCoreWithdrawal = (
     );
 
     // Updates GToken factor in entity <Factor>
-    if (tx.token === 'pwrd') {
+    if (tx.token === Token.PWRD) {
         setPwrdFactor();
-    } else if (tx.token === 'gvt') {
+    } else if (tx.token === Token.GVT) {
         setGvtFactor();
     }
 }

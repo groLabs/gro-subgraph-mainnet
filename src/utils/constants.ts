@@ -2,6 +2,7 @@ import { contracts } from '../../addresses';
 import {
     Num,
     Addr,
+    Token,
 } from '../types/constants';
 import {
     Bytes,
@@ -11,11 +12,27 @@ import {
 
 
 // Blocks
-export const GENESIS_POOL_GRO_WETH = 13355180;  // Oct-04-2021 10:03:33 PM
+export const GRO_WETH_POOL_START_BLOCK = 13355180;  // Oct-04-2021 10:03:33 PM
 export const G2_START_BLOCK = 16697425  // Feb-24-2023 09:51:35 AM
 
 // Timestamps
 export const TS_LAUNCH = 1622204347;    // Friday 28 May 2021 12:19:07
+
+// Tokens
+export const TOKEN: Token = {
+    UNKNOWN: 'unknown',
+	PWRD: 'pwrd',
+	GVT: 'gvt',
+	GRO: 'gro',
+	DAI: 'dai',
+	USDC: 'usdc',
+	USDT: 'usdt',
+    THREE_CRV: '3crv',
+	UNISWAP_GVT_GRO: 'uniswap_gvt_gro',
+	UNISWAP_GRO_USDC: 'uniswap_gro_usdc',
+	CURVE_PWRD3CRV: 'curve_pwrd3crv',
+	BALANCER_GRO_WETH: 'balancer_gro_weth',
+}
 
 // Numbers
 export const DECIMALS = 7;

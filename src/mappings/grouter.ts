@@ -18,6 +18,7 @@
 
 import { getGroToken } from '../utils/tokens';
 import { setGvtPrice } from '../setters/price';
+import { TOKEN as Token} from '../utils/constants';
 import { manageCoreDeposit } from '../managers/deposit';
 import { parseGRouterDepositEvent } from '../parsers/deposit';
 import { manageCoreWithdrawal } from '../managers/withdrawal';
@@ -37,13 +38,13 @@ import {
 /// @param token the token for which the factor/price needs to be updated
 const updateFactor = (token: string): void => {
     // Updates factor in entity <Factor>
-    if (token === 'pwrd') {
+    if (token === Token.PWRD) {
         setPwrdFactor();
-    } else if (token === 'gvt') {
+    } else if (token === Token.GVT) {
         setGvtFactor();
     }
     // Updates gvt price in entity <Price>
-    if (token === 'gvt')
+    if (token === Token.GVT)
         setGvtPrice();
 }
 

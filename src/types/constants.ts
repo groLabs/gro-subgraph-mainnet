@@ -4,7 +4,6 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
-
 export class Addr {
     public ZERO: Bytes;
 }
@@ -16,6 +15,22 @@ export class Num {
     public THIRTY_PERCENT: BigDecimal;
     public PWRD_START_FACTOR: BigDecimal;
     public GVT_START_FACTOR: BigDecimal;
+}
+
+// @dev: should be align with enum <Token> in entities
+export class Token {
+    public UNKNOWN: string;
+	public PWRD: string;
+	public GVT: string;
+	public GRO: string;
+	public DAI: string;
+	public USDC: string;
+	public USDT: string;
+    public THREE_CRV: string;
+	public UNISWAP_GVT_GRO: string;
+	public UNISWAP_GRO_USDC: string;
+	public CURVE_PWRD3CRV: string;
+	public BALANCER_GRO_WETH: string;
 }
 
 export class Contracts {

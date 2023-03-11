@@ -1,4 +1,7 @@
-import { DECIMALS } from '../utils/constants';
+import {
+    DECIMALS,
+    TOKEN as Token,
+} from '../utils/constants';
 import { ApprovalEvent } from '../types/approval';
 import { ApprovalTx } from '../../generated/schema';
 import {
@@ -12,7 +15,7 @@ export const setApprovalTx = (
     token: string,
 ): ApprovalTx => {
     let tx = new ApprovalTx(ev.id);
-    const base = (token === 'usdc' || token === 'usdt')
+    const base = (token === Token.USDC || token === Token.USDT)
         ? 6
         : 18;
     const coinAmount = tokenToDecimal(ev.value, base, DECIMALS);

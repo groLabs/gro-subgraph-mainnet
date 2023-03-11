@@ -2,6 +2,7 @@ import { initGVault } from './gvault';
 import {
     NUM,
     ADDR,
+    TOKEN as Token,
 } from '../utils/constants';
 import { getGVaultStrategies } from '../utils/strats';
 import {
@@ -17,7 +18,7 @@ import {
 
 const noGVaultStrategy = (): GVaultStrategy => {
     let strat = new GVaultStrategy(ADDR.ZERO);
-    strat.coin = 'unknown';
+    strat.coin = Token.UNKNOWN;
     strat.metacoin = 'unknown';
     strat.protocol = 'unknown';
     strat.strat_name = 'unknown';

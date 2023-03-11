@@ -14,6 +14,7 @@ import {
     NUM,
     ADDR,
     DECIMALS,
+    TOKEN as Token,
 } from '../utils/constants';
 import {
     log,
@@ -42,8 +43,8 @@ export const initPrice = (): Price => {
 
 export const getGroToken = (isPwrd: bool): string => {
     return (isPwrd)
-        ? 'pwrd'
-        : 'gvt';
+        ? Token.PWRD
+        : Token.GVT;
 }
 
 export const getGvtPrice = (): BigDecimal => {
@@ -60,16 +61,16 @@ export const getGvtPrice = (): BigDecimal => {
 // Retrieves price per share for a given token
 export const getPricePerShare = (token: string): BigDecimal => {
     let price: BigDecimal = NUM.ZERO;
-    if (token === 'gvt') {
+    if (token === Token.GVT) {
         price = getGvtPrice();
-    } else if (token === 'gro') {
+    } else if (token === Token.GRO) {
         const _price = initPrice();
         price = _price.gro;
     } else if (
-        token === 'pwrd'
-        || token === 'dai'
-        || token === 'usdc'
-        || token === 'usdt'
+        token === Token.PWRD
+        || token === Token.DAI
+        || token === Token.USDC
+        || token === Token.USDT
     ) {
         price = NUM.ONE;
     } else {
@@ -83,21 +84,21 @@ export const getTokenByPoolId = (
 ): string => {
     switch (poolId) {
         case 0:
-            return 'gro';
+            return Token.GRO;
         case 1:
-            return 'uniswap_gvt_gro';
+            return Token.UNISWAP_GVT_GRO;
         case 2:
-            return 'uniswap_gro_usdc';
+            return Token.UNISWAP_GRO_USDC;
         case 3:
-            return 'gvt';
+            return Token.GVT;
         case 4:
-            return 'curve_pwrd3crv';
+            return Token.CURVE_PWRD3CRV;
         case 5:
-            return 'balancer_gro_weth';
+            return Token.BALANCER_GRO_WETH;
         case 6:
-            return 'pwrd';
+            return Token.PWRD;
         default:
-            return 'unknown';
+            return Token.UNKNOWN;
     }
 }
 
@@ -121,7 +122,7 @@ export const amountToUsd = (
     amount: BigDecimal
 ): BigDecimal => {
     let price = NUM.ZERO;
-    if (coin == '3crv') {
+    if (coin == Token.THREE_CRV) {
         const _price = initPrice();
         price = _price.three_crv;
     } else {
@@ -138,26 +139,26 @@ export const getUSDAmountOfShare = (
     let usdAmount = NUM.ZERO;
     const addDecimal = BigInt.fromI32(10).pow(12).toBigDecimal();
     if (tokenIndex == 0) {
-        usdAmount = amountToUsd('dai', coinAmount);
+        usdAmount = amountToUsd(Token.DAI, coinAmount);
     } else if (tokenIndex == 1) {
-        usdAmount = amountToUsd('usdc', coinAmount)
+        usdAmount = amountToUsd(Token.USDC, coinAmount)
             .times(addDecimal);
     } else if (tokenIndex == 2) {
-        usdAmount = amountToUsd('usdt', coinAmount)
+        usdAmount = amountToUsd(Token.USDT, coinAmount)
             .times(addDecimal);
     } else if (tokenIndex == 3) {
-        usdAmount = amountToUsd('3crv', coinAmount);
+        usdAmount = amountToUsd(Token.THREE_CRV, coinAmount);
     }
     return BigInt.fromString(usdAmount.truncate(0).toString());
 }
 
 // returns the USD value of a given stablecoin (DAI, USDC or USDT)
 export function getStablecoinUsdPrice(token: string): BigDecimal {
-    const chainlinkAddress: Address = (token === 'dai')
+    const chainlinkAddress: Address = (token === Token.DAI)
         ? chainlinkDaiUsdAddress
-        : (token === 'usdc')
+        : (token === Token.USDC)
             ? chainlinkUsdcUsdAddress
-            : (token === 'usdt')
+            : (token === Token.USDT)
                 ? chainlinkUsdtUsdAddress
                 : Address.zero();
     const contract = ChainlinkAggregator.bind(chainlinkAddress);

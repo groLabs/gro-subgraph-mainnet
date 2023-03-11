@@ -26,6 +26,7 @@ import { updateTotalSupply } from '../setters/coreData';
 import {
     ADDR,
     DECIMALS,
+    TOKEN as Token,
 } from '../utils/constants';
 import {
     Approval,
@@ -40,7 +41,7 @@ export function handleApproval(event: Approval): void {
     const ev = parseApprovalEvent(event);
 
     // Manages the approval
-    manageApproval(ev, 'gro');
+    manageApproval(ev, Token.GRO);
 }
 
 /// @notice Handles <Transfer> events from gro contract
@@ -58,20 +59,20 @@ export function handleTransfer(event: Transfer): void {
         const ev = parseTransferEvent(event);
 
         // Manages the transfer
-        manageTransfer(ev, 'gro');
+        manageTransfer(ev, Token.GRO);
 
         // Updates total supply in entity <CoreData>
         if (from == ADDR.ZERO) {
             updateTotalSupply(
                 'deposit',
                 value,
-                'gro',
+                Token.GRO,
             );
         } else if (to == ADDR.ZERO) {
             updateTotalSupply(
                 'withdrawal',
                 value,
-                'gro',
+                Token.GRO,
             );
         }
     }

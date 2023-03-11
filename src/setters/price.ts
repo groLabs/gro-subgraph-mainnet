@@ -16,7 +16,8 @@ import {
     NUM,
     ADDR,
     DECIMALS,
-    GENESIS_POOL_GRO_WETH,
+    TOKEN as Token,
+    GRO_WETH_POOL_START_BLOCK,
     BALANCER_GRO_WETH_POOLID,
 } from '../utils/constants';
 import {
@@ -51,13 +52,15 @@ export const initPrice = (): Price => {
     return price;
 }
 
-// Triggered by PnLExecution events
+// Triggered by GRouter <LogDeposit> | <LogLegacyDeposit> | <LogWithdrawal>
+// and GVault <LogStrategyHarvestReport> events
 export const setGvtPrice = (): void => {
     let price = initPrice();
-    price.gvt = getPricePerShare('gvt');
+    price.gvt = getPricePerShare(Token.GVT);
     price.save();
 }
 
+// Triggered by Chainlink <AnswerUpdated> event in a daily basis
 export const set3CrvPrice = (): void => {
     const contract = ThreePool.bind(threePoolAddress);
     const virtualPrice = contract.try_get_virtual_price();
@@ -71,6 +74,7 @@ export const set3CrvPrice = (): void => {
     }
 }
 
+// Triggered by UniswapV2 <swap> event for GVT/GRO pool
 export const setUniswapGvtGroPrice = (): void => {
     const contract = UniswapV2Pair.bind(uni2GvtGroAddress);
     const reserves = contract.try_getReserves();
@@ -83,7 +87,7 @@ export const setUniswapGvtGroPrice = (): void => {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
         const gvtReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, DECIMALS);
         const groReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, DECIMALS);
-        // update Pool data
+        // update Pool-1 data
         updatePoolData(
             1,
             uni2GvtGroAddress,
@@ -107,6 +111,7 @@ export const setUniswapGvtGroPrice = (): void => {
 
 //@dev: Gro token was circulating before this pool creation,
 //      so any tx before won't have gro price
+// Triggered by UniswapV2 <swap> event for GRO/USDC pool
 export const setUniswapGroUsdcPrice = (): void => {
     const contract = UniswapV2Pair.bind(uni2GroUsdcAddress);
     const reserves = contract.try_getReserves();
@@ -119,7 +124,7 @@ export const setUniswapGroUsdcPrice = (): void => {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
         const groReserve = tokenToDecimal(reserves.value.get_reserve0(), 18, DECIMALS);
         const usdcReserve = tokenToDecimal(reserves.value.get_reserve1(), 6, DECIMALS);
-        // update Pool data
+        // update Pool-2 data
         updatePoolData(
             2,
             uni2GroUsdcAddress,
@@ -127,10 +132,9 @@ export const setUniswapGroUsdcPrice = (): void => {
             usdcReserve,
             totalSupply,
         );
-        // update GRO price
+        // update GRO price (in USD value)
         const price = initPrice();
         const priceUSDC = getStablecoinUsdPrice('usdc');
-        // const usdReserve = usdcReserve.times(price.usdc)
         const usdReserve = usdcReserve.times(priceUSDC);
         const groPricePerShare = usdReserve.div(groReserve).truncate(DECIMALS);
         price.gro = groPricePerShare;
@@ -138,7 +142,6 @@ export const setUniswapGroUsdcPrice = (): void => {
         const oneGroAmount = (NUM.ONE.div(totalSupply)).times(groReserve);
         const oneUsdcAmount = (NUM.ONE.div(totalSupply)).times(usdcReserve);
         const oneGroValue = oneGroAmount.times(price.gro);
-        // const oneUsdcValue = oneUsdcAmount.times(price.usdc);
         const oneUsdcValue = oneUsdcAmount.times(priceUSDC);
         const lpPricePerShare = oneGroValue.plus(oneUsdcValue);
         price.uniswap_gro_usdc = lpPricePerShare.truncate(DECIMALS);
@@ -146,6 +149,7 @@ export const setUniswapGroUsdcPrice = (): void => {
     }
 }
 
+// Triggered by Curve Metapool <TokenExchange> | <TokenExchangeUnderlying> events for PWRD pool
 export const setCurvePwrd3crvPrice = (): void => {
     const contract = CurveMetapool3CRV.bind(curveMetapoolAddress);
     const reserves = contract.try_get_balances();
@@ -161,7 +165,7 @@ export const setCurvePwrd3crvPrice = (): void => {
         const total_supply = tokenToDecimal(totalSupply.value, 18, 12);
         const crv_reserve = tokenToDecimal(reserves.value[0], 18, DECIMALS);
         const pwrd_reserve = tokenToDecimal(reserves.value[1], 18, DECIMALS);
-        // update Pool data
+        // update Pool-4 data
         updatePoolData(
             4,
             curveMetapoolAddress,
@@ -177,12 +181,13 @@ export const setCurvePwrd3crvPrice = (): void => {
     }
 }
 
+// Triggered by Balancer Pool <Transfer> and Chainlink hourly <AnswerUpdated> events
 export const setBalancerGroWethPrice = (tx: Tx): void => {
     const contractVault = BalancerGroWethVault.bind(balGroWethVaultAddress);
     const contractPool = BalancerGroWethPool.bind(balGroWethPoolAddress);
     const _totalSupply = contractPool.try_totalSupply();
     const poolTokens = contractVault.try_getPoolTokens(BALANCER_GRO_WETH_POOLID);
-    if (tx.block < GENESIS_POOL_GRO_WETH) {
+    if (tx.block < GRO_WETH_POOL_START_BLOCK) {
         log.warning(
             `setBalancerGroWethPrice(): GRO/WETH Vault updates before its pool creation ${tx.msg} in setters/price.ts`,
             tx.data
@@ -208,7 +213,7 @@ export const setBalancerGroWethPrice = (tx: Tx): void => {
         } else {
             const groReserve = reserves[0];
             const wethReserve = reserves[1];
-            // update Pool data
+            // update Pool-5 data
             updatePoolData(
                 5,
                 balGroWethPoolAddress,

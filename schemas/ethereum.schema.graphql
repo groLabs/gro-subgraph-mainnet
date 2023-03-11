@@ -8,6 +8,7 @@ enum Token {
 	dai
 	usdc
 	usdt
+	three_crv
 	uniswap_gvt_gro
 	uniswap_gro_usdc
 	curve_pwrd3crv

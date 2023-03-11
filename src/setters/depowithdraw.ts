@@ -21,8 +21,9 @@ import {
     NUM,
     ADDR,
     DECIMALS,
+    TOKEN as Token,
+    G2_START_BLOCK,
     ERC20_TRANSFER_SIG,
-    G2_START_BLOCK
 } from '../utils/constants';
 
 // global vars to manage emergency <token> and <from>
@@ -74,7 +75,7 @@ export const setEmergencyWithdrawTx = (
     tx.token = emergencyToken;
     const pricePerShare = getPricePerShare(emergencyToken);
     tx.usd_amount = (tx.coin_amount.times(pricePerShare)).truncate(DECIMALS);
-    tx.factor = (emergencyToken === 'pwrd')
+    tx.factor = (emergencyToken === Token.PWRD)
         ? getStoredFactor(emergencyToken)
         : getFactor(emergencyToken);
     tx.pool_id = ev.poolId;
@@ -131,7 +132,7 @@ export function getCoinAmount(
             if ((tx.type === 'core_deposit' && from == Address.zero())
                 || (tx.type === 'core_withdrawal' && to == Address.zero())) {
                 if (isEmergency) {
-                    emergencyToken = (log.address == gvtAddress) ? 'gvt' : 'pwrd';
+                    emergencyToken = (log.address == gvtAddress) ? Token.GVT : Token.PWRD;
                     emergencyFrom = from;
                 }
                 const value = ethereum.decode('uin256', log.data)!.toBigInt();
@@ -149,7 +150,7 @@ export function getCoinAmount(
 }
 
 function getFactorForOldProtocol(blockNumber: number, token: string): BigDecimal {
-    if (token == 'pwrd' && blockNumber < G2_START_BLOCK)
+    if (token == Token.PWRD && blockNumber < G2_START_BLOCK)
         return getStoredFactor(token);
 
     return getFactor(token);

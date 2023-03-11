@@ -1,3 +1,4 @@
+import { TOKEN as Token} from '../utils/constants';
 import { gVaultAddress } from '../utils/contracts';
 import { Strategy as Strat } from '../types/strats';
 import {
@@ -19,65 +20,65 @@ export const getGVaultStrategies = (): Strat[] => {
             Address.fromHexString('0x1402c1caa002354fc2c4a4cd2b4045a5b9625ef3'),   // vault address (GVault)
             'Convex FRAX 3CRV primary',     // strategy name
             'Convex-FRAX-3CRV',             // strategy display name
-            '3CRV',         // vault name
-            '3CRV yVault',  // vault display name
-            '3crv',         // coin
-            'frax',         // metacoin
-            'convex',       // protocol
-            true,           // active
-            1,              // queue id [see log <LogStrategyAdded>]
+            '3CRV',             // vault name
+            '3CRV yVault',      // vault display name
+            Token.THREE_CRV,    // coin
+            'frax',             // metacoin
+            'convex',           // protocol
+            true,               // active
+            1,                  // queue id [see log <LogStrategyAdded>]
         ),
         new Strat(
             Address.fromHexString('0x708d0089d52d57e911024465e841774634466608'), // strategy address
             Address.fromHexString('0x1402c1caa002354fc2c4a4cd2b4045a5b9625ef3'), // vault address (GVault)
             'Convex LUSD 3CRV primary',      // strategy name
             'Convex-LUSD-3CRV',              // strategy display name
-            '3CRV',         // vault name
-            '3CRV yVault',  // vault display name
-            '3crv',         // coin
-            'lusd',         // metacoin
-            'convex',       // protocol
-            true,           // active
-            2,              // queue id [see log <LogStrategyAdded>]
+            '3CRV',             // vault name
+            '3CRV yVault',      // vault display name
+            Token.THREE_CRV,    // coin
+            'lusd',             // metacoin
+            'convex',           // protocol
+            true,               // active
+            2,                  // queue id [see log <LogStrategyAdded>]
         ),
         new Strat(
             Address.fromHexString('0xd947957dea1112cc9d7a5111ea6459432737e4c2'), // strategy address
             Address.fromHexString('0x1402c1caa002354fc2c4a4cd2b4045a5b9625ef3'), // vault address (GVault)
             'Convex OUSD 3CRV primary',     // strategy name
             'Convex-OUSD-3CRV',             // strategy display name
-            '3CRV',         // vault name
-            '3CRV yVault',  // vault display name
-            '3crv',         // coin
-            'ousd',         // metacoin
-            'convex',       // protocol
-            true,           // active
-            3,              // queue id [see log <LogStrategyAdded>]
+            '3CRV',             // vault name
+            '3CRV yVault',      // vault display name
+            Token.THREE_CRV,    // coin
+            'ousd',             // metacoin
+            'convex',           // protocol
+            true,               // active
+            3,                  // queue id [see log <LogStrategyAdded>]
         ),
         new Strat(
             Address.fromHexString('0xd849d8551ec988a59d4e411b1ed7b5b40bf97159'), // strategy address
             Address.fromHexString('0x1402c1caa002354fc2c4a4cd2b4045a5b9625ef3'), // vault address (GVault)
             'Convex TUSD 3CRV primary',     // strategy name
             'Convex-TUSD-3CRV',             // strategy display name
-            '3CRV',         // vault name
-            '3CRV yVault',  // vault display name
-            '3crv',         // coin
-            'tusd',         // metacoin
-            'convex',       // protocol
-            true,           // active
-            4,              // queue id [see log <LogStrategyAdded>]
+            '3CRV',             // vault name
+            '3CRV yVault',      // vault display name
+            Token.THREE_CRV,    // coin
+            'tusd',             // metacoin
+            'convex',           // protocol
+            true,               // active
+            4,                  // queue id [see log <LogStrategyAdded>]
         ),
         new Strat(
             Address.fromHexString('0xa1327c0cd1e04e82fd99e68b46ab8a6eb15b17ae'), // strategy address
             Address.fromHexString('0x1402c1caa002354fc2c4a4cd2b4045a5b9625ef3'), // vault address (GVault)
             'Convex GUSD 3CRV primary',     // strategy name
             'Convex-GUSD-3CRV',             // strategy display name
-            '3CRV',         // vault name
-            '3CRV yVault',  // vault display name
-            '3crv',         // coin
-            'gusd',         // metacoin
-            'convex',       // protocol
-            true,           // active
-            5,              // queue id [see log <LogStrategyAdded>]
+            '3CRV',             // vault name
+            '3CRV yVault',      // vault display name
+            Token.THREE_CRV,    // coin
+            'gusd',             // metacoin
+            'convex',           // protocol
+            true,               // active
+            5,                  // queue id [see log <LogStrategyAdded>]
         ),
     ];
     return strats;
@@ -141,7 +142,7 @@ export const getGVaultStrategies = (): Strat[] => {
 }
 */
 
-// Gro Protocol strategies
+// Good old Gro Protocol strategies
 /*
 export const getStrategies = (): Strat[] => {
     const strats = [
