@@ -2,6 +2,7 @@ import { Totals } from '../../generated/schema';
 import {
     NUM,
     TOKEN as Token,
+    TX_TYPE as TxType,
 } from '../utils/constants';
 import {
     Bytes,
@@ -55,14 +56,14 @@ export const setTotals = (
 ): void => {
     let total = initTotals(userAddress, false);
     if (coin === Token.GRO) {
-        if (type === 'core_deposit' || type === 'transfer_in') {
+        if (type === TxType.CORE_DEPOSIT || type === TxType.TRANSFER_IN) {
             total.amount_added_gro = total.amount_added_gro.plus(coinAmount);
             total.amount_total_gro = total.amount_total_gro.plus(coinAmount);
         } else {
             total.amount_removed_gro = total.amount_removed_gro.plus(coinAmount);
             total.amount_total_gro = total.amount_total_gro.minus(coinAmount);
         }
-    } else if (type === 'core_deposit' || type === 'transfer_in') {
+    } else if (type === TxType.CORE_DEPOSIT || type === TxType.TRANSFER_IN) {
         if (coin === Token.GVT) {
             total.amount_added_gvt = total.amount_added_gvt.plus(coinAmount);
             total.value_added_gvt = total.value_added_gvt.plus(usdAmount);
@@ -77,7 +78,7 @@ export const setTotals = (
         }
         total.value_added_total = total.value_added_total.plus(usdAmount);
         total.net_value_total = total.net_value_total.plus(usdAmount);
-    } else if (type === 'core_withdrawal' || type === 'transfer_out') {
+    } else if (type === TxType.CORE_WITHDRAWAL || type === TxType.TRANSFER_OUT) {
         if (coin === Token.GVT) {
             total.amount_removed_gvt = total.amount_removed_gvt.plus(coinAmount);
             total.value_removed_gvt = total.value_removed_gvt.plus(usdAmount);

@@ -16,6 +16,7 @@ import {
     DECIMALS,
     NUM_POOLS,
     STAKER_ADDRESSES,
+    TX_TYPE as TxType,
     LOG_DEPOSIT_STAKER_SIG,
     LOG_WITHDRAW_STAKER_SIG,
 } from '../utils/constants';
@@ -117,7 +118,7 @@ export const updateStakerGroPerBlock = (
 ): void => {
     const md = initMD();
     const groPerBlock = tokenToDecimal(gro_per_block, 18, DECIMALS);
-    md.gro_per_block = groPerBlock
+    md.gro_per_block = groPerBlock;
     md.save();
 }
 
@@ -131,8 +132,8 @@ export const setClaimTx = (
     tx.block_timestamp = ev.timestamp;
     tx.hash = ev.hash;
     tx.type = (ev.pid.length > 1)
-        ? 'multiclaim'
-        : 'claim';
+        ? TxType.MULTICLAIM
+        : TxType.CLAIM;
     tx.user_address = ev.userAddress;
     tx.pool_id = ev.pid;
     tx.vest = ev.vest;

@@ -1,6 +1,7 @@
 import {
     DECIMALS,
     TOKEN as Token,
+    TX_TYPE as TxType,
 } from '../utils/constants';
 import { ApprovalEvent } from '../types/approval';
 import { ApprovalTx } from '../../generated/schema';
@@ -25,7 +26,7 @@ export const setApprovalTx = (
     tx.block_number = ev.block.toI32();
     tx.block_timestamp = ev.timestamp.toI32();
     tx.token = token;
-    tx.type = 'approval';
+    tx.type = TxType.APPROVAL;
     tx.hash = ev.hash;
     tx.coin_amount = coinAmount;
     tx.usd_amount = coinAmount.times(pricePerShare);

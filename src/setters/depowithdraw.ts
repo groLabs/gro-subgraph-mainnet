@@ -21,8 +21,9 @@ import {
     NUM,
     ADDR,
     DECIMALS,
-    TOKEN as Token,
     G2_START_BLOCK,
+    TOKEN as Token,
+    TX_TYPE as TxType,
     ERC20_TRANSFER_SIG,
 } from '../utils/constants';
 
@@ -129,8 +130,8 @@ export function getCoinAmount(
         ) {
             const from = ethereum.decode('address', log.topics[1])!.toAddress();
             const to = ethereum.decode('address', log.topics[2])!.toAddress();
-            if ((tx.type === 'core_deposit' && from == Address.zero())
-                || (tx.type === 'core_withdrawal' && to == Address.zero())) {
+            if ((tx.type === TxType.CORE_DEPOSIT && from == Address.zero())
+                || (tx.type === TxType.CORE_WITHDRAWAL && to == Address.zero())) {
                 if (isEmergency) {
                     emergencyToken = (log.address == gvtAddress) ? Token.GVT : Token.PWRD;
                     emergencyFrom = from;

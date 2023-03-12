@@ -1,6 +1,9 @@
-import { NUM } from '../utils/constants';
 import { Pool } from '../../generated/schema';
 import { getRewardDebt } from '../utils/staker';
+import {
+    NUM,
+    TX_TYPE as TxType,
+} from '../utils/constants';
 import {
     Bytes,
     BigDecimal,
@@ -43,11 +46,11 @@ export const setPools = (
         poolId
     );
     const currentNetReward = currentRewardDebt.minus(pool.reward_debt);
-    if (type === 'claim' || type === 'multiclaim') {
+    if (type === TxType.CLAIM || type === TxType.MULTICLAIM) {
         pool.net_reward = pool.net_reward.plus(currentNetReward);
-    } else if (type === 'staker_deposit') {
+    } else if (type === TxType.STAKER_DEPOSIT) {
         pool.balance = pool.balance.plus(coinAmount);
-    } else if (type === 'staker_withdrawal') {
+    } else if (type === TxType.STAKER_WITHDRAWAL) {
         pool.balance = pool.balance.minus(coinAmount);
     }
     pool.reward_debt = currentRewardDebt;

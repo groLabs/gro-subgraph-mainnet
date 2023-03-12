@@ -1,9 +1,12 @@
-import { ADDR } from '../utils/constants';
 import { setUser } from '../setters/users';
 import { setTotals } from '../setters/totals';
 import { Bytes } from '@graphprotocol/graph-ts';
 import { TransferEvent } from '../types/transfer';
 import { setTransferTx } from '../setters/transfers';
+import {
+    ADDR,
+    TX_TYPE as TxType,
+} from '../utils/constants';
 
 
 /// @notice Builds the transfer tx
@@ -59,10 +62,10 @@ export const manageTransfer = (
     // case C -> else, transfer between users (transfer_in & transfer_out)
     if (ev.fromAddress == ADDR.ZERO) {
         userAddressIn = ev.toAddress;
-        type = 'core_deposit';
+        type = TxType.CORE_DEPOSIT;
     } else if (ev.toAddress == ADDR.ZERO) {
         userAddressOut = ev.fromAddress;
-        type = 'core_withdrawal';
+        type = TxType.CORE_WITHDRAWAL;
     } else {
         userAddressIn = ev.toAddress;
         userAddressOut = ev.fromAddress;
@@ -70,12 +73,12 @@ export const manageTransfer = (
 
     // Creates one tx (mint OR burn) or two txs (transfer_in AND transfer_out)
     if (type !== '') {
-        let userAddress = (type == 'core_deposit')
+        let userAddress = (type == TxType.CORE_DEPOSIT)
             ? userAddressIn
             : userAddressOut;
         buildTransfer(ev, userAddress, type, token);
     } else {
-        buildTransfer(ev, userAddressIn, 'transfer_in', token);
-        buildTransfer(ev, userAddressOut, 'transfer_out', token);
+        buildTransfer(ev, userAddressIn, TxType.TRANSFER_IN, token);
+        buildTransfer(ev, userAddressOut, TxType.TRANSFER_OUT, token);
     }
 }

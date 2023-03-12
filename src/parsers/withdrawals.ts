@@ -15,13 +15,14 @@
 ///     - @ts-nocheck is enabled to handle different contract versions with same params
 
 // @ts-nocheck
-import {
-    ADDR,
-    NO_POOL,
-} from '../utils/constants';
 import { BigInt } from '@graphprotocol/graph-ts';
 import { getUSDAmountOfShare } from '../utils/tokens';
 import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
+import {
+    ADDR,
+    NO_POOL,
+    TX_TYPE as TxType,
+} from '../utils/constants';
 
 
 /// @notice Parses <LogNewWithdrawal> events from WithdrawHandler v1, v2 & v3 contracts
@@ -36,7 +37,7 @@ export function parseCoreWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'core_withdrawal',
+        TxType.CORE_WITHDRAWAL,
         ev.params.user,                 // FK to User.id,
         ev.params.user,                 // from
         ADDR.ZERO,                      // to
@@ -62,7 +63,7 @@ export function parseGRouterWithdrawEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'core_withdrawal',
+        TxType.CORE_WITHDRAWAL,
         ev.params.sender,               // FK to User.id,
         ev.params.sender,               // from
         ADDR.ZERO,                      // to
@@ -85,7 +86,7 @@ export function parseCoreEmergencyWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'core_withdrawal',
+        TxType.CORE_WITHDRAWAL,
         ADDR.ZERO,                      // FK to User.id,
         ADDR.ZERO,                      // from
         ADDR.ZERO,                      // to
@@ -112,7 +113,7 @@ export function parseStakerWithdrawalEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'staker_withdrawal',
+        TxType.STAKER_WITHDRAWAL,
         ev.params.user,                 // FK to User.id,
         ev.address,                     // from
         ev.params.user,                 // to

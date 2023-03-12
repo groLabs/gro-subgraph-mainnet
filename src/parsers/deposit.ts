@@ -20,6 +20,7 @@ import { DepoWithdraw as DepoWithdrawEvent } from '../types/depowithdraw';
 import { 
     ADDR,
     NO_POOL,
+    TX_TYPE as TxType,
 } from '../utils/constants';
 
 
@@ -35,7 +36,7 @@ export function parseCoreDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'core_deposit',
+        TxType.CORE_DEPOSIT,
         ev.params.user,                 // FK to User.id,
         ADDR.ZERO,                      // from
         ev.params.user,                 // to
@@ -58,7 +59,7 @@ export function parseGRouterDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'core_deposit',
+        TxType.CORE_DEPOSIT,
         ev.params.sender,               // FK to User.id,
         ADDR.ZERO,                      // from
         ev.params.sender,               // to
@@ -84,7 +85,7 @@ export function parseStakerDepositEvent<T>(ev: T): DepoWithdrawEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'staker_deposit',
+        TxType.STAKER_DEPOSIT,
         ev.params.user,                 // FK to User.id,
         ev.params.user,                 // from
         ev.address,                     // to

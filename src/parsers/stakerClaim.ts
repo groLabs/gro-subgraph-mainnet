@@ -16,6 +16,7 @@
 ///       handle non-existing fields)
 
 import { BigInt } from '@graphprotocol/graph-ts';
+import { TX_TYPE as TxType } from '../utils/constants';
 import { StakerClaimEvent } from '../types/stakerClaim';
 import {
     LogClaim as LogClaimV1,
@@ -38,7 +39,7 @@ export function parseClaimV1Event(ev: LogClaimV1): StakerClaimEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'claim',
+        TxType.CLAIM,
         ev.params.user,
         false,
         [ev.params.pid.toI32()],
@@ -59,7 +60,7 @@ export function parseClaimV2Event(ev: LogClaimV2): StakerClaimEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'claim',
+        TxType.CLAIM,
         ev.params.user,
         ev.params.vest,
         [ev.params.pid.toI32()],
@@ -80,7 +81,7 @@ export function parseMultiClaimV2Event(ev: LogMultiClaimV2): StakerClaimEvent {
         ev.block.timestamp.toI32(),
         ev.transaction.hash,
         ev.address,
-        'multiclaim',
+        TxType.MULTICLAIM,
         ev.params.user,
         ev.params.vest,
         ev.params.pids.map<i32>((pid: BigInt): i32 => pid.toI32()),

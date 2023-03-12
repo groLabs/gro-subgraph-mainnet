@@ -5,6 +5,7 @@ import { TransferTx } from '../../generated/schema';
 import {
     NO_POOL,
     DECIMALS,
+    TX_TYPE as TxType,
 } from '../utils/constants';
 import {
     tokenToDecimal,
@@ -18,9 +19,9 @@ export const setTransferTx = (
     type: string,
     token: string,
 ): TransferTx => {
-    const transfer_tag = (type == 'transfer_in')
+    const transfer_tag = (type == TxType.TRANSFER_IN)
         ? 0
-        : (type == 'transfer_out')
+        : (type == TxType.TRANSFER_OUT)
             ? 1
             : 2;
     const id = ev.id.concatI32(transfer_tag);  
