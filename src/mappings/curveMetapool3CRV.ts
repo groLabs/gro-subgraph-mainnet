@@ -14,6 +14,9 @@
 ///     - Handles <Transfer>, <TokenExchange> & <TokenExchangeUnderlying> events
 ///       from Curve Metapool contracts
 /// @dev
+//      - Essentially updates Curve Metapool's latest data (i.e.: reserves, total supply
+//        & curve_pwrd3crv price), so we can start updating the related entities from G2
+//        deployment instead of the pools creation to reduce indexing time
 ///     - Curve Metapool 3CRVPWRD: 0xbcb91e689114b9cc865ad7871845c95241df4105
 
 import { contracts } from '../../addresses';
@@ -31,6 +34,7 @@ import {
     ADDR,
     DECIMALS,
     TOKEN as Token,
+    G2_START_BLOCK,
 } from '../utils/constants';
 import {
     Transfer,
@@ -57,8 +61,7 @@ export function handleTransfer(event: Transfer): void {
 export function handleTokenExchange(event: TokenExchange): void {
     const blockNumber = event.block.number.toI32();
     const blockTimestamp = event.block.timestamp.toI32();
-    // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (blockNumber >= 16588464) {
+    if (blockNumber >= G2_START_BLOCK) {
         // Updates reserves & total supply in entity <PoolData>
         // and curve_pwrd3crv price in entity <Price>
         setCurvePwrd3crvPrice();
@@ -75,7 +78,7 @@ export function handleTokenExchange(event: TokenExchange): void {
             NUM.ZERO,
             tokenToDecimal(event.params.tokens_sold, 18, DECIMALS),
             ADDR.ZERO,
-            getVirtualPrice()
+            getVirtualPrice(),
         );
     }
 }
@@ -85,8 +88,7 @@ export function handleTokenExchange(event: TokenExchange): void {
 export function handleTokenExchangeUnderlying(event: TokenExchangeUnderlying): void {
     const blockNumber = event.block.number.toI32();
     const blockTimestamp = event.block.timestamp.toI32();
-    // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (blockNumber >= 16588464) {
+    if (blockNumber >= G2_START_BLOCK) {
         // Updates reserves & total supply in entity <PoolData>
         // and curve_pwrd3crv price in entity <Price>
         setCurvePwrd3crvPrice();
@@ -114,7 +116,10 @@ const getVirtualPrice = (): BigDecimal => {
     const contract = MetaPool.bind(contractAddress);
     const virtualPrice = contract.try_get_virtual_price();
     if (virtualPrice.reverted) {
-        log.error('getVirtualPrice(): try_get_virtual_price() reverted in /mappings/curveMetapool3CRV.ts', []);
+        log.error(
+            'getVirtualPrice(): try_get_virtual_price() reverted in /mappings/curveMetapool3CRV.ts'
+            , []
+        );
     } else {
         return tokenToDecimal(virtualPrice.value, 18, DECIMALS);
     }

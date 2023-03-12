@@ -14,6 +14,9 @@
 ///     - Handles <Swap> & <Transfer> events from Uniswap V2 Gvt/Gro pool contract
 ///     - Handles <Swap> & <Transfer> events from Uniswap V2 Gro/Usdc pool contract
 /// @dev
+//      - Essentially updates Uniswap pools' latest data (i.e.: reserves, total supply
+//        & uniswap* prices), so we can start updating the related entities from G2
+//        deployment instead of the pools creation to reduce indexing time
 ///     - Uniswap V2 Gvt/Gro: 0x2ac5bc9dda37601edb1a5e29699deb0a5b67e9bb
 ///     - Uniswap V2 Gro/Usdc: 0x21c5918ccb42d20a2368bdca8feda0399ebfd2f6
 
@@ -24,6 +27,7 @@ import {
     NUM,
     DECIMALS,
     TOKEN as Token,
+    G2_START_BLOCK,
 } from '../utils/constants';
 import {
     setUniswapGvtGroPrice,
@@ -44,8 +48,7 @@ import {
 export function handleSwapGvtGro(event: SwapEventGvtGro): void {
     const blockNumber = event.block.number.toI32();
     const blockTimestamp = event.block.timestamp.toI32();
-    // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (blockNumber >= 16600000) {
+    if (blockNumber >= G2_START_BLOCK) {
         // Updates reserves & total supply in entity <PoolData>
         // and uniswap_gvt_gro price in entity <Price>
         setUniswapGvtGroPrice();
@@ -72,8 +75,7 @@ export function handleSwapGvtGro(event: SwapEventGvtGro): void {
 export function handleSwapGroUsdc(event: SwapEventGroUsdc): void {
     const blockNumber = event.block.number.toI32();
     const blockTimestamp = event.block.timestamp.toI32();
-    // TODO: block to be set to G2_START_BLOCK once there are token exchanges after that date
-    if (blockNumber >= 16600000) {
+    if (blockNumber >= G2_START_BLOCK) {
         // Updates reserves & total supply in entity <PoolData>
         // and uniswap_gro_usdc AND gro prices in entity <Price>
         setUniswapGroUsdcPrice();

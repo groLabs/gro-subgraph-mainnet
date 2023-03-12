@@ -14,6 +14,10 @@
 ///     - Handles <Transfer> events from Balancer Pool contract
 ///     - Generates a daily swap to store virtual price
 /// @dev
+//      - Essentially updates Balancer pool's latest data (i.e.: reserves, total supply
+//        & balancer_gro_weth price), so we can start updating the related entities from
+//        G2 deployment (as defined by Chainlink start block) instead of the pool creation
+//        to reduce indexing time
 ///     - Balancer Vault: 0xba12222222228d8ba445958a75a0704d566bf2c8
 ///     - Balancer Pool: 0x702605f43471183158938c1a3e5f5a359d7b31ba
 
