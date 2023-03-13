@@ -5,6 +5,7 @@ import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
 import { TOKEN as Token } from '../utils/constants';
 import { DepoWithdraw } from '../types/depowithdraw';
+import { TX_TYPE as TxType } from '../utils/constants';
 import { updateTotalSupply } from '../setters/coreData';
 import {
     setGvtFactor,
@@ -43,7 +44,7 @@ export const manageCoreWithdrawal = (
 
     // Updates total supply in entity <CoreData>
     updateTotalSupply(
-        'withdrawal',
+        TxType.CORE_WITHDRAWAL,
         tx.coin_amount,
         token,
     );

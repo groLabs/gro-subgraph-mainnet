@@ -2,6 +2,7 @@ import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
 import { TOKEN as Token } from '../utils/constants';
 import { DepoWithdraw } from '../types/depowithdraw';
+import { TX_TYPE as TxType } from '../utils/constants';
 import { updateTotalSupply } from '../setters/coreData';
 import { setEmergencyWithdrawTx } from '../setters/depowithdraw';
 import {
@@ -32,7 +33,7 @@ export const manageEmergencyCoreWithdrawal = (
 
     // Updates total supply in entity <CoreData>
     updateTotalSupply(
-        'withdrawal',
+        TxType.CORE_WITHDRAWAL,
         tx.coin_amount,
         tx.token,
     );

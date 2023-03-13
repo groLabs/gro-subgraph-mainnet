@@ -4,6 +4,7 @@ import { setPools } from '../setters/pools';
 import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
 import { DepoWithdraw } from '../types/depowithdraw';
+import { TX_TYPE as TxType } from '../utils/constants';
 import { updateTotalSupply } from '../setters/coreData';
 import {
     setDepoWithdrawTx,
@@ -38,7 +39,7 @@ export const manageCoreDeposit = (
 
     // Updates total supply in entity <CoreData>
     updateTotalSupply(
-        'deposit',
+        TxType.CORE_DEPOSIT,
         tx.coin_amount,
         token,
     );

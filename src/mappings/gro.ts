@@ -27,6 +27,7 @@ import {
     ADDR,
     DECIMALS,
     TOKEN as Token,
+    TX_TYPE as TxType,
 } from '../utils/constants';
 import {
     Approval,
@@ -64,13 +65,13 @@ export function handleTransfer(event: Transfer): void {
         // Updates total supply in entity <CoreData>
         if (from == ADDR.ZERO) {
             updateTotalSupply(
-                'deposit',
+                TxType.CORE_DEPOSIT,
                 value,
                 Token.GRO,
             );
         } else if (to == ADDR.ZERO) {
             updateTotalSupply(
-                'withdrawal',
+                TxType.CORE_WITHDRAWAL,
                 value,
                 Token.GRO,
             );

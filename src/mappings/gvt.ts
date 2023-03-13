@@ -41,6 +41,7 @@ import {
 import {
     DECIMALS,
     TOKEN as Token,
+    TX_TYPE as TxType,
     LOG_DEPOSIT_SIG_V1,
     LOG_DEPOSIT_SIG_V23,
     LOG_GROUTER_DEPOSIT_SIG,
@@ -147,7 +148,7 @@ const isDepositOrWithdrawalGVT = (
             // Update total supply in entity <CoreData>
             // Means gvt minted out of deposit handler (aka harvest) 
             updateTotalSupply(
-                'deposit',
+                TxType.CORE_DEPOSIT,
                 tokenToDecimal(amount, 18, DECIMALS),
                 Token.GVT,
             )
