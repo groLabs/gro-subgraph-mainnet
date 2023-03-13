@@ -292,7 +292,7 @@ dataSources:
     network: {{network}}
     source:
       address: "{{GvtAddress}}"
-      abi: ERC20
+      abi: Gvt
       startBlock: {{GvtStartBlock}}
     mapping:
       kind: ethereum/events
@@ -325,7 +325,7 @@ dataSources:
     network: {{network}}
     source:
       address: "{{PwrdAddress}}"
-      abi: ERC20
+      abi: Pwrd
       startBlock: {{PwrdStartBlock}}
     mapping:
       kind: ethereum/events
@@ -343,6 +343,8 @@ dataSources:
         - name: ERC20
           file: ./abis/ethereum/ERC20.json
       eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
         - event: Approval(indexed address,indexed address,uint256)
@@ -869,6 +871,8 @@ dataSources:
         - name: Pwrd
           file: ./abis/ethereum/Pwrd.json
       eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
         - event: LogStrategyAdded(indexed address,indexed uint256,uint256)
           handler: handleStrategyAdded
         - event: LogStrategyHarvestReport(indexed address,uint256,uint256,uint256,uint256,uint256,uint256)
@@ -883,7 +887,6 @@ dataSources:
         #   handler: handleDeposit
         # - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
         #   handler: handleWithdraw  
-
       file: ./src/mappings/gvault.ts
 # *******************************************************************************************
 # ***********   G T R A N C H E   ***********************************************************

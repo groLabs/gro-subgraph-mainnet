@@ -3,7 +3,9 @@ import {
 	ADDR,
 } from '../utils/constants';
 import { TS_LAUNCH } from '../utils/constants';
+import { initCoreData } from '../setters/coreData';
 import { MasterData } from '../../generated/schema';
+import { initAllGVaultStrategies } from '../setters/stratsGVault';
 
 
 export const initMD = (): MasterData => {
@@ -26,4 +28,14 @@ export const initMD = (): MasterData => {
 		md.util_ratio_limit = NUM.ONE;
 	}
 	return md;
+}
+
+export const initMasterDataOnce = (): void => {
+	let md = MasterData.load(ADDR.ZERO);
+	if (!md) {
+		md = initMD();
+		md.save;
+		initCoreData(true);
+		initAllGVaultStrategies();
+	}
 }

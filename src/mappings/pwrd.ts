@@ -20,14 +20,16 @@
 
 import { parseLogEvent } from '../parsers/log';
 import { TOKEN as Token } from '../utils/constants';
+import { initMasterDataOnce } from '../setters/masterdata';
 import { manageApproval } from '../managers/approvals';
 import { manageTransfer } from '../managers/transfers';
 import { parseApprovalEvent } from '../parsers/approval';
 import { parseTransferEvent } from '../parsers/transfer';
+import { OwnershipTransferred} from '../../generated/Pwrd/Pwrd';
 import {
     Approval,
     Transfer,
-} from '../../generated/Gvt/ERC20';
+} from '../../generated/Pwrd/ERC20';
 import {
     isStakerTransfer,
     isDepositOrWithdrawal,
@@ -82,4 +84,8 @@ export function handleTransfer(event: Transfer): void {
         const ev = parseTransferEvent(event);
         manageTransfer(ev, Token.PWRD);
     }
+}
+
+export function handleOwnershipTransferred(event: OwnershipTransferred) : void {
+    initMasterDataOnce();
 }

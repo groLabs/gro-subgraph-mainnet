@@ -20,6 +20,7 @@ import { log } from '@graphprotocol/graph-ts';
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
 import { updateFactors } from '../setters/factors';
+import { initMasterDataOnce } from '../setters/masterdata';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
 import {
@@ -39,6 +40,7 @@ import {
 import {
     LogStrategyAdded,
     LogNewReleaseFactor,
+    OwnershipTransferred,
     LogStrategyTotalChanges,
     LogStrategyHarvestReport,
     LogWithdrawalFromStrategy,
@@ -133,4 +135,8 @@ export function handleStrategyTotalChanges(ev: LogStrategyTotalChanges): void {
         tokenToDecimal(ev.params.totalDebt, 18, DECIMALS),
         ev.block.number,
     );
+}
+
+export function handleOwnershipTransferred(ev: OwnershipTransferred): void {
+    initMasterDataOnce();
 }
