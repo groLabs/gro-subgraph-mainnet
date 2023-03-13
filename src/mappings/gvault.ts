@@ -16,11 +16,12 @@
 /// @dev
 ///     - GVault: 0x1402c1caa002354fc2c4a4cd2b4045a5b9625ef3
 
+import { log } from '@graphprotocol/graph-ts';
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
+import { updateFactors } from '../setters/factors';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
-import { updateFactors } from '../setters/factors';
 import {
     NUM,
     ADDR,
@@ -29,11 +30,11 @@ import {
 import {
     initGVault,
     setNewReleaseFactor,
+    setGVaultLockedProfit,
 } from '../setters/gvault';
 import {
     setGVaultDebt,
     setGVaultHarvest,
-    setGVaultLockedProfit,
 } from '../setters/stratsGVault';
 import {
     LogStrategyAdded,
@@ -100,8 +101,9 @@ export function handleStrategyHarvestReport(ev: LogStrategyHarvestReport): void 
 /// @notice Handles <LogWithdrawalFromStrategy> events from GVault contract
 /// @param ev the withdrawal from strategy event
 export function handleWithdrawalFromStrategy(ev: LogWithdrawalFromStrategy): void {
-    const strategyAddress = getStrategyAddressByQueueId(ev.params.strategyId.toI32());
-    if (strategyAddress != ADDR.ZERO)
+    const queue = ev.params.strategyId.toI32();
+    const strategyAddress = getStrategyAddressByQueueId(queue);
+    if (strategyAddress != ADDR.ZERO) {
         // Updates the strategy debt & timestamp in entity <GVaultStrategy>
         setGVaultDebt(
             strategyAddress,
@@ -109,6 +111,16 @@ export function handleWithdrawalFromStrategy(ev: LogWithdrawalFromStrategy): voi
             tokenToDecimal(ev.params.strategyDebt, 18, DECIMALS),
             ev.block.number,
         );
+    } else {
+        const payload = 'non-existing strategy {} for queue {} in /mappings/gvault.ts';
+        log.warning(
+            'handleWithdrawalFromStrategy(): withdrawal on ' + payload,
+            [
+                strategyAddress.toHexString(),
+                queue.toString(),
+            ]
+        );
+    }
 }
 
 /// @notice Handles <LogStrategyTotalChanges> events from GVault contract

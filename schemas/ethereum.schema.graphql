@@ -109,6 +109,8 @@ type GVaultStrategy @entity {
 	vault_display_name: String!
 	vault_address: GVault!
 	strategy_debt: BigDecimal!
+	equilibrium_value: BigDecimal
+	healthThreshold: Int
 	block_strategy_reported: Int!
 	block_strategy_withdraw: Int!
 	harvests: [GVaultHarvest!] @derivedFrom(field: "strategy_address")

@@ -1,36 +1,16 @@
-import { initGVault } from './gvault';
-import {
-    NUM,
-    ADDR,
-    TOKEN as Token,
-} from '../utils/constants';
+import { NUM } from '../utils/constants';
 import { getGVaultStrategies } from '../utils/strats';
 import {
     GVaultHarvest,
     GVaultStrategy
 } from '../../generated/schema';
 import {
+    log,
     Bytes,
     BigInt,
     BigDecimal
 } from '@graphprotocol/graph-ts';
 
-
-const noGVaultStrategy = (): GVaultStrategy => {
-    let strat = new GVaultStrategy(ADDR.ZERO);
-    strat.coin = Token.UNKNOWN;
-    strat.metacoin = 'unknown';
-    strat.protocol = 'unknown';
-    strat.strat_name = 'unknown';
-    strat.strat_display_name = 'unknown';
-    strat.vault_name = 'unknown';
-    strat.vault_display_name = 'unknown';
-    strat.vault_address = ADDR.ZERO;
-    strat.strategy_debt = NUM.ZERO;
-    strat.block_strategy_reported = 0;
-    strat.block_strategy_withdraw = 0;
-    return strat;
-}
 
 export const initAllGVaultStrategies = (): void => {
     const strats = getGVaultStrategies();
@@ -47,38 +27,13 @@ export const initAllGVaultStrategies = (): void => {
             strat.vault_display_name = str.vault_display_name;
             strat.vault_address = str.vault;
             strat.strategy_debt = NUM.ZERO;
+            strat.equilibrium_value = NUM.ZERO;
+            strat.healthThreshold = 0;
             strat.block_strategy_reported = 0;
             strat.block_strategy_withdraw = 0;
             strat.save();
         }
     }
-}
-
-export const initGVaultStrategy = (stratAddress: Bytes): GVaultStrategy => {
-    let strat = GVaultStrategy.load(stratAddress);
-    if (!strat) {
-        const strats = getGVaultStrategies();
-        for (let i = 0; i < strats.length; i++) {
-            const str = strats[i];
-            if (str.active && str.id == stratAddress) {
-                strat = new GVaultStrategy(str.id);
-                strat.coin = str.coin;
-                strat.metacoin = str.metacoin;
-                strat.protocol = str.protocol;
-                strat.strat_name = str.strat_name;
-                strat.strat_display_name = str.strat_display_name;
-                strat.vault_name = str.vault_name;
-                strat.vault_display_name = str.vault_display_name;
-                strat.vault_address = str.vault;
-                strat.strategy_debt = NUM.ZERO;
-                strat.block_strategy_reported = 0;
-                strat.block_strategy_withdraw = 0;
-                return strat;
-            }
-        }
-        return noGVaultStrategy();
-    }
-    return strat;
 }
 
 export const setGVaultDebt = (
@@ -87,29 +42,24 @@ export const setGVaultDebt = (
     strategyDebt: BigDecimal,
     blockTs: BigInt,
 ): void => {
-    let strat = initGVaultStrategy(strategyAddress);
-    if (eventType == 'withdrawal') {
-        // Based on event <LogWithdrawalFromStrategy>
-        strat.strategy_debt = strategyDebt;
-        strat.block_strategy_withdraw = blockTs.toI32();
-    } else if (eventType == 'total_changes') {
-        // Based on event <LogStrategyTotalChanges>
-        strat.strategy_debt = strategyDebt;
-        strat.block_strategy_reported = blockTs.toI32();
+    let strat = GVaultStrategy.load(strategyAddress);
+    if (strat) {
+        if (eventType == 'withdrawal') {
+            // Based on event <LogWithdrawalFromStrategy>
+            strat.strategy_debt = strategyDebt;
+            strat.block_strategy_withdraw = blockTs.toI32();
+        } else if (eventType == 'total_changes') {
+            // Based on event <LogStrategyTotalChanges>
+            strat.strategy_debt = strategyDebt;
+            strat.block_strategy_reported = blockTs.toI32();
+        }
+        strat.save();
+    } else {
+        log.warning(
+            'setGVaultDebt(): debt on non-existing strategy {} in /setters/stratsGVault.ts',
+            [strategyAddress.toHexString()]
+        );
     }
-    strat.save();
-}
-
-// @dev: triggered by GVault->`LogStrategyHarvestReport`
-export const setGVaultLockedProfit = (
-    vaultAddress: Bytes,
-    lockedProfit: BigDecimal,
-    block: BigInt,
-): void => {
-    let vault = initGVault(vaultAddress);
-    vault.locked_profit = lockedProfit;
-    vault.locked_profit_timestamp = block.toI32();
-    vault.save();
 }
 
 // @dev: triggered by GVault->`LogStrategyHarvestReport`
@@ -138,4 +88,22 @@ export const setGVaultHarvest = (
         harvest.save();
     }
     return harvest;
+}
+
+export const setStopLossLogic = (
+    strategyAddress: Bytes,
+    equilibriumValue: BigDecimal,
+    healthThreshold: i32,
+): void => {
+    let strat = GVaultStrategy.load(strategyAddress);
+    if (strat) {
+        strat.equilibrium_value = equilibriumValue;
+        strat.healthThreshold = healthThreshold;
+        strat.save();
+    } else {
+        log.warning(
+            'setStopLossLogic(): stopLoss on non-existing strategy {} in /setters/stratsGVault.ts',
+            [strategyAddress.toHexString()]
+        );
+    }
 }
