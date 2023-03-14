@@ -18,6 +18,7 @@
 
 import { getGroToken } from '../utils/tokens';
 import { setGvtPrice } from '../setters/price';
+import { updateFactor } from '../setters/factors';
 import { TOKEN as Token} from '../utils/constants';
 import { manageCoreDeposit } from '../managers/deposit';
 import { parseGRouterDepositEvent } from '../parsers/deposit';
@@ -28,24 +29,18 @@ import {
     LogWithdrawal,
     LogLegacyDeposit,
 } from '../../generated/GRouter/GRouter';
-import {
-    setGvtFactor,
-    setPwrdFactor
-} from '../setters/factors';
+
 
 
 /// @notice Updates the factor/price
 /// @param token the token for which the factor/price needs to be updated
-const updateFactor = (token: string): void => {
-    // Updates factor in entity <Factor>
+const updateFactors = (token: string): void => {
     if (token === Token.PWRD) {
-        setPwrdFactor();
+        updateFactor(Token.PWRD);
     } else if (token === Token.GVT) {
-        setGvtFactor();
-    }
-    // Updates gvt price in entity <Price>
-    if (token === Token.GVT)
+        updateFactor(Token.GVT);
         setGvtPrice();
+    } 
 }
 
 /// @notice Handles <LogDeposit> events from GRouter contract
@@ -65,7 +60,7 @@ export function handleLogDeposit(event: LogDeposit): void {
     );
 
     // Updates the factor/price
-    updateFactor(token);
+    updateFactors(token);
 }
 
 /// @notice Handles <LogLegacyDeposit> events from GRouter contract
@@ -86,7 +81,7 @@ export function handleLogLegacyDeposit(event: LogLegacyDeposit): void {
     );
 
     // Updates the factor/price
-    updateFactor(token);
+    updateFactors(token);
 }
 
 /// @notice Handles <LogWithdrawal> events from GRouter contract
@@ -106,5 +101,5 @@ export function handleLogWithdrawal(event: LogWithdrawal): void {
     );
 
     // Updates the factor/price
-    updateFactor(token);
+    updateFactors(token);
 }

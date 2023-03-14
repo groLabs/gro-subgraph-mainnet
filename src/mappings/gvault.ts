@@ -19,7 +19,7 @@
 import { log } from '@graphprotocol/graph-ts';
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
-import { updateFactors } from '../setters/factors';
+import { updateFactor } from '../setters/factors';
 import { initMasterDataOnce } from '../setters/masterdata';
 import { setUtilizationRatio } from '../setters/gtranche';
 import { getStrategyAddressByQueueId } from '../utils/strats';
@@ -27,6 +27,7 @@ import {
     NUM,
     ADDR,
     DECIMALS,
+    TOKEN as Token,
 } from '../utils/constants';
 import {
     initGVault,
@@ -91,7 +92,7 @@ export function handleStrategyHarvestReport(ev: LogStrategyHarvestReport): void 
     );
 
     // Updates the gvt & pwrd factors in entity <Factor>
-    updateFactors();
+    updateFactor(Token.UNKNOWN);
 
     // Updates the gvt price in entity <Price>
     setGvtPrice();

@@ -3,14 +3,11 @@ import { setUser } from '../setters/users'
 import { setPools } from '../setters/pools';
 import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
+import { updateFactor } from '../setters/factors';
 import { TOKEN as Token } from '../utils/constants';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { TX_TYPE as TxType } from '../utils/constants';
 import { updateTotalSupply } from '../setters/coreData';
-import {
-    setGvtFactor,
-    setPwrdFactor
-} from '../setters/factors';
 import {
     setDepoWithdrawTx,
     setStakerDepoWithdrawTx
@@ -51,9 +48,9 @@ export const manageCoreWithdrawal = (
 
     // Updates GToken factor in entity <Factor>
     if (token === Token.PWRD) {
-        setPwrdFactor();
+        updateFactor(Token.PWRD);
     } else if (token === Token.GVT) {
-        setGvtFactor();
+        updateFactor(Token.GVT);
     }
 }
 

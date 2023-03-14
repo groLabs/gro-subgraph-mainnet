@@ -20,12 +20,10 @@
 import { Log } from '../types/log';
 import { setGvtPrice } from '../setters/price';
 import { parseLogEvent } from '../parsers/log';
+import { updateFactor } from '../setters/factors';
 import { LogPnLExecution } from '../../generated/PnL/PnL';
 import {
-	setGvtFactor,
-	setPwrdFactor,
-} from '../setters/factors';
-import {
+	TOKEN as Token,
 	LOG_WITHDRAWAL_SIG_V1,
 	LOG_WITHDRAWAL_SIG_V23,
 	WITHDRAWAL_HANDLER_ADDRESSES,
@@ -38,14 +36,14 @@ import {
 ///      will update the factor AFTER the based calc
 export function handlePnLExecution(event: LogPnLExecution): void {
 	setGvtPrice();
-	setGvtFactor();
+	updateFactor(Token.GVT);
 	const receipt = event.receipt;
 	if (receipt) {
 		const logs = parseLogEvent(event.receipt!.logs);
 		if (!isWithdrawal(logs))
-			setPwrdFactor();
+			updateFactor(Token.PWRD);
 	} else {
-		setPwrdFactor();
+		updateFactor(Token.PWRD);
 	}
 }
 

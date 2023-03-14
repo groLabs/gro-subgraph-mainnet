@@ -1,14 +1,12 @@
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
+import { updateFactor } from '../setters/factors';
 import { TOKEN as Token } from '../utils/constants';
 import { DepoWithdraw } from '../types/depowithdraw';
 import { TX_TYPE as TxType } from '../utils/constants';
 import { updateTotalSupply } from '../setters/coreData';
 import { setEmergencyWithdrawTx } from '../setters/depowithdraw';
-import {
-    setGvtFactor,
-    setPwrdFactor
-} from '../setters/factors';
+
 
 
 /// @notice Manages emergency core withdrawals from EmergencytHandler (pre-G2)
@@ -40,8 +38,8 @@ export const manageEmergencyCoreWithdrawal = (
 
     // Updates GToken factor in entity <Factor>
     if (tx.token === Token.PWRD) {
-        setPwrdFactor();
+        updateFactor(Token.PWRD);
     } else if (tx.token === Token.GVT) {
-        setGvtFactor();
+        updateFactor(Token.GVT);
     }
 }
