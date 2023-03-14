@@ -1,3 +1,18 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Initialises entity <VestingBonus> and updates amounts & rewards and
+///         global timestamps
+
 import { initMD } from './masterdata';
 import { NUM } from '../utils/constants';
 import { GROVesting as GROVestingV1 } from '../../generated/GROVestingV1/GROVesting';
@@ -16,10 +31,13 @@ import {
     BigInt,
     Address,
     BigDecimal,
-
 } from '@graphprotocol/graph-ts';
 
 
+/// @notice Initialises entity <VestingBonus> with default values if not created yet
+/// @param userAddress the user address
+/// @param save stores the entity if true; doesn't store it otherwise
+/// @return VestingBonus object
 export const initVestingBonus = (
     userAddress: Bytes,
     save: boolean,
@@ -29,10 +47,7 @@ export const initVestingBonus = (
     if (!vestingBonus) {
         vestingBonus = new VestingBonus(id);
         vestingBonus.user_address = userAddress;
-        vestingBonus.locked_gro = NUM.ZERO;  //TODO: never updated -> to be removed
         vestingBonus.net_reward = NUM.ZERO;
-        vestingBonus.claim_now = NUM.ZERO;
-        vestingBonus.vest_all = NUM.ZERO;
         vestingBonus.vesting_gro = NUM.ZERO;
         vestingBonus.latest_start_time = 0;
         if (save)

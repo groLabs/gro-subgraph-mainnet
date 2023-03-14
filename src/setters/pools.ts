@@ -1,3 +1,17 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Initialises entity <Pool> and updates its net rewards, balance and debt
+
 import { Pool } from '../../generated/schema';
 import { getRewardDebt } from '../utils/staker';
 import {
@@ -10,6 +24,10 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
+/// @notice Initialises entity <Pool> with default values if not created yet
+/// @param userAddress the user address
+/// @param poolId the pool id
+/// @return Pool object for a given user address and pool id
 const initPool = (
     userAddress: Bytes,
     poolId: i32,
@@ -23,13 +41,23 @@ const initPool = (
         pool.net_reward = NUM.ZERO;
         pool.reward_debt = NUM.ZERO;
         pool.balance = NUM.ZERO;
-        pool.claim_now = NUM.ZERO;
-        pool.vest_all = NUM.ZERO;
     }
     return pool;
 }
 
-// @dev: Reward = current reward from deposit/withdrawal/claim - last reward from deposit/withdrawal/claim
+/// @notice Updates net rewards, balance and debt in entity <Pool> when there
+///         is a deposit, withdrawal or claim from the Staker contract
+/// @dev - Triggered by the following Staker events:
+///         - <LogClaim>
+///         - <LogMultiClaim>
+///         - <LogDeposit>
+///         - <LogWithdraw>
+///         - <LogEmergencyWithdraw>
+/// @param type the transaction type (staker_deposit, staker_withdrawal, claim, multiclaim)
+/// @param userAddress the user address
+/// @param poolId the pool id
+/// @param contractAddress the staker contract address
+/// @param coinAmount the coin amount
 export const setPools = (
     type: string,
     userAddress: Bytes,
@@ -38,15 +66,16 @@ export const setPools = (
     coinAmount: BigDecimal,
 ): void => {
     let pool = initPool(userAddress, poolId);
-    // Retrieve rewards debt from function userInfo() in staker contract
-    // when there is a deposit, withdrawal or claim
     const currentRewardDebt = getRewardDebt(
         contractAddress,
         userAddress,
-        poolId
+        poolId,
     );
     const currentNetReward = currentRewardDebt.minus(pool.reward_debt);
-    if (type === TxType.CLAIM || type === TxType.MULTICLAIM) {
+    if (
+        type === TxType.CLAIM
+        || type === TxType.MULTICLAIM
+    ) {
         pool.net_reward = pool.net_reward.plus(currentNetReward);
     } else if (type === TxType.STAKER_DEPOSIT) {
         pool.balance = pool.balance.plus(coinAmount);

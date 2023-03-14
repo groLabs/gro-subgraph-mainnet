@@ -220,10 +220,7 @@ type Totals @entity {
 type VestingBonus @entity {
 	id: Bytes! # userAddress
 	user_address: User! # FK to User
-	locked_gro: BigDecimal!
 	net_reward: BigDecimal!
-	claim_now: BigDecimal!
-	vest_all: BigDecimal!
 	vesting_gro: BigDecimal!
 	latest_start_time: Int!
 }
@@ -245,8 +242,6 @@ type Pool @entity {
 	net_reward: BigDecimal!
 	reward_debt: BigDecimal!
 	balance: BigDecimal! # rename to coinBalance
-	claim_now: BigDecimal!
-	vest_all: BigDecimal!
 }
 
 # gro protocol deposits, withdrawals & transfers
