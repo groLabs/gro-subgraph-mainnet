@@ -5,12 +5,6 @@ dataSources:
 # *******************************************************************************************
 # ***********   C H A I N L I N K   *********************************************************
 # *******************************************************************************************
-# @dev-1: linked only to DAI/USD aggregator, but listening to the hourly answerUpdated
-# event to update DAI, USDC & USDT based on contract call latestRoundData() on each
-# corresponding aggregator
-# @dev-2: calcs for vault & strategy data rely on stablecoin events, so handling them would
-# kill the overall performance. Instead, data from vaults & adapters is retrieved every 1h
-# directly through contract calls
   - kind: ethereum/contract
     name: ChainlinkAggregator
     network: {{network}}
@@ -24,6 +18,8 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - PoolSwap
+        - PoolData
       abis:
         - name: AccessControlledOffchainAggregator
           file: ./abis/ethereum/ChainlinkAggregatorProxy.json
@@ -33,10 +29,6 @@ dataSources:
           file: ./abis/ethereum/BalancerGroWethPool.json
         - name: ThreePool
           file: ./abis/ethereum/ThreePool.json
-        - name: Gvt
-          file: ./abis/ethereum/Gvt.json
-        - name: Pwrd
-          file: ./abis/ethereum/Pwrd.json
         - name: UniswapV2Pair
           file: ./abis/ethereum/UniswapV2Pair.json
       eventHandlers:
@@ -88,9 +80,10 @@ dataSources:
       entities:
         - User
         - Totals
-        - Factor
         - CoreData
         - TransferTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: DepositHandler
           file: ./abis/ethereum/DepositHandlerV1.json
@@ -117,9 +110,10 @@ dataSources:
       entities:
         - User
         - Totals
-        - Factor
         - CoreData
         - TransferTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: DepositHandler
           file: ./abis/ethereum/DepositHandlerV2.json
@@ -146,9 +140,10 @@ dataSources:
       entities:
         - User
         - Totals
-        - Factor
         - CoreData
         - TransferTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: DepositHandler
           file: ./abis/ethereum/DepositHandlerV3.json
@@ -304,6 +299,9 @@ dataSources:
         - Factor
         - Totals
         - CoreData
+        - TransferTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: Gvt
           file: ./abis/ethereum/Gvt.json
@@ -337,6 +335,9 @@ dataSources:
         - Factor
         - Totals
         - CoreData
+        - TransferTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: Pwrd
           file: ./abis/ethereum/Pwrd.json
@@ -368,8 +369,11 @@ dataSources:
       entities:
         - User
         - CoreTx
-        - Price
-        # - Totals
+        - Totals
+        - CoreData
+        - TransferTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: Gro
           file: ./abis/ethereum/Gro.json
@@ -386,6 +390,7 @@ dataSources:
 # *******************************************************************************************
 # ***********   S T A K E R   ***************************************************************
 # *******************************************************************************************
+# @dev: Uses Gvt & Pwrd contracts to get the factors
   - kind: ethereum/contract
     name: LpTokenStakerV1
     network: {{network}}
@@ -399,8 +404,14 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - User
-        - Pools
+        - Pool
+        - Totals
+        - TransferTx
+        - MasterData
+        - StakerData
         - StakerClaimTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: LpTokenStaker
           file: ./abis/ethereum/LpTokenStakerV1.json
@@ -440,10 +451,14 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - User
-        - Pools
+        - Pool
+        - Totals
+        - TransferTx
+        - MasterData
+        - StakerData
         - StakerClaimTx
-        - DepositTx
-        - WithdrawalTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: LpTokenStaker
           file: ./abis/ethereum/LpTokenStakerV2.json
@@ -489,7 +504,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - CoreData
         - PoolData
+        - PoolSwap
       abis:
         - name: UniswapV2Pair
           file: ./abis/ethereum/UniswapV2Pair.json
@@ -513,7 +530,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - CoreData
         - PoolData
+        - PoolSwap
       abis:
         - name: UniswapV2Pair
           file: ./abis/ethereum/UniswapV2Pair.json
@@ -540,7 +559,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - CoreData
         - PoolData
+        - PoolSwap
       abis:
         - name: Vyper_contract
           file: ./abis/ethereum/CurveMetapool3CRV.json
@@ -566,7 +587,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - CoreData
         - PoolData
+        - PoolSwap
       abis:
         - name: Vault
           file: ./abis/ethereum/BalancerGroWethVault.json
@@ -593,7 +616,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Price
+        - CoreData
         - PoolData
+        - PoolSwap
       abis:
         - name: ERC20
           file: ./abis/ethereum/ERC20.json
@@ -746,7 +771,11 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - User
+        - Totals
         - Airdrop
+        - VestingBonus
+        - VestingAirdrop
         - AirdropClaimTx
       abis:
         - name: Airdrop
@@ -769,7 +798,11 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - User
+        - Totals
         - Airdrop
+        - VestingBonus
+        - VestingAirdrop
         - AirdropClaimTx
       abis:
         - name: Airdrop
@@ -792,7 +825,10 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - TBC
+        - User
+        - Totals
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: GMerkleVestor
           file: ./abis/ethereum/GMerkleVestor.json
@@ -823,6 +859,8 @@ dataSources:
         - Totals
         - CoreData
         - TransferTx
+        - VestingBonus
+        - VestingAirdrop
       abis:
         - name: GRouter
           file: ./abis/ethereum/GRouter.json
@@ -858,6 +896,7 @@ dataSources:
       entities:
         - Price
         - Factor
+        - GVault
         - MasterData
         - GVaultStrategy
         - GVaultHarvest
@@ -928,7 +967,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - TBC
+        - GVaultStrategy
       abis:
         - name: StopLossLogic
           file: ./abis/ethereum/StopLossLogic.json
