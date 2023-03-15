@@ -14,7 +14,7 @@
 ///     - Handles <LogVest>, <LogExit> & <LogExtend> events from
 ///       GROVesting v1 & v2 contracts
 ///     - Handles <LogInstantExit> & <LogNewInitUnlockedPercent> events from
-///       GROVesting v1 contract
+///       GROVesting v2 contract only
 /// @dev
 ///     - GROVesting v1: 0xa28693bf01dc261887b238646bb9636cb3a3730b
 ///     - GROVesting v2: 0x748218256afe0a19a88ebeb2e0c5ce86d2178360
@@ -24,6 +24,12 @@ import {
     NUM,
     DECIMALS,
 } from '../utils/constants';
+import {
+    vesting1Address,
+    vesting2Address,
+} from '../utils/contracts';
+import { GROVesting as GROVestingV1 } from '../../generated/GROVestingV1/GROVesting';
+import { GROVesting as GROVestingV2 } from '../../generated/GROVestingV2/GROVesting';
 import {
     LogVest as LogVestV1,
     LogExit as LogExitV1,
@@ -46,6 +52,9 @@ import {
 } from '../setters/vestingBonus';
 import { tokenToDecimal } from '../utils/tokens';
 
+const GROVestingV1contract = GROVestingV1.bind(vesting1Address);
+const GROVestingV2contract = GROVestingV2.bind(vesting2Address);
+
 
 /// @notice Handles <LogVest> events from GROVesting V1 contract
 /// @param event the vest event
@@ -66,7 +75,7 @@ export function handleVestV1(event: LogVestV1): void {
     // Updates global start time in entity <MasterData>
     updateGlobalTimeStamp(
         md,
-        event.address,
+        GROVestingV1contract,
         true,
     );
 }
@@ -90,7 +99,7 @@ export function handleVestV2(event: LogVestV2): void {
     // Updates global start time in entity <MasterData>
     updateGlobalTimeStamp(
         md,
-        event.address,
+        GROVestingV2contract,
         true,
     );
 }
@@ -102,7 +111,7 @@ export function handleExitV1(event: LogExitV1): void {
     // and vesting gro in entity <VestingBonus>
     updateExit(
         event.params.user,
-        event.address,
+        GROVestingV1contract,
         tokenToDecimal(event.params.vesting, 18, DECIMALS),
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
         tokenToDecimal(event.params.penalty, 18, DECIMALS),
@@ -117,7 +126,7 @@ export function handleExitV2(event: LogExitV2): void {
     // and vesting gro in entity <VestingBonus>
     updateExit(
         event.params.user,
-        event.address,
+        GROVestingV2contract,
         tokenToDecimal(event.params.amount, 18, DECIMALS),
         tokenToDecimal(event.params.totalLockedAmount, 18, DECIMALS),
         tokenToDecimal(event.params.penalty, 18, DECIMALS),
@@ -132,7 +141,7 @@ export function handleInstantExitV2(event: LogInstantExitV2): void {
     // Updates total bonus & global start time in entity <MasterData>
     updateExit(
         event.params.user,
-        event.address,
+        GROVestingV2contract,
         NUM.ZERO,
         NUM.ZERO,
         tokenToDecimal(event.params.penalty, 18, DECIMALS),
@@ -147,7 +156,7 @@ export function handleExtendV1(event: LogExtendV1): void {
     // Updates global start time in entity <MasterData>
     updateGlobalTimeStamp(
         md,
-        event.address,
+        GROVestingV1contract,
         true,
     );
     // Updates latest start time in entity <VestingBonus>
@@ -164,7 +173,7 @@ export function handleExtendV2(event: LogExtendV2): void {
     // Updates global start time in entity <MasterData>
     updateGlobalTimeStamp(
         md,
-        event.address,
+        GROVestingV2contract,
         true,
     );
     // Updates latest start time in entity <VestingBonus>

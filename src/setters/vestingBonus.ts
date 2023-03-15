@@ -10,26 +10,21 @@
 
 // gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
 
-/// @notice Initialises entity <VestingBonus> and updates amounts & rewards and
-///         global timestamps
+/// @notice 
+///     - Initialises entity <VestingBonus> and updates amount, rewards & timestamp
+///     - Updates total bonus, locked amount, initial unlocked percent & global start
+///       time in entity <MasterData>
 
 import { initMD } from './masterdata';
 import { NUM } from '../utils/constants';
-import { GROVesting as GROVestingV1 } from '../../generated/GROVestingV1/GROVesting';
-import { GROVesting as GROVestingV2 } from '../../generated/GROVestingV2/GROVesting';
 import {
     MasterData,
     VestingBonus,
 } from '../../generated/schema';
 import {
-    vesting1Address,
-    vesting2Address,
-} from '../utils/contracts';
-import {
     log,
     Bytes,
     BigInt,
-    Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
 
@@ -37,7 +32,7 @@ import {
 /// @notice Initialises entity <VestingBonus> with default values if not created yet
 /// @param userAddress the user address
 /// @param save stores the entity if true; doesn't store it otherwise
-/// @return VestingBonus object
+/// @return vesting bonus object from entity <VestingBonus>
 export const initVestingBonus = (
     userAddress: Bytes,
     save: boolean,
@@ -56,7 +51,13 @@ export const initVestingBonus = (
     return vestingBonus;
 }
 
-// Event <BonusClaimed> from GROHodler
+/// @notice Updates the net reward in entity <VestingBonus>
+/// @dev - Triggered by <LogBonusClaimed> event from GROHodler contracts
+///      - If vest=true, all bonus claim is added to rewards; otherwise, the 30% is added
+///      - Claiming bonus without vesting is only available in GROHodler v2
+/// @param userAddress the user address
+/// @param _amount the bonus claim amount
+/// @param vest the vest flag (true, false)
 export const updateNetReward = (
     userAddress: Bytes,
     _amount: BigDecimal,
@@ -70,7 +71,11 @@ export const updateNetReward = (
     vestingBonus.save();
 }
 
-// Event <LogVest> from GROVesting
+/// @notice Updates the vesting amount in entity <VestingBonus>
+/// @dev Triggered by <LogVest> event from GROVesting contracts
+/// @param userAddress the user address
+/// @param amount the vesting amount
+/// @param latestStartTime the vesting start time
 export const updateVest = (
     userAddress: Bytes,
     amount: BigDecimal,
@@ -82,6 +87,10 @@ export const updateVest = (
     vestingBonus.save();
 }
 
+/// @notice Updates the start time in entity <VestingBonus>
+/// @dev Triggered by <LogExtend> event from GROVesting contracts
+/// @param userAddress the user address
+/// @param latestStartTime the vesting start time
 export const updateStartTime = (
     userAddress: Bytes,
     latestStartTime: BigInt,
@@ -91,7 +100,12 @@ export const updateStartTime = (
     vestingBonus.save();
 }
 
-// Event <LogVest> & <LogExit> from GROVesting
+/// @notice Updates the total locked amount in entity <MasterData>
+/// @dev Triggered by <LogVest> events from GROVesting contract
+/// @param md the MasterData entity
+/// @param amount the total locked amount
+/// @param save stores the entity if true; doesn't store it otherwise
+/// @return MasterData object
 export const updateTotalLockedAmount = (
     md: MasterData,
     amount: BigDecimal,
@@ -104,8 +118,13 @@ export const updateTotalLockedAmount = (
     return md;
 }
 
-// Event <LogExit>, <LogInstantExit> from GROVesting
-// Event <LogBonusClaimed> from GROHodler
+/// @notice Updates the total bonus in entity <MasterData>
+/// @dev: Triggered by the following contract events:
+///         - <LogBonusClaimed> from GROHodler
+///         - <LogExit> & <LogInstantExit> from GROVesting
+/// @param bonusAmount the bonus amount from a claim or penalty amount from an exit
+/// @param save stores the entity if true; doesn't store it otherwise
+/// @return MasterData object
 export const updateTotalBonus = (
     bonusAmount: BigDecimal,
     save: boolean,
@@ -122,70 +141,68 @@ export const updateTotalBonus = (
     return md;
 }
 
-// Event <LogVest>, <LogExit>, <LogInstantExit> & <LogExtend> from GROVesting
-export const updateGlobalTimeStamp = (
+/// @notice Updates the global start time in entity <MasterData>
+/// @dev: Triggered by <LogVest>, <LogExtend>, <LogExit> & <LogInstantExit>
+///       events from GROVesting contracts
+/// @param md the MasterData entity
+/// @param vestingContract the vesting contract (v1 or v2)
+/// @param save stores the entity if true; doesn't store it otherwise
+/// @return MasterData object
+export function updateGlobalTimeStamp<T>(
     md: MasterData,
-    vestingAddress: Bytes,
+    vestingContract: T,
     save: boolean,
-): MasterData => {
-    if (vestingAddress == vesting1Address) {
-        const contract = GROVestingV1.bind(Address.fromBytes(vestingAddress));
-        const globalStartTime = contract.try_globalStartTime();
-        if (globalStartTime.reverted) {
-            log.error(
-                'updateGlobalTimeStamp(): try_globalStartTime() on vesting v1 reverted in /setters/vestingBonus.ts',
-                []
-            );
-        } else {
-            md.global_start_time = globalStartTime.value.toI32();
-        }
-    } else if (vestingAddress == vesting2Address) {
-        const contract = GROVestingV2.bind(Address.fromBytes(vestingAddress));
-        const globalStartTime = contract.try_globalStartTime();
-        if (globalStartTime.reverted) {
-            log.error(
-                'updateGlobalTimeStamp(): try_globalStartTime() on vesting v2 reverted in /setters/vestingBonus.ts',
-                []
-            );
-        } else {
-            md.global_start_time = globalStartTime.value.toI32();
-        }
-    } else {
+): MasterData {
+    //@ts-ignore
+    const globalStartTime = vestingContract.try_globalStartTime();
+    if (globalStartTime.reverted) {
         log.error(
-            'updateGlobalTimeStamp(): vesting contract {} not found in /setters/vestingBonus.ts',
-            [vestingAddress.toHexString()]
+            'updateGlobalTimeStamp(): try_globalStartTime() on vesting reverted in /setters/vestingBonus.ts',
+            [],
         );
+    } else {
+        md.global_start_time = globalStartTime.value.toI32();
     }
     if (save)
         md.save();
     return md;
 }
 
-// Events <LogExit> & <LogInstantExit> from GROVesting
-export const updateExit = (
+/// @notice
+///     - Updates total bonus, total locked amount & global start time
+///       in entity <MasterData>
+///     - Updates vesting amount in entity <VestingBonus>
+/// @dev: Triggered by <LogExit> & <LogInstantExit> events from GROVesting
+/// @param userAddress the user address
+/// @param vestingContract the vesting contract (v1, v2)
+/// @param vestingAmount the vesting amount
+/// @param totalLockedAmount the total locked amount
+/// @param penaltyAmount the penalty amount
+/// @param isInstantExit true if function is called from an <LogInstantExit> event
+export function updateExit<T>(
     userAddress: Bytes,
-    vestingAddress: Bytes,
-    vestingAmount: BigDecimal,      // amount
-    totalLockedAmount: BigDecimal,  // totalLockedAmount
-    penaltyAmount: BigDecimal,      // penalty
+    vestingContract: T,
+    vestingAmount: BigDecimal,
+    totalLockedAmount: BigDecimal,
+    penaltyAmount: BigDecimal,
     isInstantExit: boolean,
-): void => {
-    // Step 1: update total_bonus
+): void {
+    // Updates total_bonus
     let md = updateTotalBonus(
         penaltyAmount,
         false,
     );
-    // Step 2: update total_locked_amount
+    // Updates total_locked_amount
     if (!isInstantExit && totalLockedAmount.ge(NUM.ZERO))
         md.total_locked_amount = totalLockedAmount;
 
-    // Step 3: update global_start_time (Groove)
+    // Updates global_start_time (Groove)
     md = updateGlobalTimeStamp(
         md,
-        vestingAddress,
+        vestingContract,
         false
     );
-    // Step 4: update vesting_gro
+    // Updates vesting_gro
     if (!isInstantExit) {
         let vestingBonus = initVestingBonus(userAddress, false);
         vestingBonus.vesting_gro = vestingBonus.vesting_gro
@@ -195,6 +212,9 @@ export const updateExit = (
     md.save();
 }
 
+/// @notice Updates the init unlocked percent in entity <MasterData>
+/// @dev: Triggered by <LogNewInitUnlockedPercent> event from GROVesting v2
+/// @param amount the init unlocked percent
 export const updateInitUnlockedPercent = (
     amount: BigDecimal
 ): void => {
