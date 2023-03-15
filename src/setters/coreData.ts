@@ -36,8 +36,8 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
-/// @notice Initialises entity <CoreData> with default values
-/// @param save Stores the entity if true
+/// @notice Initialises entity <CoreData> with default values if not created yet
+/// @param save stores the entity if true; doesn't store it otherwise
 /// @return CoreData object (there can only be one that gets updated)
 export const initCoreData = (save: boolean): CoreData => {
 	let core = CoreData.load(ADDR.ZERO);
@@ -106,19 +106,26 @@ export const updateTotalSupply = (
 		|| side == TxType.STAKER_DEPOSIT
 	) {
 		if (coin === Token.GVT) {
-			core.total_supply_gvt = core.total_supply_gvt.plus(amount);
+			core.total_supply_gvt = core.total_supply_gvt
+				.plus(amount);
 		} else if (coin === Token.PWRD) {
-			core.total_supply_pwrd_based = core.total_supply_pwrd_based.plus(basedAmount);
+			core.total_supply_pwrd_based = core.total_supply_pwrd_based
+				.plus(basedAmount);
 		} else if (coin === Token.GRO) {
-			core.total_supply_gro = core.total_supply_gro.plus(amount);
+			core.total_supply_gro = core.total_supply_gro
+				.plus(amount);
 		} else if (coin === Token.UNISWAP_GVT_GRO) {
-			core.total_supply_uniswap_gvt_gro = core.total_supply_uniswap_gvt_gro.plus(amount);
+			core.total_supply_uniswap_gvt_gro = core.total_supply_uniswap_gvt_gro
+				.plus(amount);
 		} else if (coin === Token.UNISWAP_GRO_USDC) {
-			core.total_supply_uniswap_gro_usdc = core.total_supply_uniswap_gro_usdc.plus(amount);
+			core.total_supply_uniswap_gro_usdc = core.total_supply_uniswap_gro_usdc
+				.plus(amount);
 		} else if (coin === Token.CURVE_PWRD3CRV) {
-			core.total_supply_curve_pwrd3crv = core.total_supply_curve_pwrd3crv.plus(amount);
+			core.total_supply_curve_pwrd3crv = core.total_supply_curve_pwrd3crv
+				.plus(amount);
 		} else if (coin === Token.BALANCER_GRO_WETH) {
-			core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth.plus(amount);
+			core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth
+				.plus(amount);
 		} else {
 			showLog.error(`coreData.ts->updateTotalSupply(): can't update for coin {} side {}`, [coin, side]);
 		}
@@ -127,19 +134,25 @@ export const updateTotalSupply = (
 		|| side == TxType.STAKER_WITHDRAWAL
 	) {
 		if (coin === Token.GVT) {
-			core.total_supply_gvt = core.total_supply_gvt.minus(amount);
+			core.total_supply_gvt = core.total_supply_gvt
+				.minus(amount);
 		} else if (coin === Token.PWRD) {
-			core.total_supply_pwrd_based = core.total_supply_pwrd_based.minus(basedAmount);
+			core.total_supply_pwrd_based = core.total_supply_pwrd_based
+				.minus(basedAmount);
 		} else if (coin === Token.GRO) {
 			core.total_supply_gro = core.total_supply_gro.minus(amount);
 		} else if (coin === Token.UNISWAP_GVT_GRO) {
-			core.total_supply_uniswap_gvt_gro = core.total_supply_uniswap_gvt_gro.minus(amount);
+			core.total_supply_uniswap_gvt_gro = core.total_supply_uniswap_gvt_gro
+				.minus(amount);
 		} else if (coin === Token.UNISWAP_GRO_USDC) {
-			core.total_supply_uniswap_gro_usdc = core.total_supply_uniswap_gro_usdc.minus(amount);
+			core.total_supply_uniswap_gro_usdc = core.total_supply_uniswap_gro_usdc
+				.minus(amount);
 		} else if (coin === Token.CURVE_PWRD3CRV) {
-			core.total_supply_curve_pwrd3crv = core.total_supply_curve_pwrd3crv.minus(amount);
+			core.total_supply_curve_pwrd3crv = core.total_supply_curve_pwrd3crv
+				.minus(amount);
 		} else if (coin === Token.BALANCER_GRO_WETH) {
-			core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth.minus(amount);
+			core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth
+				.minus(amount);
 		} else {
 			showLog.error(`coreData.ts->updateTotalSupply(): can't update for coin {} side {}`, [coin, side]);
 		}

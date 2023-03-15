@@ -1,3 +1,17 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Stores Gvt, Pwrd & Gro transfers in entity <TransferTx>
+
 import { getFactor } from '../setters/factors';
 import { Bytes } from '@graphprotocol/graph-ts';
 import { TransferEvent } from '../types/transfer';
@@ -13,6 +27,14 @@ import {
 } from '../utils/tokens';
 
 
+/// @notice Stores transfers in entity <TransferTx>
+/// @dev Staker transfers are excluded, as they are considered 'intra' operations
+///      within Gro Protocol and kept in users balance
+/// @param ev the transfer event
+/// @param userAddress the user address
+/// @param type the transfer type (core_deposit, core_withdrawal, transfer_in, transfer_out)
+/// @param token the transfer token (gvt, pwrd, gro)
+/// @return transfer object from entity <TransferTx>
 export const setTransferTx = (
     ev: TransferEvent,
     userAddress: Bytes,

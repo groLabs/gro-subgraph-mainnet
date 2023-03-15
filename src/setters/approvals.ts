@@ -1,16 +1,35 @@
-import {
-    DECIMALS,
-    TOKEN as Token,
-    TX_TYPE as TxType,
-} from '../utils/constants';
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Stores approvals into entity <ApprovalTx>
+
 import { ApprovalEvent } from '../types/approval';
 import { ApprovalTx } from '../../generated/schema';
 import {
     tokenToDecimal,
     getPricePerShare,
 } from '../utils/tokens';
+import {
+    DECIMALS,
+    TOKEN as Token,
+    TX_TYPE as TxType,
+} from '../utils/constants';
 
 
+/// @notice Stores approvals into entity <ApprovalTx>
+/// @dev Triggered by <Approval> events from Gvt, Pwrd & Gro contracts
+/// @param ev the parsed approval event
+/// @param token the approval token
+/// @return approval object from entity <ApprovalTx>
 export const setApprovalTx = (
     ev: ApprovalEvent,
     token: string,
@@ -34,4 +53,3 @@ export const setApprovalTx = (
     tx.save();
     return tx;
 }
-

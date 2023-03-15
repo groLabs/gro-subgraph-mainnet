@@ -1,3 +1,19 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Stores claims into entity <AirdropClaimTx>
+///     - Stores new drops into entity <Airdrop>
+
 import { DECIMALS } from '../utils/constants';
 import { tokenToDecimal } from '../utils/tokens';
 import { AirdropClaimEvent } from '../types/airdropClaim';
@@ -8,6 +24,10 @@ import {
 } from '../../generated/schema';
 
 
+/// @notice Stores airdrop claims into entity <AirdropClaimTx>
+/// @dev Triggered by event <LogClaim> from Airdrop contracts
+/// @param ev the parsed claim event
+/// @return claim object from entity <AirdropClaimTx>
 export const setAirdropClaimTx = (
     ev: AirdropClaimEvent,
 ): AirdropClaimTx => {
@@ -25,6 +45,10 @@ export const setAirdropClaimTx = (
     return tx;
 }
 
+/// @notice Stores new drops into entity <Airdrop>
+/// @dev Triggered by event <LogNewDrop> from Airdrop contracts
+/// @param ev the new airdrop event
+/// @return new drop object from entity <Airdrop>
 export const setNewAirdrop = (
     ev: AirdropNewDropEvent,
 ): void => {

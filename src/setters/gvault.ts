@@ -1,3 +1,17 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Updates the release factor & locked profit in entity <GVault>
+
 import { NUM } from '../utils/constants';
 import { GVault } from '../../generated/schema';
 import {
@@ -7,6 +21,9 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
+/// @notice Initialises entity <GVault> with default values if not created yet
+/// @param vaultAddress the vault address to be initialised or returned
+/// @return GVault object for a given vault address
 export const initGVault = (
     vaultAddress: Bytes,
 ): GVault => {
@@ -21,6 +38,10 @@ export const initGVault = (
     return vault;
 }
 
+/// @notice Updates the new release factor in entity <GVault>
+/// @dev Triggered by event <LogNewReleaseFactor> from GVault contract
+/// @param vaultAddress the vault address
+/// @param value the new release factor value to be updated
 export const setNewReleaseFactor = (
     vaultAddress: Bytes,
     value: i32,
@@ -30,14 +51,18 @@ export const setNewReleaseFactor = (
     vault.save();
 }
 
-// @dev: triggered by GVault->`LogStrategyHarvestReport`
+/// @notice Updates the locked profit in entity <GVault>
+/// @dev Triggered by event <LogStrategyHarvestReport> from GVault contract
+/// @param vaultAddress the vault address
+/// @param lockedProfit the locked profit value
+/// @param blockTimestamp the block timestamp at which the harvest was triggered
 export const setGVaultLockedProfit = (
     vaultAddress: Bytes,
     lockedProfit: BigDecimal,
-    block: BigInt,
+    blockTimestamp: BigInt,
 ): void => {
     let vault = initGVault(vaultAddress);
     vault.locked_profit = lockedProfit;
-    vault.locked_profit_timestamp = block.toI32();
+    vault.locked_profit_timestamp = blockTimestamp.toI32();
     vault.save();
 }

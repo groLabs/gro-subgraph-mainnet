@@ -1,3 +1,17 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Updates the Gro-related token prices
+
 import { Tx } from '../types/tx';
 import { updatePoolData } from './poolData';
 import { Price } from '../../generated/schema';
@@ -36,6 +50,8 @@ import { WeightedPool as BalancerGroWethPool } from '../../generated/BalancerGro
 import { Vyper_contract as CurveMetapool3CRV } from '../../generated/CurveMetapool3CRV/Vyper_contract';
 
 
+/// @notice Initialises entity <Price> with default zero values if not created yet
+/// @return Price object
 export const initPrice = (): Price => {
     let price = Price.load(ADDR.ZERO);
     if (!price) {
@@ -52,15 +68,19 @@ export const initPrice = (): Price => {
     return price;
 }
 
-// Triggered by GRouter <LogDeposit> | <LogLegacyDeposit> | <LogWithdrawal>
-// and GVault <LogStrategyHarvestReport> events
+/// @notice Updates the gvt price in entity <Price>
+/// @dev Triggered by the following contract events:
+///         - <LogPnLExecution> from PnL
+///         - <LogStrategyHarvestReport> from GVault
+///         - <LogDeposit>, <LogLegacyDeposit> & <LogWithdrawal> from GRouter
 export const setGvtPrice = (): void => {
     let price = initPrice();
     price.gvt = getPricePerShare(Token.GVT);
     price.save();
 }
 
-// Triggered by Chainlink <AnswerUpdated> event in a daily basis
+/// @notice Updates the three_crv price in entity <Price>
+/// @dev Triggered by Chainlink <AnswerUpdated> event in a daily basis
 export const set3CrvPrice = (): void => {
     const contract = ThreePool.bind(threePoolAddress);
     const virtualPrice = contract.try_get_virtual_price();
@@ -74,7 +94,9 @@ export const set3CrvPrice = (): void => {
     }
 }
 
-// Triggered by UniswapV2 <swap> event for GVT/GRO pool
+/// @notice Updates the uniswap_gvt_gro price in entity <Price> and the 
+///         total supply & reserves of Uniswap GVT/GRO Pool in entity <PoolData>
+/// @dev Triggered by <Swap> events from Uniswap GVT/GRO pool
 export const setUniswapGvtGroPrice = (): void => {
     const contract = UniswapV2Pair.bind(uni2GvtGroAddress);
     const reserves = contract.try_getReserves();
@@ -109,9 +131,11 @@ export const setUniswapGvtGroPrice = (): void => {
     }
 }
 
-//@dev: Gro token was circulating before this pool creation,
-//      so any tx before won't have gro price
-// Triggered by UniswapV2 <swap> event for GRO/USDC pool
+/// @notice Updates the uniswap_gro_usdc price in entity <Price> and the 
+///         total supply & reserves of Uniswap GRO/USDC in entity <PoolData>
+/// @dev - Triggered by <Swap> events from Uniswap GRO/USDC
+///      - Gro token was circulating before this pool creation,
+//         so any tx before won't have gro price
 export const setUniswapGroUsdcPrice = (): void => {
     const contract = UniswapV2Pair.bind(uni2GroUsdcAddress);
     const reserves = contract.try_getReserves();
@@ -149,7 +173,9 @@ export const setUniswapGroUsdcPrice = (): void => {
     }
 }
 
-// Triggered by Curve Metapool <TokenExchange> | <TokenExchangeUnderlying> events for PWRD pool
+/// @notice Updates the curve_pwrd3crv price in entity <Price> and the 
+///         total supply & reserves of Curve MetaPool 3CRVPWRD in entity <PoolData>
+/// @dev Triggered by <TokenExchange> & <TokenExchangeUnderlying> events from Curve MetaPool 3CRVPWRD
 export const setCurvePwrd3crvPrice = (): void => {
     const contract = CurveMetapool3CRV.bind(curveMetapoolAddress);
     const reserves = contract.try_get_balances();
@@ -181,33 +207,38 @@ export const setCurvePwrd3crvPrice = (): void => {
     }
 }
 
-// Triggered by Balancer Pool <Transfer> and Chainlink hourly <AnswerUpdated> events
+/// @notice Updates the balancer_gro_weth price in entity <Price> and the 
+///         total supply & reserves of Balancer GRO/WETH Pool in entity <PoolData>
+/// @dev Triggered by Balancer Pool <Transfer> and regular Chainlink <AnswerUpdated> events
 export const setBalancerGroWethPrice = (tx: Tx): void => {
     const contractVault = BalancerGroWethVault.bind(balGroWethVaultAddress);
     const contractPool = BalancerGroWethPool.bind(balGroWethPoolAddress);
     const _totalSupply = contractPool.try_totalSupply();
     const poolTokens = contractVault.try_getPoolTokens(BALANCER_GRO_WETH_POOLID);
+    const path = 'in setters/price.ts';
     if (tx.block < GRO_WETH_POOL_START_BLOCK) {
         log.warning(
-            `setBalancerGroWethPrice(): GRO/WETH Vault updates before its pool creation ${tx.msg} in setters/price.ts`,
+            `setBalancerGroWethPrice(): GRO/WETH Vault updates before its pool creation ${tx.msg} ${path}`,
             tx.data
         )
     } else if (_totalSupply.reverted) {
         log.error(
-            `setBalancerGroWethPrice(): try_totalSupply() reverted ${tx.msg} in /setters/price.ts`,
+            `setBalancerGroWethPrice(): try_totalSupply() reverted ${tx.msg} ${path}`,
             tx.data
         );
     } else if (poolTokens.reverted) {
         log.error(
-            `setBalancerGroWethPrice(): try_getPoolTokens() reverted ${tx.msg} in /setters/price.ts`,
+            `setBalancerGroWethPrice(): try_getPoolTokens() reverted ${tx.msg} ${path}`,
             tx.data
         );
     } else {
         const totalSupply = tokenToDecimal(_totalSupply.value, 18, 12);
-        const reserves = poolTokens.value.getBalances().map<BigDecimal>((item: BigInt) => tokenToDecimal(item, 18, DECIMALS));
+        const reserves = poolTokens.value.getBalances().map<BigDecimal>(
+            (item: BigInt) => tokenToDecimal(item, 18, DECIMALS)
+        );
         if (reserves.length !== 2) {
             log.error(
-                `setBalancerGroWethPrice(): wrong reserves pair ${tx.msg} in /setters/price.ts`,
+                `setBalancerGroWethPrice(): wrong reserves pair ${tx.msg} ${path}`,
                 tx.data
             );
         } else {

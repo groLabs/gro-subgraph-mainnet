@@ -1,3 +1,19 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Initialises entity <GVaultStrategy> and updates debt, equilibrium value & health threshold
+///     - Stores harvests' gain, loss, debt paid, debt added and locked profit in entity <GVaultHarvest>
+
 import { NUM } from '../utils/constants';
 import { getGVaultStrategies } from '../utils/strats';
 import {
@@ -12,6 +28,10 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
+/// @notice Initialises entity <GVaultStrategy> with default values
+/// @dev
+///  - Static data for strategies is defined at /utils/strats.ts->getGVaultStrategies()
+///  - This function is called once through /setters/masterdata.ts->initMasterDataOnce()
 export const initAllGVaultStrategies = (): void => {
     const strats = getGVaultStrategies();
     for (let i = 0; i < strats.length; i++) {
@@ -36,6 +56,13 @@ export const initAllGVaultStrategies = (): void => {
     }
 }
 
+/// @notice Updates debt and timestamp in entity <GVaultStrategy>
+/// @dev Triggered by <LogStrategyTotalChanges> and <LogWithdrawalFromStrategy>
+///      events from GVault contract
+/// @param strategyAddress the strategy address
+/// @param eventType the event type (withdrawal, total_changes)
+/// @param strategyDebt the strategy debt
+/// @param blockTs the block timestamp of the withdrawal or total_changes tx
 export const setGVaultDebt = (
     strategyAddress: Bytes,
     eventType: string,
@@ -62,7 +89,18 @@ export const setGVaultDebt = (
     }
 }
 
-// @dev: triggered by GVault->`LogStrategyHarvestReport`
+/// @notice Stores harvest events from GVault in entity <GVaultHarvest>
+/// @dev Triggered by <LogStrategyHarvestReport> events from GVault contract
+/// @param id the harvest identifier (transaction hash + log index)
+/// @param strategyAddress the strategy address
+/// @param gain the gain value
+/// @param loss the loss value
+/// @param debtPaid the debt value paid
+/// @param debtAdded the debt value added
+/// @param lockedProfit the locked profit
+/// @param lockedProfitBeforeLoss the locked profit before loss
+/// @param timestamp the block timestamp of the harvest transaction
+/// @return harvest object from entity <GVaultHarvest>
 export const setGVaultHarvest = (
     id: Bytes,
     strategyAddress: Bytes,
@@ -90,6 +128,11 @@ export const setGVaultHarvest = (
     return harvest;
 }
 
+/// @notice Updates equilibrium value & health threshold in entity <GVaultStrategy>
+/// @dev Triggered by <LogStrategyUpdated> events from StopLossLogic contract
+/// @param strategyAddress the strategy address
+/// @param equilibriumValue the equilibrium value
+/// @param healthThreshold the health threshold
 export const setStopLossLogic = (
     strategyAddress: Bytes,
     equilibriumValue: BigDecimal,

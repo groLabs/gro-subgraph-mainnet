@@ -1,3 +1,21 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Initialises entity <StakerData> and updates LP supply, acc gro per share,
+///       allocation point, pool share and block number/timestamp in entity <StakerData>
+///     - Updates total allocation and gro per block in entity <MasterData>
+///     - Stores claims in entity <StakerClaimTx>
+
 import { Log } from '../types/log';
 import { initMD } from './masterdata';
 import { tokenToDecimal } from '../utils/tokens';
@@ -5,7 +23,7 @@ import { StakerClaimEvent } from '../types/stakerClaim';
 import {
     StakerData,
     StakerClaimTx,
- } from '../../generated/schema';
+} from '../../generated/schema';
 import {
     BigInt,
     ethereum,
@@ -22,6 +40,9 @@ import {
 } from '../utils/constants';
 
 
+/// @notice Initialises entity <StakerData> with default values if not created yet
+/// @param poolId the pool identifier
+/// @return StakerData object for a given poolId
 const initStakerData = (
     poolId: i32,
 ): StakerData => {
@@ -39,10 +60,18 @@ const initStakerData = (
     return staker;
 }
 
-// @dev: When there is a deposit/withdrawal in the lpTokenStaker, 
-// the LogUpdatePool event gives the total supply of that pool BEFORE
-// the deposit/withdrawal -> this needs to be added/deducted from the 
-// total supply within the LogUpdatePool event.
+/// @notice Retrieves the coin amount from a <Transfer> event within a staker deposit
+///         or withdrawal transaction
+/// @dev - When there is a deposit/withdrawal in the Staker, the <LogUpdatePool> event
+///        gives the total supply of that pool BEFORE the deposit/withdrawal: this needs
+///        to be added/deducted from the LogUpdatePool's total supply
+///      - Triggered by <LogUpdatePool> event from Staker contract
+///      - <LogUpdatePool> events are automatically triggered after every <LogDeposit>,
+///        <LogWithdraw>, <LogEmergencyWithdraw>, <LogClaim>, <LogMultiClaim>
+/// @param logs the logs from the staker deposit or withdrawal transaction 
+/// @return the transfer amount of a staker deposit or withdrawal:
+///         - positive amount if deposit (will be then added to LP supply)
+///         - negative amount if withdrawal (will be then deducted from LP supply)
 const getTransferFromUpdatePool = (
     logs: Log[]
 ): BigDecimal => {
@@ -64,7 +93,15 @@ const getTransferFromUpdatePool = (
     return NUM.ZERO;
 }
 
-// @dev: from staker->LogUpdatePool()
+/// @notice Updates the LP supply, accrued gro per share, block number and
+///         block timestamp in entity <StakerData>
+/// @dev Triggered by <LogUpdatePool> event from Staker contract
+/// @param poolId the pool identifier
+/// @param lpSupply the LP supply
+/// @param accGroPerShare the accrued gro per share
+/// @param blockNumber the block number
+/// @param blockTimestamp the block timestamp
+/// @param logs the logs from a LogUpdatePool transaction
 export const updateStakerSupply = (
     poolId: BigInt,
     lpSupply: BigInt,
@@ -75,13 +112,20 @@ export const updateStakerSupply = (
 ): void => {
     const staker = initStakerData(poolId.toI32());
     const amount = getTransferFromUpdatePool(logs);
-    staker.lp_supply = tokenToDecimal(lpSupply, 18, 12).plus(amount).truncate(12);
+    staker.lp_supply = tokenToDecimal(lpSupply, 18, 12)
+        .plus(amount)
+        .truncate(12);
     staker.acc_gro_per_share = tokenToDecimal(accGroPerShare, 12, 12);
     staker.block_number = blockNumber.toI32();
     staker.block_timestamp = blockTimestamp.toI32();
     staker.save();
 }
 
+/// @notice Updates the pool allocation in entity <StakerData> for a given
+///         pool and the total allocation in entity <MasterData>
+/// @dev Triggered by events <LogAddPool> & <LogSetPool> from Staker contract
+/// @param _poolId the pool identifier to be updated
+/// @param alloc_point the allocation point
 export const updateStakerAllocation = (
     _poolId: BigInt,
     alloc_point: BigInt,
@@ -113,6 +157,9 @@ export const updateStakerAllocation = (
     }
 }
 
+/// @notice Updates the gro per block in entity <MasterData>
+/// @dev Triggered by event <LogGroPerBlock> from staker contract
+/// @param gro_per_block the gro amount per block
 export const updateStakerGroPerBlock = (
     gro_per_block: BigInt,
 ): void => {
@@ -122,6 +169,10 @@ export const updateStakerGroPerBlock = (
     md.save();
 }
 
+/// @notice Stores staker claims & multi-claims in entity <StakerClaimTx>
+/// @dev Triggered by <LogClaim> & <LogMultiClaim> from staker contract
+/// @param ev the parsed claim event
+/// @return claim object from entity <StakerClaimTx>
 export const setClaimTx = (
     ev: StakerClaimEvent,
 ): StakerClaimTx => {
