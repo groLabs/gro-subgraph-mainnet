@@ -754,7 +754,7 @@ dataSources:
         - event: LogNewVest(indexed address,indexed uint256,uint256)
           handler: handleNewVest
         - event: LogStoppedVesting(indexed address,indexed uint256,uint256,uint256)
-          handler: StoppedVesting
+          handler: handleStoppedVesting
       file: ./src/mappings/vestingTeam.ts
 # *******************************************************************************************
 # ***********   A I R D R O P S   ***********************************************************

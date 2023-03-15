@@ -200,9 +200,8 @@ type Totals @entity {
 	amount_added_gro: BigDecimal!
 	amount_removed_gro: BigDecimal!
 	amount_total_gro: BigDecimal!
-	amount_added_gro_team: BigDecimal!
-	amount_removed_gro_team: BigDecimal!
-	amount_total_gro_team: BigDecimal!
+	amount_vest_team_gro: BigDecimal!
+	amount_claim_team_gro: BigDecimal!
 	value_added_pwrd: BigDecimal!
 	value_added_gvt: BigDecimal!
 	value_added_total: BigDecimal!

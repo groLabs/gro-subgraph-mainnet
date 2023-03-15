@@ -1,3 +1,19 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     - Initialises entity <Totals> and updates their amount and value fields
+///     - This entity is used to provide aggregated personal stats to the front-end
+
 import { Totals } from '../../generated/schema';
 import {
     NUM,
@@ -10,7 +26,10 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
-//@dev: <save> used to initialised totals for only-staker users, etc
+/// @notice Initialises entity <Totals> with default 0 values
+/// @param userAddress the user address
+/// @param save stores the entity if true; doesn't store it otherwise
+/// @dev total object from entity <Totals>
 export const initTotals = (
     userAddress: Bytes,
     save: boolean,
@@ -26,9 +45,8 @@ export const initTotals = (
         total.amount_added_gro = NUM.ZERO;
         total.amount_removed_gro = NUM.ZERO;
         total.amount_total_gro = NUM.ZERO;
-        total.amount_added_gro_team = NUM.ZERO;
-        total.amount_removed_gro_team = NUM.ZERO;
-        total.amount_total_gro_team = NUM.ZERO;
+        total.amount_vest_team_gro = NUM.ZERO;
+        total.amount_claim_team_gro = NUM.ZERO;
         total.value_added_gvt = NUM.ZERO;
         total.value_added_pwrd = NUM.ZERO;
         total.value_added_total = NUM.ZERO;
@@ -46,6 +64,20 @@ export const initTotals = (
     return total;
 }
 
+/// @notice Updates the gro, gvt or pwrd amount and values in entity <Totals>
+/// @dev Triggered by the following contract events:
+///     - <LogDeposit> & <LogWithdrawal> from GRouter
+///     - <LogNewDeposit> from DepositHandler
+///     - <LogNewWithdrawal> from WithdrawHandler
+///     - <LogEmergencyWithdrawal> from EmergencyHandler
+///     - <Transfer> from Gro, Gvt & Pwrd (excluding staker transfers)
+/// @param type the transaction type (core_deposit, core_withdrawal,
+///             transfer_in & transfer_out)
+/// @param coin the coin type (gro, gvt, pwrd)
+/// @param userAddress the user address
+/// @param coinAmount the coin amount
+/// @param usdAmount the coin value (in USD)
+/// @param factor the gvt or pwrd factor
 export const setTotals = (
     type: string,
     coin: string,
@@ -56,43 +88,77 @@ export const setTotals = (
 ): void => {
     let total = initTotals(userAddress, false);
     if (coin === Token.GRO) {
-        if (type === TxType.CORE_DEPOSIT || type === TxType.TRANSFER_IN) {
-            total.amount_added_gro = total.amount_added_gro.plus(coinAmount);
-            total.amount_total_gro = total.amount_total_gro.plus(coinAmount);
+        if (
+            type === TxType.CORE_DEPOSIT
+            || type === TxType.TRANSFER_IN
+        ) {
+            total.amount_added_gro = total.amount_added_gro
+                .plus(coinAmount);
+            total.amount_total_gro = total.amount_total_gro
+                .plus(coinAmount);
         } else {
-            total.amount_removed_gro = total.amount_removed_gro.plus(coinAmount);
-            total.amount_total_gro = total.amount_total_gro.minus(coinAmount);
+            total.amount_removed_gro = total.amount_removed_gro
+                .plus(coinAmount);
+            total.amount_total_gro = total.amount_total_gro
+                .minus(coinAmount);
         }
-    } else if (type === TxType.CORE_DEPOSIT || type === TxType.TRANSFER_IN) {
+    } else if (
+        type === TxType.CORE_DEPOSIT
+        || type === TxType.TRANSFER_IN
+    ) {
         if (coin === Token.GVT) {
-            total.amount_added_gvt = total.amount_added_gvt.plus(coinAmount);
-            total.value_added_gvt = total.value_added_gvt.plus(usdAmount);
-            total.net_amount_gvt = total.net_amount_gvt.plus(coinAmount);
-            total.net_value_gvt = total.net_value_gvt.plus(usdAmount);
+            total.amount_added_gvt = total.amount_added_gvt
+                .plus(coinAmount);
+            total.value_added_gvt = total.value_added_gvt
+                .plus(usdAmount);
+            total.net_amount_gvt = total.net_amount_gvt
+                .plus(coinAmount);
+            total.net_value_gvt = total.net_value_gvt
+                .plus(usdAmount);
         } else if (coin === Token.PWRD) {
             const based_amount_pwrd = coinAmount.times(factor);
-            total.amount_added_pwrd = total.amount_added_pwrd.plus(coinAmount);
-            total.value_added_pwrd = total.value_added_pwrd.plus(usdAmount);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus(based_amount_pwrd);
-            total.net_value_pwrd = total.net_value_pwrd.plus(usdAmount);
+            total.amount_added_pwrd = total.amount_added_pwrd
+                .plus(coinAmount);
+            total.value_added_pwrd = total.value_added_pwrd
+                .plus(usdAmount);
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd
+                .plus(based_amount_pwrd);
+            total.net_value_pwrd = total.net_value_pwrd
+                .plus(usdAmount);
         }
-        total.value_added_total = total.value_added_total.plus(usdAmount);
-        total.net_value_total = total.net_value_total.plus(usdAmount);
-    } else if (type === TxType.CORE_WITHDRAWAL || type === TxType.TRANSFER_OUT) {
+        total.value_added_total = total.value_added_total
+            .plus(usdAmount);
+        total.net_value_total = total.net_value_total
+            .plus(usdAmount);
+    } else if (
+        type === TxType.CORE_WITHDRAWAL
+        || type === TxType.TRANSFER_OUT
+    ) {
         if (coin === Token.GVT) {
-            total.amount_removed_gvt = total.amount_removed_gvt.plus(coinAmount);
-            total.value_removed_gvt = total.value_removed_gvt.plus(usdAmount);
-            total.net_amount_gvt = total.net_amount_gvt.minus(coinAmount);
-            total.net_value_gvt = total.net_value_gvt.minus(usdAmount);
+            total.amount_removed_gvt = total.amount_removed_gvt
+                .plus(coinAmount);
+            total.value_removed_gvt = total.value_removed_gvt
+                .plus(usdAmount);
+            total.net_amount_gvt = total.net_amount_gvt
+                .minus(coinAmount);
+            total.net_value_gvt = total.net_value_gvt
+                .minus(usdAmount);
         } else if (coin === Token.PWRD) {
-            total.amount_removed_pwrd = total.amount_removed_pwrd.plus(coinAmount);
-            total.value_removed_pwrd = total.value_removed_pwrd.plus(usdAmount);
-            const based_amount_pwrd = coinAmount.times(factor);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd.minus(based_amount_pwrd);
-            total.net_value_pwrd = total.net_value_pwrd.minus(usdAmount);
+            total.amount_removed_pwrd = total.amount_removed_pwrd
+                .plus(coinAmount);
+            total.value_removed_pwrd = total.value_removed_pwrd
+                .plus(usdAmount);
+            const based_amount_pwrd = coinAmount
+                .times(factor);
+            total.net_based_amount_pwrd = total.net_based_amount_pwrd
+                .minus(based_amount_pwrd);
+            total.net_value_pwrd = total.net_value_pwrd
+                .minus(usdAmount);
         }
-        total.value_removed_total = total.value_removed_total.plus(usdAmount);
-        total.net_value_total = total.net_value_total.minus(usdAmount);
+        total.value_removed_total = total.value_removed_total
+            .plus(usdAmount);
+        total.net_value_total = total.net_value_total
+            .minus(usdAmount);
     }
     total.save();
 }
