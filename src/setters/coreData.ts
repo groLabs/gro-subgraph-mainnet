@@ -26,7 +26,6 @@ import {
 	ADDR,
 	DECIMALS,
 	TOKEN as Token,
-	TX_TYPE as TxType,
 } from '../utils/constants';
 import {
 	BigInt,
@@ -75,14 +74,12 @@ export function setTotalSupply(
 	const decimals = (coin == Token.UNISWAP_GRO_USDC) ? 12 : DECIMALS;
 	if (from == ADDR.ZERO) {
 		updateTotalSupply(
-			TxType.STAKER_DEPOSIT,
 			tokenToDecimal(amount, 18, decimals),
 			coin,
 		);
 	} else if (to == ADDR.ZERO) {
 		updateTotalSupply(
-			TxType.STAKER_WITHDRAWAL,
-			tokenToDecimal(amount, 18, decimals),
+			tokenToDecimal(amount, 18, decimals).times(NUM.MINUS_ONE),
 			coin,
 		);
 	}
@@ -93,7 +90,6 @@ export function setTotalSupply(
 /// @param amount the amount of the transfer
 /// @param coin the coin of the transfer (can be any besides the pool ones)
 export const updateTotalSupply = (
-	side: string,
 	amount: BigDecimal,
 	coin: string,
 ): void => {
@@ -101,63 +97,29 @@ export const updateTotalSupply = (
 	const basedAmount = (coin === Token.PWRD)
 		? amount.times(getStoredFactor(Token.PWRD))
 		: NUM.ZERO;
-	if (
-		side == TxType.CORE_DEPOSIT
-		|| side == TxType.STAKER_DEPOSIT
-	) {
-		if (coin === Token.GVT) {
-			core.total_supply_gvt = core.total_supply_gvt
-				.plus(amount);
-		} else if (coin === Token.PWRD) {
-			core.total_supply_pwrd_based = core.total_supply_pwrd_based
-				.plus(basedAmount);
-		} else if (coin === Token.GRO) {
-			core.total_supply_gro = core.total_supply_gro
-				.plus(amount);
-		} else if (coin === Token.UNISWAP_GVT_GRO) {
-			core.total_supply_uniswap_gvt_gro = core.total_supply_uniswap_gvt_gro
-				.plus(amount);
-		} else if (coin === Token.UNISWAP_GRO_USDC) {
-			core.total_supply_uniswap_gro_usdc = core.total_supply_uniswap_gro_usdc
-				.plus(amount);
-		} else if (coin === Token.CURVE_PWRD3CRV) {
-			core.total_supply_curve_pwrd3crv = core.total_supply_curve_pwrd3crv
-				.plus(amount);
-		} else if (coin === Token.BALANCER_GRO_WETH) {
-			core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth
-				.plus(amount);
-		} else {
-			showLog.error(`coreData.ts->updateTotalSupply(): can't update for coin {} side {}`, [coin, side]);
-		}
-	} else if (
-		side == TxType.CORE_WITHDRAWAL
-		|| side == TxType.STAKER_WITHDRAWAL
-	) {
-		if (coin === Token.GVT) {
-			core.total_supply_gvt = core.total_supply_gvt
-				.minus(amount);
-		} else if (coin === Token.PWRD) {
-			core.total_supply_pwrd_based = core.total_supply_pwrd_based
-				.minus(basedAmount);
-		} else if (coin === Token.GRO) {
-			core.total_supply_gro = core.total_supply_gro.minus(amount);
-		} else if (coin === Token.UNISWAP_GVT_GRO) {
-			core.total_supply_uniswap_gvt_gro = core.total_supply_uniswap_gvt_gro
-				.minus(amount);
-		} else if (coin === Token.UNISWAP_GRO_USDC) {
-			core.total_supply_uniswap_gro_usdc = core.total_supply_uniswap_gro_usdc
-				.minus(amount);
-		} else if (coin === Token.CURVE_PWRD3CRV) {
-			core.total_supply_curve_pwrd3crv = core.total_supply_curve_pwrd3crv
-				.minus(amount);
-		} else if (coin === Token.BALANCER_GRO_WETH) {
-			core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth
-				.minus(amount);
-		} else {
-			showLog.error(`coreData.ts->updateTotalSupply(): can't update for coin {} side {}`, [coin, side]);
-		}
+	if (coin === Token.GVT) {
+		core.total_supply_gvt = core.total_supply_gvt
+			.plus(amount);
+	} else if (coin === Token.PWRD) {
+		core.total_supply_pwrd_based = core.total_supply_pwrd_based
+			.plus(basedAmount);
+	} else if (coin === Token.GRO) {
+		core.total_supply_gro = core.total_supply_gro
+			.plus(amount);
+	} else if (coin === Token.UNISWAP_GVT_GRO) {
+		core.total_supply_uniswap_gvt_gro = core.total_supply_uniswap_gvt_gro
+			.plus(amount);
+	} else if (coin === Token.UNISWAP_GRO_USDC) {
+		core.total_supply_uniswap_gro_usdc = core.total_supply_uniswap_gro_usdc
+			.plus(amount);
+	} else if (coin === Token.CURVE_PWRD3CRV) {
+		core.total_supply_curve_pwrd3crv = core.total_supply_curve_pwrd3crv
+			.plus(amount);
+	} else if (coin === Token.BALANCER_GRO_WETH) {
+		core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth
+			.plus(amount);
 	} else {
-		showLog.error(`coreData.ts->updateTotalSupply(): can't update for side {}`, [side]);
+		showLog.error(`coreData.ts->updateTotalSupply(): can't update for coin {} side {}`, [coin]);
 	}
 	core.save();
 }

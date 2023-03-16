@@ -24,10 +24,10 @@ import { manageTransfer } from '../managers/transfers';
 import { isStakerTransfer } from '../utils/contracts';
 import { updateTotalSupply } from '../setters/coreData';
 import {
+    NUM,
     ADDR,
     DECIMALS,
     TOKEN as Token,
-    TX_TYPE as TxType,
 } from '../utils/constants';
 import {
     Approval,
@@ -65,14 +65,12 @@ export function handleTransfer(event: Transfer): void {
         // Updates total supply in entity <CoreData>
         if (from == ADDR.ZERO) {
             updateTotalSupply(
-                TxType.CORE_DEPOSIT,
                 value,
                 Token.GRO,
             );
         } else if (to == ADDR.ZERO) {
             updateTotalSupply(
-                TxType.CORE_WITHDRAWAL,
-                value,
+                value.times(NUM.MINUS_ONE),
                 Token.GRO,
             );
         }

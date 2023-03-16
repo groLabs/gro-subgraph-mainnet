@@ -1,12 +1,13 @@
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
 import { updateFactor } from '../setters/factors';
-import { TOKEN as Token } from '../utils/constants';
+import {
+    NUM,
+    TOKEN as Token,
+} from '../utils/constants';
 import { DepoWithdraw } from '../types/depowithdraw';
-import { TX_TYPE as TxType } from '../utils/constants';
 import { updateTotalSupply } from '../setters/coreData';
 import { setEmergencyWithdrawTx } from '../setters/depowithdraw';
-
 
 
 /// @notice Manages emergency core withdrawals from EmergencytHandler (pre-G2)
@@ -31,8 +32,7 @@ export const manageEmergencyCoreWithdrawal = (
 
     // Updates total supply in entity <CoreData>
     updateTotalSupply(
-        TxType.CORE_WITHDRAWAL,
-        tx.coin_amount,
+        tx.coin_amount.times(NUM.MINUS_ONE),
         tx.token,
     );
 

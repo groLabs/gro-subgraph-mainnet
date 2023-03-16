@@ -4,10 +4,12 @@ import { setPools } from '../setters/pools';
 import { setTotals } from '../setters/totals';
 import { initTotals } from '../setters/totals';
 import { updateFactor } from '../setters/factors';
-import { TOKEN as Token } from '../utils/constants';
 import { DepoWithdraw } from '../types/depowithdraw';
-import { TX_TYPE as TxType } from '../utils/constants';
 import { updateTotalSupply } from '../setters/coreData';
+import {
+    NUM,
+    TOKEN as Token,
+} from '../utils/constants';
 import {
     setDepoWithdrawTx,
     setStakerDepoWithdrawTx
@@ -41,8 +43,7 @@ export const manageCoreWithdrawal = (
 
     // Updates total supply in entity <CoreData>
     updateTotalSupply(
-        TxType.CORE_WITHDRAWAL,
-        tx.coin_amount,
+        tx.coin_amount.times(NUM.MINUS_ONE),
         token,
     );
 
