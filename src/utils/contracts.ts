@@ -1,9 +1,25 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Contains contract-related util functions and address conversions
+
 import { contracts } from '../../addresses';
 import { Address } from '@graphprotocol/graph-ts';
 import { STAKER_ADDRESSES } from '../utils/constants';
 
 
-// check if Transfer is a deposit or withdrawal
+/// @notice Checks if Transfer is a deposit or withdrawal based on from/to addresses
+/// @return - True if deposit (from = 0x) or withdrawal (to = 0x)
+///         - False otherwise
 export const isDepositOrWithdrawal = (
     from: Address,
     to: Address,
@@ -13,7 +29,9 @@ export const isDepositOrWithdrawal = (
         : false;
 }
 
-// check if Transfer comes in or out of a staker contract
+/// @notice Checks if Transfer comes from Staker contract
+/// @return - True if from or to is a Staker address
+///         - False otherwise
 export const isStakerTransfer = (
     from: Address,
     to: Address,
@@ -23,11 +41,14 @@ export const isStakerTransfer = (
         : false;
 }
 
+/// @notice Checks if Transfer goes to the GRouter contract
+/// @return - True if from to is the GRouter address
+///         - False otherwise
 export const isTransferToGRouter = (to: Address): bool => {
     return  gRouterAddress.equals(to);
 }
 
-// contract addresses
+// Contract addresses conversion (from string to Address) 
 // Gro Protocol
 export const gvtAddress = Address.fromString(contracts.GvtAddress);
 export const pwrdAddress = Address.fromString(contracts.PwrdAddress);

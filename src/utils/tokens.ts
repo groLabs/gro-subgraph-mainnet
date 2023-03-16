@@ -1,15 +1,22 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Contains token-related utility functions
+
 import { Gvt } from '../../generated/Gvt/Gvt';
 import { UniswapV2Pair } from '../../generated/UniswapV2PairGvtGro/UniswapV2Pair';
 import {
     AccessControlledOffchainAggregator as ChainlinkAggregator
 } from '../../generated/ChainlinkAggregator/AccessControlledOffchainAggregator';
-import {
-    gvtAddress,
-    uni2UsdcWethAddress,
-    chainlinkDaiUsdAddress,
-    chainlinkUsdcUsdAddress,
-    chainlinkUsdtUsdAddress,
-} from '../utils/contracts';
 import {
     NUM,
     ADDR,
@@ -22,6 +29,13 @@ import {
     Address,
     BigDecimal,
 } from '@graphprotocol/graph-ts';
+import {
+    gvtAddress,
+    uni2UsdcWethAddress,
+    chainlinkDaiUsdAddress,
+    chainlinkUsdcUsdAddress,
+    chainlinkUsdtUsdAddress,
+} from '../utils/contracts';
 
 
 // TEMPORARILY COPIED HERE (generates exception otherwise)
@@ -41,28 +55,28 @@ export const initPrice = (): Price => {
     return price;
 }
 
+/// @return gvt or pwrd depending on the <isPwrd> parameter
+/// @dev <isPwrd>: the deposit or withdrawal field that indicates the token type:
+///     - For DepositHandler & WithdrawHandler: field `pwrd` (true: pwrd, false: gvt)
+///     - For GRouter: field `tranche` (true: pwrd, false: gvt)
 export const getGroToken = (isPwrd: bool): string => {
     return (isPwrd)
         ? Token.PWRD
         : Token.GVT;
 }
 
-export const getGvtPrice = (): BigDecimal => {
-    const contract = Gvt.bind(gvtAddress);
-    const pricePerShare = contract.try_getPricePerShare();
-    if (pricePerShare.reverted) {
-        log.error('getGvtPrice(): try_getPricePerShare() reverted in /utils/tokens.ts', []);
-        return NUM.ZERO;
-    } else {
-        return tokenToDecimal(pricePerShare.value, 18, DECIMALS);
-    }
-}
-
-// Retrieves price per share for a given token
+/// @return price per share given a token type
 export const getPricePerShare = (token: string): BigDecimal => {
     let price: BigDecimal = NUM.ZERO;
     if (token === Token.GVT) {
-        price = getGvtPrice();
+        const contract = Gvt.bind(gvtAddress);
+        const pricePerShare = contract.try_getPricePerShare();
+        if (pricePerShare.reverted) {
+            log.error('getPricePerShare(): try_getPricePerShare() reverted in /utils/tokens.ts', []);
+            return price;
+        } else {
+            return tokenToDecimal(pricePerShare.value, 18, DECIMALS);
+        }
     } else if (token === Token.GRO) {
         const _price = initPrice();
         price = _price.gro;
@@ -79,6 +93,7 @@ export const getPricePerShare = (token: string): BigDecimal => {
     return price;
 }
 
+/// @return token type given a pool identifier
 export const getTokenByPoolId = (
     poolId: i32,
 ): string => {
@@ -102,21 +117,28 @@ export const getTokenByPoolId = (
     }
 }
 
-// Converts a BigInt into a N-decimal BigDecimal
+/// @notice Converts a BigInt to BigDecimal
+/// @param amount the amount to be converted
+/// @param factor the base conversion factor (1eN)
+/// @param decimals the decimal precision (normally 7)
+/// @return the converted BigDecimal
 export function tokenToDecimal(
     amount: BigInt,
-    precision: i32,
+    factor: i32,
     decimals: i32,
 ): BigDecimal {
     const scale = BigInt.fromI32(10)
-        .pow(precision as u8)
+        .pow(factor as u8)
         .toBigDecimal();
     return amount.toBigDecimal()
         .div(scale)
         .truncate(decimals);
 }
 
-// converts a Bigdecimal coin amount to USD value
+/// @notice Converts an stablecoin amount to its USD value
+/// @param coin the coin type (dai, usdc, usdt) 
+/// @param amount the coin amount
+/// @return the USD value
 export const amountToUsd = (
     coin: string,
     amount: BigDecimal
@@ -131,7 +153,12 @@ export const amountToUsd = (
     return amount.times(price).truncate(DECIMALS);
 }
 
-// returns the USD value in BigInt of a given stablecoin amount (used for G2 withdrawals)
+/// @notice Gives the USD value in BigInt for a given stablecoin amount
+///         (dai, usdc, usdt or 3crv)
+/// @dev Only used for G2 withdrawals
+/// @param tokenIndex the <tokenIndex> field from GRouter withdrawals 
+/// @param amount the coin amount
+/// @return the USD value in BigInt
 export const getUSDAmountOfShare = (
     tokenIndex: number,
     coinAmount: BigDecimal
@@ -152,7 +179,10 @@ export const getUSDAmountOfShare = (
     return BigInt.fromString(usdAmount.truncate(0).toString());
 }
 
-// returns the USD value of a given stablecoin (DAI, USDC or USDT)
+/// @notice Gives the USD value in BigDecimal for a given stablecoin type
+///         (dai, usdc, usdt) based on Chainlink prices
+/// @param token the token type
+/// @return the USD value in BigDecimal
 export function getStablecoinUsdPrice(token: string): BigDecimal {
     const chainlinkAddress: Address = (token === Token.DAI)
         ? chainlinkDaiUsdAddress
@@ -172,6 +202,8 @@ export function getStablecoinUsdPrice(token: string): BigDecimal {
     }
 }
 
+/// @return the USDC value of a WETH
+/// @dev Using USDC instead of USD to avoid one more call to Chainlink
 export function getWethPrice(): BigDecimal {
     const contract = UniswapV2Pair.bind(uni2UsdcWethAddress);
     const reserves = contract.try_getReserves();
@@ -181,8 +213,7 @@ export function getWethPrice(): BigDecimal {
     } else {
         const usdcReserve = tokenToDecimal(reserves.value.get_reserve0(), 6, DECIMALS);
         const wethReserve = tokenToDecimal(reserves.value.get_reserve1(), 18, DECIMALS);
-        // TODO: update WETH price
-        // TODO: chainlink to calc the USD price of USDC.
+        // OPTIONAL: chainlink to calc the USD price of USDC.
         const price = usdcReserve.div(wethReserve).truncate(DECIMALS);
         return price;
     }

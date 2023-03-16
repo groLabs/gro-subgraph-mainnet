@@ -1,3 +1,17 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Contains all constant values used across the different subgraph functions
+
 import { contracts } from '../../addresses';
 import {
     Num,
@@ -82,7 +96,6 @@ export const DEPOSIT_HANDLER_ADDRESSES = [
     Address.fromString(contracts.DepositHandlerV2Address),
     Address.fromString(contracts.DepositHandlerV3Address),
 ];
-
 export const WITHDRAWAL_HANDLER_ADDRESSES = [
     Address.fromString(contracts.WithdrawHandlerV1Address),
     Address.fromString(contracts.WithdrawHandlerV2Address),

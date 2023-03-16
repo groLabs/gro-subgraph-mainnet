@@ -26,7 +26,7 @@ import {
 } from '@graphprotocol/graph-ts';
 
 
-/// @notice Gets the current reward debt for a given user & pool from the Staker
+/// @notice Gets the current reward debt from the Staker for a given user & pool
 /// @param stakerContract the staker contract
 /// @param userAddress the user address
 /// @param poolId the pool identifier
@@ -43,7 +43,7 @@ export function getRewardDebt<T>(
         Address.fromBytes(userAddress),
     );
     if (userInfo.reverted) {
-        const data = `on userAddress: {}, poolId: {}`;
+        const data = `on userAddress: {} poolId: {}`;
         log.error(
             `getRewardDebt(): try_userInfo reverted for Staker ${data} in /utils/staker.ts`,
             [userAddress.toHexString(), poolId.toString()]

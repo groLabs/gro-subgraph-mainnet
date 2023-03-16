@@ -1,18 +1,29 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Contains all static data referring to Convex strategies plus
+///         strategy-related util functions
+/// @dev Most of the names/descriptions are to be used in the front-end
+
 import { TOKEN as Token} from '../utils/constants';
-import { gVaultAddress } from '../utils/contracts';
 import { Strategy as Strat } from '../types/strats';
-import {
-    GVault,
-    GVault__strategiesResult,
-} from '../../generated/GVault/GVault';
 import {
     log,
     Bytes,
     Address,
-    ethereum,
 } from '@graphprotocol/graph-ts';
 
 
+/// @notice Contains the static data from all Convex strategies
 export const getGVaultStrategies = (): Strat[] => {
     const strats = [
         new Strat(
@@ -84,14 +95,7 @@ export const getGVaultStrategies = (): Strat[] => {
     return strats;
 }
 
-export const getTotalAssetsStrat3crv = (
-    strategyAddress: Address,
-): ethereum.CallResult<GVault__strategiesResult> => {
-    const contract = GVault.bind(gVaultAddress);
-    const assets = contract.try_strategies(strategyAddress);
-    return assets;
-}
-
+/// @return strategy address given a queue identifier
 export const getStrategyAddressByQueueId = (queueId: number): Bytes => {
     const strats = getGVaultStrategies();
     for (let i = 0; i < strats.length; i++) {
@@ -99,7 +103,7 @@ export const getStrategyAddressByQueueId = (queueId: number): Bytes => {
             return strats[i].id;
         }
     }
-    log.error('getStrategyAddressByQueueId(): strategy by id not found in /utils/strats.ts', []);
+    log.error('getStrategyAddressByQueueId(): strategy by queue id not found in /utils/strats.ts', []);
     return Address.zero();
 }
 
