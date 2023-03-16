@@ -10,7 +10,7 @@
 
 // gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
 
-/// @notice Initialises entity <Pool> and updates its net rewards, balance and debt
+/// @notice Initialises entity <Pool> and updates its net reward, balance and debt
 
 import { Pool } from '../../generated/schema';
 import { getRewardDebt } from '../utils/staker';
@@ -45,7 +45,7 @@ const initPool = (
     return pool;
 }
 
-/// @notice Updates net rewards, balance and debt in entity <Pool> when there
+/// @notice Updates net reward, balance and debt in entity <Pool> when there
 ///         is a deposit, withdrawal or claim from the Staker contract
 /// @dev - Triggered by the following Staker events:
 ///         - <LogClaim>
@@ -53,21 +53,23 @@ const initPool = (
 ///         - <LogDeposit>
 ///         - <LogWithdraw>
 ///         - <LogEmergencyWithdraw>
+///      - Reward is calculated as the current reward from deposit/withdrawal/claim
+///        minus the last reward from deposit/withdrawal/claim
 /// @param type the transaction type (staker_deposit, staker_withdrawal, claim, multiclaim)
 /// @param userAddress the user address
 /// @param poolId the pool id
-/// @param contractAddress the staker contract address
+/// @param stakerContract the staker contract (v1, v2)
 /// @param coinAmount the coin amount
-export const setPools = (
+export function setPools<T> (
     type: string,
     userAddress: Bytes,
     poolId: i32,
-    contractAddress: Bytes,
+    stakerContract: T,
     coinAmount: BigDecimal,
-): void => {
+): void {
     let pool = initPool(userAddress, poolId);
     const currentRewardDebt = getRewardDebt(
-        contractAddress,
+        stakerContract,
         userAddress,
         poolId,
     );

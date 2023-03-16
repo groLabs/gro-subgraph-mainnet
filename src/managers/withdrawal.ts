@@ -1,3 +1,27 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     1) Manages withdrawal events from WithdrawalHandler & GRouter contracts by:
+///         - Storing the user (if not existing yet)
+///         - Storing the core withdrawal transaction
+///         - Updating the user's balance
+///         - Updating the total supply
+///         - Updating the gvt/pwrd factors
+///     2) Manages withdrawal events from Staker contract by:
+///         - Storing the user & totals (if not existing yet)
+///         - Storing the staker withdrawal transaction
+///         - Updating the pools balance
+
 import { Log } from '../types/log';
 import { setUser } from '../setters/users'
 import { setPools } from '../setters/pools';
@@ -57,10 +81,12 @@ export const manageCoreWithdrawal = (
 
 /// @notice Manages staker withdrawals
 /// @param ev the parsed withdrawal event
-export const manageStakerWithdrawal = (
+/// @param stakerContract the staker contract (v1, v2)
+export function manageStakerWithdrawal<T>(
     ev: DepoWithdraw,
-    isEmergencyWithdrawal: boolean
-): void => {
+    isEmergencyWithdrawal: boolean,
+    stakerContract: T,
+): void {
     // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
@@ -72,7 +98,7 @@ export const manageStakerWithdrawal = (
         tx.type,
         tx.user_address,
         tx.pool_id,
-        tx.contract_address,
+        stakerContract,
         tx.coin_amount,
     );
 

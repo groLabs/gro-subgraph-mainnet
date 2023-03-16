@@ -19,12 +19,19 @@
 ///     - Staker v1: 0x001c249c09090d79dc350a286247479f08c7aad7
 ///     - Staker v1: 0x2e32bad45a1c29c1ea27cf4dd588df9e68ed376c
 
+
 import { parseLogEvent } from '../parsers/log';
 import { manageClaim } from '../managers/stakerClaims';
 import { parseStakerDepositEvent } from '../parsers/deposit';
 import { parseStakerWithdrawalEvent } from '../parsers/withdrawals';
 import { manageStakerDeposit } from '../managers/deposit';
 import { manageStakerWithdrawal } from '../managers/withdrawal';
+import { LpTokenStaker as LpTokenStakerV1 } from '../../generated/LpTokenStakerV1/LpTokenStaker';
+import { LpTokenStaker as LpTokenStakerV2 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
+import {
+    staker1Address,
+    staker2Address,
+} from '../utils/contracts';
 import {
     parseClaimV1Event,
     parseClaimV2Event,
@@ -57,68 +64,102 @@ import {
     LogEmergencyWithdraw as LogEmergencyWithdrawV2,
 } from '../../generated/LpTokenStakerV2/LpTokenStaker';
 
+const LpTokenStakerV1contract = LpTokenStakerV1.bind(staker1Address);
+const LpTokenStakerV2contract = LpTokenStakerV2.bind(staker2Address);
+
 
 /// @notice Handles <LogClaim> events from Staker v1 contract
 /// @param event the claim event
 export function handleClaimV1(event: LogClaimV1): void {
     const ev = parseClaimV1Event(event);
-    manageClaim(ev);
+    manageClaim(
+        ev,
+        LpTokenStakerV1contract,
+    );
 }
 
 /// @notice Handles <LogClaim> events from Staker v2 contract
 /// @param event the claim event
 export function handleClaimV2(event: LogClaimV2): void {
     const ev = parseClaimV2Event(event);
-    manageClaim(ev);
+    manageClaim(
+        ev,
+        LpTokenStakerV2contract,
+    );
 }
 
 /// @notice Handles <LogMultiClaim> events from Staker v2 contract
 /// @param event the multi-claim event
 export function handleMultiClaimV2(event: LogMultiClaimV2): void {
     const ev = parseMultiClaimV2Event(event);
-    manageClaim(ev);
+    manageClaim(
+        ev,
+        LpTokenStakerV2contract,
+    );
 }
 
 /// @notice Handles <LogDeposit> events from Staker v1 contract
 /// @param event the deposit event
 export function handleDepositV1(event: LogDepositV1): void {
     const ev = parseStakerDepositEvent(event);
-    manageStakerDeposit(ev);
+    manageStakerDeposit(
+        ev,
+        LpTokenStakerV1contract,
+    );
 }
 
 /// @notice Handles <LogDeposit> events from Staker v2 contract
 /// @param event the deposit event
 export function handleDepositV2(event: LogDepositV2): void {
     const ev = parseStakerDepositEvent(event);
-    manageStakerDeposit(ev);
+    manageStakerDeposit(
+        ev,
+        LpTokenStakerV2contract,
+    );
 }
 
 /// @notice Handles <LogWithdraw> events from Staker v1 contract
 /// @param event the withdrawal event
 export function handleWithdrawV1(event: LogWithdrawV1): void {
     const ev = parseStakerWithdrawalEvent(event);
-    manageStakerWithdrawal(ev, false);
+    manageStakerWithdrawal(
+        ev,
+        false,
+        LpTokenStakerV1contract,
+    );
 }
 
 /// @notice Handles <LogWithdraw> events from Staker v2 contract
 /// @param event the withdrawal event
 export function handleWithdrawV2(event: LogWithdrawV2): void {
     const ev = parseStakerWithdrawalEvent(event);
-    manageStakerWithdrawal(ev, false);
+    manageStakerWithdrawal(
+        ev,
+        false,
+        LpTokenStakerV2contract,
+    );
 }
 
 /// @notice Handles <LogEmergencyWithdraw> events from Staker v1 contract
 /// @param event the emergency withdrawal event
 export function handleEmergencyWithdrawV1(event: LogEmergencyWithdrawV1): void {
     const ev = parseStakerWithdrawalEvent(event);
-    manageStakerWithdrawal(ev, true);
+    manageStakerWithdrawal(
+        ev,
+        true,
+        LpTokenStakerV1contract,
+    );
 }
 
 /// @notice Handles <LogEmergencyWithdraw> events from Staker v2 contract
 /// @param event the emergency withdrawal event
 export function handleEmergencyWithdrawV2(event: LogEmergencyWithdrawV2): void {
     const ev = parseStakerWithdrawalEvent(event);
-    manageStakerWithdrawal(ev, true);
+    manageStakerWithdrawal(
+        ev,
+        true,
+        LpTokenStakerV2contract,
+    );
 }
 
 /// @notice Handles <LogAddPool> events from Staker v1 contract

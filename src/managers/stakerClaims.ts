@@ -1,3 +1,20 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Manages staker claim events by:
+///     - Storing the user & totals (if not existing yet)
+///     - Storing the claim transaction
+///     - Updating the pools balance
+
 import { setUser } from '../setters/users';
 import { setPools } from '../setters/pools';
 import { StakerClaimEvent } from '../types/stakerClaim';
@@ -7,9 +24,10 @@ import { setClaimTx } from '../setters/staker';
 
 /// @notice Manages staker claims
 /// @param ev the parsed claim event
-export const manageClaim = (
+export function manageClaim<T>(
     ev: StakerClaimEvent,
-): void => {
+    stakerContract: T,
+): void {
     // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
@@ -23,7 +41,7 @@ export const manageClaim = (
             tx.type,
             tx.user_address,
             ev.pid[i],
-            tx.contract_address,
+            stakerContract,
             tx.amount,
         );
     }

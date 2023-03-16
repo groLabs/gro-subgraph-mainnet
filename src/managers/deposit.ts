@@ -1,3 +1,26 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice
+///     1) Manages deposit events from DepositHandler & GRouter contracts by:
+///         - Storing the user (if not existing yet)
+///         - Storing the core deposit transaction
+///         - Updating the user's balance
+///         - Updating the total supply
+///     2) Manages deposit events from Staker contract by:
+///         - Storing the user & totals (if not existing yet)
+///         - Storing the staker deposit transaction
+///         - Updating the pools balance
+
 import { Log } from '../types/log';
 import { setUser } from '../setters/users'
 import { setPools } from '../setters/pools';
@@ -45,9 +68,11 @@ export const manageCoreDeposit = (
 
 /// @notice Manages staker deposits
 /// @param ev the parsed deposit event
-export const manageStakerDeposit = (
+/// @param stakerContract the staker contract (v1, v2)
+export function manageStakerDeposit<T>(
     ev: DepoWithdraw,
-): void => {
+    stakerContract: T,
+): void {
     // Creates user if not existing yet in entity <User>
     setUser(ev.userAddress);
 
@@ -59,7 +84,7 @@ export const manageStakerDeposit = (
         tx.type,
         tx.user_address,
         tx.pool_id,
-        tx.contract_address,
+        stakerContract,
         tx.coin_amount,
     );
 
