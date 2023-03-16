@@ -1,3 +1,23 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Manages gvt, pwrd & gro transfer events by:
+///     - Storing the user (if not existing yet)
+///     - Storing the transfer transaction
+///     - Updating the user's balance
+/// @dev A non-deposit/withdrawal transfer implies generating two transactions:
+///     - For the wallet sending a G-token is a 'transfer-out'
+///     - For the wallet receiving a G-token is a 'transfer-in'
+
 import { setUser } from '../setters/users';
 import { setTotals } from '../setters/totals';
 import { Bytes } from '@graphprotocol/graph-ts';

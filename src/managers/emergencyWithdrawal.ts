@@ -1,3 +1,21 @@
+// SPDX-License-Identifier: AGPLv3
+
+//  ________  ________  ________
+//  |\   ____\|\   __  \|\   __  \
+//  \ \  \___|\ \  \|\  \ \  \|\  \
+//   \ \  \  __\ \   _  _\ \  \\\  \
+//    \ \  \|\  \ \  \\  \\ \  \\\  \
+//     \ \_______\ \__\\ _\\ \_______\
+//      \|_______|\|__|\|__|\|_______|
+
+// gro protocol - ethereum subgraph: https://github.com/groLabs/gro-subgraph-mainnet
+
+/// @notice Manages withdrawal events from EmergencyHandler by:
+///     - Storing the core withdrawal transaction
+///     - Updating the user's balance
+///     - Updating the total supply
+///     - Updating the gvt/pwrd factors
+
 import { Log } from '../types/log';
 import { setTotals } from '../setters/totals';
 import { updateFactor } from '../setters/factors';
