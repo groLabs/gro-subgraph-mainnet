@@ -18,6 +18,8 @@ import { STAKER_ADDRESSES } from '../utils/constants';
 
 
 /// @notice Checks if Transfer is a deposit or withdrawal based on from/to addresses
+/// @param from the from address
+/// @param to the to address
 /// @return - True if deposit (from = 0x) or withdrawal (to = 0x)
 ///         - False otherwise
 export const isDepositOrWithdrawal = (
@@ -30,6 +32,8 @@ export const isDepositOrWithdrawal = (
 }
 
 /// @notice Checks if Transfer comes from Staker contract
+/// @param from the from address
+/// @param to the to address
 /// @return - True if from or to is a Staker address
 ///         - False otherwise
 export const isStakerTransfer = (
@@ -42,6 +46,7 @@ export const isStakerTransfer = (
 }
 
 /// @notice Checks if Transfer goes to the GRouter contract
+/// @param to the to address
 /// @return - True if from to is the GRouter address
 ///         - False otherwise
 export const isTransferToGRouter = (to: Address): bool => {

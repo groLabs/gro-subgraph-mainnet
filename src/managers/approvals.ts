@@ -22,7 +22,7 @@ import { setApprovalTx } from '../setters/approvals';
 
 
 /// @notice Manages approval events 
-/// @param ev the approval event
+/// @param ev the parsed approval event
 /// @param token the approval token (gro, gvt or pwrd)
 /// @dev only handles approvals confirmed by users, but not approval
 ///      updates (e.g.: during deposits and withdrawals)

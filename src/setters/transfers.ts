@@ -30,7 +30,7 @@ import {
 /// @notice Stores transfers in entity <TransferTx>
 /// @dev Staker transfers are excluded, as they are considered 'intra' operations
 ///      within Gro Protocol and kept in users balance
-/// @param ev the transfer event
+/// @param ev the parsed transfer event
 /// @param userAddress the user address
 /// @param type the transfer type (core_deposit, core_withdrawal, transfer_in, transfer_out)
 /// @param token the transfer token (gvt, pwrd, gro)

@@ -87,78 +87,51 @@ export const setTotals = (
     factor: BigDecimal,
 ): void => {
     let total = initTotals(userAddress, false);
+
+    const isInbound = type === TxType.CORE_DEPOSIT || type === TxType.TRANSFER_IN;
+    const coinAmountSigned = isInbound
+        ? coinAmount
+        : coinAmount.times(NUM.MINUS_ONE);
+    const usdAmountSigned = isInbound
+        ? usdAmount
+        : usdAmount.times(NUM.MINUS_ONE);
+
     if (coin === Token.GRO) {
-        if (
-            type === TxType.CORE_DEPOSIT
-            || type === TxType.TRANSFER_IN
-        ) {
-            total.amount_added_gro = total.amount_added_gro
-                .plus(coinAmount);
-            total.amount_total_gro = total.amount_total_gro
-                .plus(coinAmount);
+        if (isInbound) {
+            total.amount_added_gro = total.amount_added_gro.plus(coinAmount);
         } else {
-            total.amount_removed_gro = total.amount_removed_gro
-                .plus(coinAmount);
-            total.amount_total_gro = total.amount_total_gro
-                .minus(coinAmount);
+            total.amount_removed_gro = total.amount_removed_gro.plus(coinAmount);
         }
-    } else if (
-        type === TxType.CORE_DEPOSIT
-        || type === TxType.TRANSFER_IN
-    ) {
-        if (coin === Token.GVT) {
-            total.amount_added_gvt = total.amount_added_gvt
-                .plus(coinAmount);
-            total.value_added_gvt = total.value_added_gvt
-                .plus(usdAmount);
-            total.net_amount_gvt = total.net_amount_gvt
-                .plus(coinAmount);
-            total.net_value_gvt = total.net_value_gvt
-                .plus(usdAmount);
-        } else if (coin === Token.PWRD) {
-            const based_amount_pwrd = coinAmount.times(factor);
-            total.amount_added_pwrd = total.amount_added_pwrd
-                .plus(coinAmount);
-            total.value_added_pwrd = total.value_added_pwrd
-                .plus(usdAmount);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd
-                .plus(based_amount_pwrd);
-            total.net_value_pwrd = total.net_value_pwrd
-                .plus(usdAmount);
+        total.amount_total_gro = total.amount_total_gro.plus(coinAmountSigned);
+    } else if (coin === Token.GVT) {
+        if (isInbound) {
+            total.amount_added_gvt = total.amount_added_gvt.plus(coinAmount);
+            total.value_added_gvt = total.value_added_gvt.plus(usdAmount);
+        } else {
+            total.amount_removed_gvt = total.amount_removed_gvt.plus(coinAmount);
+            total.value_removed_gvt = total.value_removed_gvt.plus(usdAmount);
         }
-        total.value_added_total = total.value_added_total
-            .plus(usdAmount);
-        total.net_value_total = total.net_value_total
-            .plus(usdAmount);
-    } else if (
-        type === TxType.CORE_WITHDRAWAL
-        || type === TxType.TRANSFER_OUT
-    ) {
-        if (coin === Token.GVT) {
-            total.amount_removed_gvt = total.amount_removed_gvt
-                .plus(coinAmount);
-            total.value_removed_gvt = total.value_removed_gvt
-                .plus(usdAmount);
-            total.net_amount_gvt = total.net_amount_gvt
-                .minus(coinAmount);
-            total.net_value_gvt = total.net_value_gvt
-                .minus(usdAmount);
-        } else if (coin === Token.PWRD) {
-            total.amount_removed_pwrd = total.amount_removed_pwrd
-                .plus(coinAmount);
-            total.value_removed_pwrd = total.value_removed_pwrd
-                .plus(usdAmount);
-            const based_amount_pwrd = coinAmount
-                .times(factor);
-            total.net_based_amount_pwrd = total.net_based_amount_pwrd
-                .minus(based_amount_pwrd);
-            total.net_value_pwrd = total.net_value_pwrd
-                .minus(usdAmount);
+        total.net_amount_gvt = total.net_amount_gvt.plus(coinAmountSigned);
+        total.net_value_gvt = total.net_value_gvt.plus(usdAmountSigned);
+    } else if (coin === Token.PWRD) {
+        const basedAmountPwrdSigned = coinAmountSigned.times(factor);
+        if (isInbound) {
+            total.amount_added_pwrd = total.amount_added_pwrd.plus(coinAmount);
+            total.value_added_pwrd = total.value_added_pwrd.plus(usdAmount);
+        } else {
+            total.amount_removed_pwrd = total.amount_removed_pwrd.plus(coinAmount);
+            total.value_removed_pwrd = total.value_removed_pwrd.plus(usdAmount);
         }
-        total.value_removed_total = total.value_removed_total
-            .plus(usdAmount);
-        total.net_value_total = total.net_value_total
-            .minus(usdAmount);
+        total.net_based_amount_pwrd = total.net_based_amount_pwrd.plus(basedAmountPwrdSigned);
+        total.net_value_pwrd = total.net_value_pwrd.plus(usdAmountSigned);
+    }
+    if (coin === Token.GVT || coin === Token.PWRD) {
+        total.net_value_total = total.net_value_total.plus(usdAmountSigned);
+        if (isInbound) {
+            total.value_added_total = total.value_added_total.plus(usdAmount);
+        } else {
+            total.value_removed_total = total.value_removed_total.plus(usdAmount);
+        }
     }
     total.save();
 }

@@ -86,6 +86,8 @@ export function handleTransfer(event: Transfer): void {
     }
 }
 
-export function handleOwnershipTransferred(event: OwnershipTransferred) : void {
+/// @notice Handles <OwnershipTransferred> events from Pwrd contract
+/// @dev No parameter is needed: this function is used to initialise Masterdata once
+export function handleOwnershipTransferred(_: OwnershipTransferred) : void {
     initMasterDataOnce();
 }

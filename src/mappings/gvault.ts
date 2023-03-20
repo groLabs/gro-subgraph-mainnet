@@ -138,6 +138,8 @@ export function handleStrategyTotalChanges(ev: LogStrategyTotalChanges): void {
     );
 }
 
-export function handleOwnershipTransferred(ev: OwnershipTransferred): void {
+/// @notice Handles <OwnershipTransferred> events from GVault contract
+/// @dev No parameter is needed: this function is used to initialise Masterdata once
+export function handleOwnershipTransferred(_: OwnershipTransferred): void {
     initMasterDataOnce();
 }

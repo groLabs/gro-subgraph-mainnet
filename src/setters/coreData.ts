@@ -71,7 +71,7 @@ export function setTotalSupply(
 	amount: BigInt,
 	coin: string,
 ): void {
-	const decimals = (coin == Token.UNISWAP_GRO_USDC) ? 12 : DECIMALS;
+	const decimals = (coin === Token.UNISWAP_GRO_USDC) ? 12 : DECIMALS;
 	if (from == ADDR.ZERO) {
 		updateTotalSupply(
 			tokenToDecimal(amount, 18, decimals),
@@ -119,7 +119,10 @@ export const updateTotalSupply = (
 		core.total_supply_balancer_gro_weth = core.total_supply_balancer_gro_weth
 			.plus(amount);
 	} else {
-		showLog.error(`coreData.ts->updateTotalSupply(): can't update for coin {} side {}`, [coin]);
+		showLog.error(
+			`coreData.ts->updateTotalSupply(): can't update supply for coin {}`,
+			[coin]
+		);
 	}
 	core.save();
 }
