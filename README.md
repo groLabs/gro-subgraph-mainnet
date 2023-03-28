@@ -4,13 +4,20 @@
 
 [Gro Protocol](https://www.gro.xyz/) is a DeFi yield aggregator that makes it easy to earn stablecoin yields with tranching & automation.
 
-This subgraph dynamically tracks the interaction of users with Gro contracts in Ethereum mainnet to provide personal stats on:
+This subgraph dynamically tracks the interaction of users with Gro contracts together with Convex strategy contracts in Ethereum mainnet to provide insightful data on personal and global stats:
 
-*   Deposits, withdrawals, transfers and approvals of GVT, PWRD and GRO tokens
+*   Deposits, withdrawals, transfers & approvals of GVT, PWRD and GRO tokens
     
-*   Deposits, withdrawals and claims from staking contracts
+*   Deposits, withdrawals, claims & swaps from staking contracts
+
+*   Airdrop claims
     
-*   Net amounts, current balance and net returns
+*   Aggregated net amounts, current balance and net returns
+
+*   Global staking pools & Convex strategies data
+
+This info can be also used to calculate KPIs such as TVL, APYs or protocol exposure to stablecoins.
+
     
 
 Active deployments
@@ -20,20 +27,20 @@ Active deployments
 
 *   [Ethereum Prod](https://thegraph.com/hosted-service/subgraph/sjuanati/gro-prod-eth) \[Production → full mainnet data\] <sup>(1)
     
-*   [Ethereum Test](https://thegraph.com/hosted-service/subgraph/sjuanati/gro-test-eth) \[Development → sample mainnet data for devs\] <sup>(1)
+*   [Ethereum Test](https://thegraph.com/hosted-service/subgraph/sjuanati/gro-test-eth) \[Development → mainnet test data for devs\] <sup>(1)
     
 *   [Avalanche Prod](https://thegraph.com/hosted-service/subgraph/sjuanati/gro-prod-avax) \[Production → full mainnet data\]
     
-*   [Avalanche Test](https://thegraph.com/hosted-service/subgraph/sjuanati/gro-test-avax) \[Development → sample mainnet data for devs\]
+*   [Avalanche Test](https://thegraph.com/hosted-service/subgraph/sjuanati/gro-test-avax) \[Development → mainnet test data for devs\]
     
 
-(1) to be decommissioned in 2023 Q1
+(1) to be decommissioned during 2023
 
 ### Decentralised network:
 
-*   Ethereum Prod \[Production → full mainnet data\]
+*   [Ethereum Prod](https://thegraph.com/explorer/subgraphs/GbxgZ8JVtyXhhckfXFQWpnShy7sALmZUtPxdYi4PuoiE?view=Overview&chain=mainnet) \[Production → full mainnet data\]
     
-*   [Ethereum Test](https://thegraph.com/studio/subgraph/gro-mainnet-test/) \[Development → sample mainnet data only for Gro devs\]
+*   [Ethereum Test](https://thegraph.com/explorer/subgraphs/GbxgZ8JVtyXhhckfXFQWpnShy7sALmZUtPxdYi4PuoiE?view=Overview&chain=arbitrum-one) \[Development → mainnet test data for devs (currently not signaled)\]
     
 
 Setup
@@ -69,33 +76,43 @@ yarn eth-test-studio
 ```
 
 The Avalanche subgraph is located in another [repository](https://github.com/groLabs/gro-subgraph-avalanche) as it contains a different product (Labs) and smart contracts.
+    
+As of 2023, the hosted service does not allow to create new subgraphs and the platform will be decommissioned soon.
 
 Key Entities
 ------------
 
-**User**
+**MasterData**: General info regarding the blockchain network, utilisation ratios or Gro per block distribution.
 
-It is the user wallet address that connects with most of the other entities such as totals, transfers or approvals.
+**CoreData**: Total supply for GRO, GVT, PWRD and LP tokens
 
-**Totals**
+**Airdrop**: Airdrop amounts allocated with its merkle root
+    
+**User**: User wallet address that links with most of the other entities such as totals, transfers, claims or approvals.
 
-Aggregated data net balance as the basis to calculate the user’s current balance and net returns for GVT and PWRD (excluding GRO)
+**Totals**: Aggregated data as the basis to calculate the user’s current balance and net returns for GVT and PWRD (excluding GRO)
 
-**Price**
+**Price**: Latest token prices for GVT, GRO, 3CRV and the pool-related LP tokens (Curve Metapool PWRD3CRV, Uniswap GVT-GRO, Uniswap GRO-USDC & Balancer GRO-WETH). PWRD is always set to 1.
 
-Latest token prices for GVT, GRO and WETH, and set to 1 for PWRD.
+**Factor**: GVT and PWRD factors. For PWRD, it is used to calculate the current balance and net returns.
 
-**Factor**
+**Pool**: Pool balance and rewards per User
 
-GVT and PWRD factors. For PWRD, it is used to calculate the current balance and net returns.
+**PoolData**: Total supply & reserves for non single-sided pools (Uniswap, Curve & Balancer)
 
-**Pool**
+**PoolSwap**: Swaps from pool contracts. For Balancer, virtual price is retrieved in a regular basis instead of retrieving swaps (since Balancer vault is shared by other protocols and retrieving such a huge amount of events would impact subgraph performance)
 
-Staking pools \[currently out of scope\]
+**GVault**: 3CRV vault hosting all Convex strategies
 
-**TransferTx**
+**GVaultStrategy**: Convex strategies generating yields 
 
-Contains the following transactions depending on field `type`:
+**GVaultHarvest**: Harvests triggered from GVault over the strategies
+
+**VestingBonus**: Vesting rewards per user
+
+**VestingAirdrop**: Claimed PWRD amount from UST vesting airdrop per user
+
+**TransferTx**: Contains the following transactions depending on field `type`:
 
 <table data-layout="wide" data-local-id="9ae48a4d-bebb-437c-8e6f-c6ad0a91293f" class="confluenceTable">
     <colgroup>
@@ -127,7 +144,7 @@ Contains the following transactions depending on field `type`:
                 <p>GVT &amp; PWRD deposits into the protocol</p>
             </td>
             <td class="confluenceTd">
-                <p>Deposit handlers</p>
+                <p>Deposit handler + GRouter </p>
             </td>
             <td class="confluenceTd">
                 <p><code>LogNewDeposit</code></p>
@@ -141,7 +158,7 @@ Contains the following transactions depending on field `type`:
                 <p>GVT &amp; PWRD withdrawals from the protocol</p>
             </td>
             <td class="confluenceTd">
-                <p>Withdraw handlers</p>
+                <p>Withdraw handler + GRouter</p>
             </td>
             <td class="confluenceTd">
                 <p><code>LogNewWithdrawal</code></p>
@@ -155,7 +172,7 @@ Contains the following transactions depending on field `type`:
                 <p>Deposits into staking contracts <sup>(1)</sup></p>
             </td>
             <td class="confluenceTd">
-                <p>Stakers</p>
+                <p>Staker</p>
             </td>
             <td class="confluenceTd">
                 <p><code>LogDeposit</code></p>
@@ -169,7 +186,7 @@ Contains the following transactions depending on field `type`:
                 <p>Withdrawals from staking contracts <sup>(1)</sup></p>
             </td>
             <td class="confluenceTd">
-                <p>Stakers</p>
+                <p>Staker</p>
             </td>
             <td class="confluenceTd">
                 <p><code>LogWithdraw</code></p>
@@ -238,13 +255,9 @@ Contains the following transactions depending on field `type`:
 
 (1) Tokens will depend on the pool
 
-**ApprovalTx**
+**ApprovalTx**: Contains approval transactions for GVT, PWRD & GRO tokens
 
-Contains approval transactions for GVT, PWRD & GRO tokens
-
-**ClaimTx**
-
-Contains GRO claims from staking contracts where poolId indicates which pool/s are the rewards coming from:
+**StakerClaimTx**: Contains GRO claims from staking contracts where poolId indicates which pool/s are the rewards coming from:
 
 <table data-layout="default" data-local-id="8025a982-fd35-4a29-ab55-c3aaebf8a4e0" class="confluenceTable">
     <colgroup>
@@ -369,15 +382,18 @@ Contains GRO claims from staking contracts where poolId indicates which pool/s a
     </tbody>
 </table>
 
+**AirdropClaimTx**: Airdrop claimed amounts
+    
 Queries
 -------
+Following are two [GraphQL](https://graphql.org/) examples to retrieve user and global data:
 
 *   Personal stats
     
 
 ```graphql
 {
-  users(where: {id: "0x....."}) {
+  users(where: {id: "0x......"}) {
     address: id
     totals {
       amount_added_gvt: value_added_gvt
@@ -389,83 +405,182 @@ Queries
       net_amount_gvt: net_value_gvt
       net_amount_pwrd: net_value_pwrd
       net_amount_total: net_value_total
-      # The following fields must be calculated on the front-end side:
-      # current_balance_gvt = totals.net_amount_gvt * prices.gvt
-      # current_balance_pwrd = totals.net_based_amount_pwrd / factors.pwrd
-      # current_balance_total = current_balance_gvt + current_balance_pwrd 
-      # net_returns_gvt = current_balance_gvt - totals.net_value_gvt
-      # net_returns_pwrd = current_balance_pwrd - totals.net_value_pwrd
-      # net_returns_total = current_balance_total - totals.net_value_total
+    }
+    airdrop_claims {
+      id
+      tranche_id
+      contract_address
     }
     core_deposits: transfers(where: {type: core_deposit}) {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
       token
-      coinAmount
-      usdAmount
+      coin_amount
+      usd_amount
       factor
+      pool_id
     }
     core_withdrawals: transfers(where: {type: core_withdrawal}) {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
       token
-      coinAmount
-      usdAmount
+      coin_amount
+      usd_amount
       factor
     }
     core_transfers_in: transfers(where: {type: transfer_in}) {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
       token
-      coinAmount
-      usdAmount
+      coin_amount
+      usd_amount
       factor
     }
     core_transfers_out: transfers(where: {type: transfer_out}) {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
       token
-      coinAmount
-      usdAmount
+      coin_amount
+      usd_amount
       factor
     }
     core_approvals: approvals(where: {type: approval}) {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
       token
-      spenderAddress
-      coinAmount
-      usdAmount
+      spender_address
+      coin_amount
+      usd_amount
     }
     staker_deposits: transfers(where: {type: staker_deposit}) {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
-      poolId
-      coinAmount
+      pool_id
+      coin_amount
     }
     staker_withdrawals: transfers(where: {type: staker_withdrawal}) {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
-      poolId
-      coinAmount
+      pool_id
+      coin_amount
     }
     staker_claims: claims {
-      block
-      timestamp
+      block_number
+      block_timestamp
       hash
       vest
-      poolId
+      pool_id
       amount
+      type
+    }
+    pool_0: pools(where: {pool_id: 0}) {
+      net_reward
+      balance
+    }
+    pool_1: pools(where: {pool_id: 1}) {
+      net_reward
+      balance
+    }
+    pool_2: pools(where: {pool_id: 2}) {
+      net_reward
+      balance
+    }
+    pool_3: pools(where: {pool_id: 3}) {
+      net_reward
+      balance
+    }
+    pool_4: pools(where: {pool_id: 4}) {
+      net_reward
+      balance
+    }
+    pool_5: pools(where: {pool_id: 5}) {
+      net_reward
+      balance
+    }
+    pool_6: pools(where: {pool_id: 6}) {
+      net_reward
+      balance
     }
   }
 }
 ```
+
+*   Gro stats
+    
+
+```graphql
+{
+  masterDatas {
+    total_bonus
+    total_bonus_in
+    total_bonus_out
+    total_locked_amount
+    init_unlocked_percent
+    global_start_time
+  }
+  gvaults {
+    id
+    locked_profit
+    release_factor
+    strategies {
+      id
+      metacoin
+      strat_name
+      strat_display_name
+      strategy_debt
+      vault_address {
+        id
+      }
+      block_strategy_reported
+      block_strategy_withdraw
+    }
+  }
+  coreDatas {
+    total_supply_gvt
+    total_supply_pwrd_based
+    total_supply_gro
+    total_supply_curve_pwrd3crv
+    total_supply_uniswap_gvt_gro
+    total_supply_uniswap_gro_usdc
+    total_supply_balancer_gro_weth
+  }
+  gvaultHarvests(orderBy: block_timestamp, orderDirection: desc, first:10) {
+    strategy_address {
+      id
+    }
+    gain
+    loss
+    debt_paid
+    debt_added
+    locked_profit
+    block_timestamp
+  }
+  stakerDatas {
+    id
+    lp_supply
+  }
+  poolDatas {
+    id
+    reserve0
+    reserve1
+    total_supply
+  }
+  poolSwaps(orderBy: pool_id, orderDirection: desc, first:5, where: {pool_id: 2}) {
+    pool_id
+    virtual_price
+    block_number
+    block_timestamp
+  }
+}
+```
+    
+For any further question, doubt, request or metaphysical reflection, please contact us at [Discord](https://discord.gg/4627HKdt) 
 
 Enjoy it! 😁
