@@ -42,6 +42,16 @@
     },
     {
         "inputs": [],
+        "name": "ExcessDebtGtThanAssets",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "LPNotZero",
+        "type": "error"
+    },
+    {
+        "inputs": [],
         "name": "LTMinAmountExpected",
         "type": "error"
     },
@@ -73,6 +83,11 @@
     {
         "inputs": [],
         "name": "SamePid",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "SlippageProtection",
         "type": "error"
     },
     {

@@ -16,13 +16,15 @@
 /// @dev
 ///     - GVault: 0x1402c1caa002354fc2c4a4cd2b4045a5b9625ef3
 
-import { log } from '@graphprotocol/graph-ts';
 import { setGvtPrice } from '../setters/price';
 import { tokenToDecimal } from '../utils/tokens';
 import { updateFactor } from '../setters/factors';
 import { initMasterDataOnce } from '../setters/masterdata';
 import { setUtilizationRatio } from '../setters/gtranche';
-import { getStrategyAddressByQueueId } from '../utils/strats';
+import {
+    isActiveStrategy,
+    getStrategyAddressByQueueId,
+} from '../utils/strats';
 import {
     NUM,
     ADDR,
@@ -69,36 +71,41 @@ export function handleLogNewReleaseFactor(ev: LogNewReleaseFactor): void {
 /// @notice Handles <LogStrategyHarvestReport> events from GVault contract
 /// @param ev the strategy harvest report event
 export function handleStrategyHarvestReport(ev: LogStrategyHarvestReport): void {
-    const logIndex = ev.logIndex.toI32();
 
-    // Stores the harvest in entity <GVaultHarvest>
-    const harvest = setGVaultHarvest(
-        ev.transaction.hash.concatI32(logIndex),
-        ev.params.strategy,
-        tokenToDecimal(ev.params.gain, 18, DECIMALS),
-        tokenToDecimal(ev.params.loss, 18, DECIMALS),
-        tokenToDecimal(ev.params.debtPaid, 18, DECIMALS),
-        tokenToDecimal(ev.params.debtAdded, 18, DECIMALS),
-        tokenToDecimal(ev.params.lockedProfit, 18, DECIMALS),
-        tokenToDecimal(ev.params.lockedProfitBeforeLoss, 18, DECIMALS),
-        ev.block.timestamp,
-    );
+    // Events from old strategies must be discarded
+    const stratAddress = ev.params.strategy;
+    if (isActiveStrategy(stratAddress)) {
 
-    // Updates the locked profit & timestamp in entity <GVault>
-    setGVaultLockedProfit(
-        ev.address,
-        harvest.locked_profit,
-        ev.block.timestamp,
-    );
+        // Stores the harvest in entity <GVaultHarvest>
+        const logIndex = ev.logIndex.toI32();
+        const harvest = setGVaultHarvest(
+            ev.transaction.hash.concatI32(logIndex),
+            stratAddress,
+            tokenToDecimal(ev.params.gain, 18, DECIMALS),
+            tokenToDecimal(ev.params.loss, 18, DECIMALS),
+            tokenToDecimal(ev.params.debtPaid, 18, DECIMALS),
+            tokenToDecimal(ev.params.debtAdded, 18, DECIMALS),
+            tokenToDecimal(ev.params.lockedProfit, 18, DECIMALS),
+            tokenToDecimal(ev.params.lockedProfitBeforeLoss, 18, DECIMALS),
+            ev.block.timestamp,
+        );
 
-    // Updates the gvt & pwrd factors in entity <Factor>
-    updateFactor(Token.UNKNOWN);
+        // Updates the locked profit & timestamp in entity <GVault>
+        setGVaultLockedProfit(
+            ev.address,
+            harvest.locked_profit,
+            ev.block.timestamp,
+        );
 
-    // Updates the gvt price in entity <Price>
-    setGvtPrice();
+        // Updates the gvt & pwrd factors in entity <Factor>
+        updateFactor(Token.UNKNOWN);
 
-    // Updates the utilisation ratio in entity <MasterData> via GTranche.utilisation()
-    setUtilizationRatio(NUM.ZERO);
+        // Updates the gvt price in entity <Price>
+        setGvtPrice();
+
+        // Updates the utilisation ratio in entity <MasterData> via GTranche.utilisation()
+        setUtilizationRatio(NUM.ZERO);
+    }
 }
 
 /// @notice Handles <LogWithdrawalFromStrategy> events from GVault contract
@@ -114,15 +121,6 @@ export function handleWithdrawalFromStrategy(ev: LogWithdrawalFromStrategy): voi
             tokenToDecimal(ev.params.strategyDebt, 18, DECIMALS),
             ev.block.number,
         );
-    } else {
-        const payload = 'non-existing strategy {} for queue {} in /mappings/gvault.ts';
-        log.warning(
-            'handleWithdrawalFromStrategy(): withdrawal on ' + payload,
-            [
-                strategyAddress.toHexString(),
-                queue.toString(),
-            ]
-        );
     }
 }
 
@@ -130,12 +128,15 @@ export function handleWithdrawalFromStrategy(ev: LogWithdrawalFromStrategy): voi
 /// @param ev the strategy total changes event
 export function handleStrategyTotalChanges(ev: LogStrategyTotalChanges): void {
     // Updates the strategy debt & timestamp in entity <GVaultStrategy>
-    setGVaultDebt(
-        ev.params.strategy,
-        'total_changes',
-        tokenToDecimal(ev.params.totalDebt, 18, DECIMALS),
-        ev.block.number,
-    );
+    const stratAddress = ev.params.strategy;
+    if (isActiveStrategy(stratAddress)) {
+        setGVaultDebt(
+            stratAddress,
+            'total_changes',
+            tokenToDecimal(ev.params.totalDebt, 18, DECIMALS),
+            ev.block.number,
+        );
+    }
 }
 
 /// @notice Handles <OwnershipTransferred> events from GVault contract

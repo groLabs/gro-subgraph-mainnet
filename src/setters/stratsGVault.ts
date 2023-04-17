@@ -81,11 +81,6 @@ export const setGVaultDebt = (
             strat.block_strategy_reported = blockTs.toI32();
         }
         strat.save();
-    } else {
-        log.warning(
-            'setGVaultDebt(): debt on non-existing strategy {} in /setters/stratsGVault.ts',
-            [strategyAddress.toHexString()]
-        );
     }
 }
 
@@ -143,10 +138,5 @@ export const setStopLossLogic = (
         strat.equilibrium_value = equilibriumValue;
         strat.healthThreshold = healthThreshold;
         strat.save();
-    } else {
-        log.warning(
-            'setStopLossLogic(): stopLoss on non-existing strategy {} in /setters/stratsGVault.ts',
-            [strategyAddress.toHexString()]
-        );
     }
 }
