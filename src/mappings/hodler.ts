@@ -15,10 +15,13 @@
 /// @dev
 ///     - GROHodler v1: 0xef10eac205817a88c6d504d02481053e85a8f927
 ///     - GROHodler v2: 0x8b4a30c8884ca4aff1e4c82cce79802a63e61397
+///     - GROHodler v2: 0x7C268Bf50e64258835029c30C91DaA65a9E55b5a
+
 
 import { tokenToDecimal } from '../utils/tokens';
 import { LogBonusClaimed as LogBonusClaimedV1 } from '../../generated/GROHodlerV1/GROHodler';
 import { LogBonusClaimed as LogBonusClaimedV2 } from '../../generated/GROHodlerV2/GROHodler';
+import { LogBonusClaimed as LogBonusClaimedV3 } from '../../generated/GROHodlerV3/GROHodler';
 import {
     NUM,
     DECIMALS,
@@ -49,6 +52,23 @@ export function handleBonusClaimedV1(event: LogBonusClaimedV1): void {
 /// @notice Handles <LogBonusClaimed> events from GROHodler v2 contract
 /// @param event the claim event
 export function handleBonusClaimedV2(event: LogBonusClaimedV2): void {
+    // Updates net reward in entity <VestingBonus>
+    updateNetReward(
+        event.params.user,
+        tokenToDecimal(event.params.amount, 18, DECIMALS),
+        event.params.vest,
+    );
+    // Updates total bonus in entity <MasterData>
+    updateTotalBonus(
+        tokenToDecimal(event.params.amount, 18, DECIMALS)
+            .times(NUM.MINUS_ONE),
+        true,
+    );
+}
+
+/// @notice Handles <LogBonusClaimed> events from GROHodler v3 contract
+/// @param event the claim event
+export function handleBonusClaimedV3(event: LogBonusClaimedV3): void {
     // Updates net reward in entity <VestingBonus>
     updateNetReward(
         event.params.user,

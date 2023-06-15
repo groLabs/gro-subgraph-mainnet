@@ -63,6 +63,8 @@ export class Contracts {
     public HodlerV1StartBlock: number;
     public HodlerV2Address: string;
     public HodlerV2StartBlock: number;
+    public HodlerV3Address: string;
+    public HodlerV3StartBlock: number;
     public VestingV1Address: string;
     public VestingV1StartBlock: number;
     public VestingV2Address: string;

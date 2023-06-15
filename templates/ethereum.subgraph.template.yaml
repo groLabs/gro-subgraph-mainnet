@@ -647,6 +647,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - MasterData
         - VestingBonus
       abis:
         - name: GROHodler
@@ -667,6 +668,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - MasterData
         - VestingBonus
       abis:
         - name: GROHodler
@@ -674,6 +676,27 @@ dataSources:
       eventHandlers:
         - event: LogBonusClaimed(indexed address,bool,uint256)
           handler: handleBonusClaimedV2
+      file: ./src/mappings/hodler.ts
+  - kind: ethereum/contract
+    name: GROHodlerV3
+    network: {{network}}
+    source:
+      address: "{{HodlerV3Address}}"
+      abi: GROHodler
+      startBlock: {{HodlerV3StartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MasterData
+        - VestingBonus
+      abis:
+        - name: GROHodler
+          file: ./abis/ethereum/GROHodlerV2.json
+      eventHandlers:
+        - event: LogBonusClaimed(indexed address,bool,uint256)
+          handler: handleBonusClaimedV3
       file: ./src/mappings/hodler.ts
 # *******************************************************************************************
 # ***********   G R O   V E S T I N G   *****************************************************
