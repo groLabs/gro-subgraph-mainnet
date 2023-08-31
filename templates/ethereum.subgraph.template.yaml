@@ -973,7 +973,7 @@ dataSources:
         - event: LogNewTrancheBalance(uint256[2],uint256)
           handler: handleNewTrancheBalance
         - event: LogNewUtilisationThreshold(uint256)
-          handler: LogNewTrancheBalance    
+          handler: handleLogNewUtilisationThreshold    
       file: ./src/mappings/gtranche.ts
 # *******************************************************************************************
 # ***********   S T O P - L O S S  L O G I C   **********************************************
