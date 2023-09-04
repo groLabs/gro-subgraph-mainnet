@@ -117,16 +117,6 @@ export class Contracts {
     public PnLG2StartBlock: number;
     public StopLossLogicAddress: string;
     public StopLossLogicStartBlock: number;
-    public ConvexStrategyFraxAddress: string;
-    public ConvexStrategyFraxStartBlock: number;
-    public ConvexStrategyLusdAddress: string;
-    public ConvexStrategyLusdStartBlock: number;
-    public ConvexStrategyGusdAddress: string;
-    public ConvexStrategyGusdStartBlock: number;
-    public ConvexStrategyOusdAddress: string;
-    public ConvexStrategyOusdStartBlock: number;
-    public ConvexStrategyTusdAddress: string;
-    public ConvexStrategyTusdStartBlock: number;
     public ThreePoolAddress: string;
     public ThreePoolStartBlock: number;
     public AirdropV1Address: string;
